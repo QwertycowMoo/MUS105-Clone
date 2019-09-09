@@ -186,13 +186,14 @@ def list_to_str(l):
     # replace the line below with your code
     #not finished fix it
     finalString = '['
-    for item in range(len(l)):
-        if (isinstance(l[item],str)):
+    for item in l:
+
+        if (isinstance(item, str)):
             finalString += "'"
-            finalString += l[item]
+            finalString = finalString + item
             finalString += "'"
         else:
-            finalString += str(l[item])
+            finalString = finalString + str(item)
 
         finalString += ","
      #removes the last comma
@@ -224,4 +225,5 @@ def remove_substring_instances(in_str, substr):
         numRemoved += 1
         index = in_str.find(substr)
     return numRemoved, in_str
+
 
