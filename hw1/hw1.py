@@ -30,14 +30,23 @@ def is_palindrome(s):
         'racecar' is a palindrome.
         'race car' is NOT a palindrome
         'rac e car' is a palindrome
-    *for out purposes, spaces matter
+    *for our purposes, spaces matter
 
     :param s: string to test for a palindrome
     :type s: str
     :return: whether or not s is a palindrome
     :rtype: bool
     """
-    pass
+    #check if string has odd number of letters
+    #find half (+ 1) if need be
+    #compare indices of the string
+    sArray = list(s);
+
+
+    for x in range(len(sArray) - 1):
+        if sArray[x] != sArray[(len(sArray) - 1) - x]:
+            return False
+    return True
 
 def is_in(a, b):
     """
@@ -53,7 +62,36 @@ def is_in(a, b):
     :return: whether or not a can be constructed from b
     :rtype: bool
     """
-    pass
+    letterArray = list(b)
+    # construct a parallel array that keeps track of whether or not the letter has been used
+    usedArray = []
+    for x in range(len(letterArray)):
+        usedArray.append(0)
+    # constructed parallel array
+
+    for letter in list(a):
+        # check if the letter actually exists in the given 'b' string
+        try:
+            # if it doesnt actually exist, just catches it and returns false
+            letterArray.index(letter)
+
+            didChange = False  # keeps track of the changes for the for loop down below
+            for checkIndex in range(len(letterArray)):
+                if didChange == True:
+                    break
+                # check if used and if so, sets the used to 1 and break out of this loop and the whole for, moving to the next letter
+                if letterArray[checkIndex] == letter and usedArray[checkIndex] == 0:
+                    usedArray[checkIndex] = 1
+                    didChange = True
+                    break
+            if didChange == False:
+                return False
+
+
+        except ValueError:
+            return False
+
+    return True
 
 def is_set(l):
     """
@@ -65,8 +103,25 @@ def is_set(l):
     :return: whether or not l is a set
     :rtype: bool
     """
-    pass
 
+    l_set = set(l)
+    l_set_list = list(l_set)
+    set_used = []
+    for x in l_set_list:
+        set_used.append(0)
+    for char in l:
+        didChange = False
+        for yeet in range(len(set_used)):
+            if didChange == True:
+                break
+            # check if used and if so, sets the used to 1 and break out of this loop and the whole for, moving to the next letter
+            if char == l_set_list[yeet] and set_used[yeet] == 0:
+                set_used[yeet] = 1
+                didChange = True
+                break
+        if didChange == False:
+            return False
+    return True
 def str_to_int2(num_string):
     """
     recall str_to_int from hw0. Re-implement that function, but instead of returning -1 in the case of unrecognized
@@ -82,7 +137,21 @@ def str_to_int2(num_string):
     :return: an integer with the value denoted by the string
     :rtype: int
     """
-    pass
+    try:
+        base = num_string[0:2]
+        if base == "0b":
+            return int(num_string, 2)
+        elif base == "0o":
+            return int(num_string, 8)
+        elif base == "0x":
+            return int(num_string, 16)
+        elif base.isdigit():
+            return int(num_string)
+        else:
+            return -1
+    except ValueError:
+        return "unrecognized base"
+
 
 def nth_element(n, my_list):
     """
@@ -128,7 +197,7 @@ class Course:
     of the functions.
     """
 
-    university = ""
+    university = "UIUC"
 
     @staticmethod
     def print_school():
@@ -180,3 +249,7 @@ class Course:
         :rtype: str
         """
 
+
+print(is_palindrome("racecar"));
+print(is_palindrome("race car"));
+print(is_palindrome("rac e car"));

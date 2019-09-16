@@ -61,8 +61,8 @@ def list_sum(l):
     """
     # replace the line below with your code
     sum = 0.0
-    for i in range(l):
-        sum += l[i]
+    for i in l:
+        sum += i
     return sum
 
 def str_to_int(num_string):
