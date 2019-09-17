@@ -125,7 +125,7 @@ def is_set(l):
 def str_to_int2(num_string):
     """
     recall str_to_int from hw0. Re-implement that function, but instead of returning -1 in the case of unrecognized
-    bases, raise a ValueError, with the message "unrecognized base". If the base is recognized, but the actual 
+    bases, raise a ValueError, with the message "unrecognized base". If the base is recognized, but the actual
     representation is wrong, for example:
         0b123
     (binary numbers should only have 0 and 1), then raise a ValueError with the message "incorrect formatting"
@@ -137,25 +137,53 @@ def str_to_int2(num_string):
     :return: an integer with the value denoted by the string
     :rtype: int
     """
-    try:
-        isBaseValid = False
-        base = num_string[0:2]
-        if base == "0b":
-            isBaseValid = True
-            return int(num_string, 2)
-        elif base == "0o":
-            isBaseValid = True
-            return int(num_string, 8)
-        elif base == "0x":
-            isBaseValid = True
-            return int(num_string, 16)
-        elif base.isdigit():
-            isBaseValid = True
-            return int(num_string)
-        else:
-            return "unrecognized base"
-    except ValueError:
-        return "incorrect formatting"
+
+    base = num_string[0:2]
+    number = num_string[2:]
+    binary = ['0', '1']
+    octal = ['0', '1', '2', '3', '4', '5', '6', '7']
+    deca = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    hexa = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+    if base == "0b":
+        for char in number:
+            isOk = False
+            for num in binary:
+                if char == num:
+                    isOk = True
+            if isOk == False:
+                raise ValueError("incorrect formatting")
+        return int(num_string, 2)
+    elif base == "0o":
+        for char in number:
+            isOk = False
+            for num in octal:
+                if char == num:
+                    isOk = True
+            if isOk == False:
+                raise ValueError("incorrect formatting")
+        return int(num_string, 8)
+    elif base == "0x":
+        for char in number:
+            isOk = False
+            for num in hexa:
+                if char == num:
+                    isOk = True
+            if isOk == False:
+                raise ValueError("incorrect formatting")
+        return int(num_string, 16)
+    elif base.isdigit():
+        for char in number:
+            isOk = False
+            for num in deca:
+                if char == num:
+                    isOk = True
+            if isOk == False:
+                raise ValueError("incorrect formatting")
+        return int(num_string)
+    else:
+        raise ValueError("unrecognized base")
+
+
 
 
 def nth_element(n, my_list):
@@ -177,11 +205,11 @@ def nth_element(n, my_list):
     :return: nth element in my_list
     :rtype: float
     """
-    try:
-        my_list.sort()
-        return my_list[n-1]
-    except (ValueError, IndexError) as e:
-        return "Cannot find nth element of inputs ({},{})".format(n, my_list)
+
+    my_list.sort()
+    if n > len(my_list) or n <= 0:
+        raise TypeError("Cannot find nth element of inputs ({},{})".format(n, my_list))
+    return my_list[n - 1]
 
 class Course:
     """
@@ -254,10 +282,13 @@ class Course:
         :param student: netID of student to remove
         :type student: str
         """
-        try:
-            self.students.remove(student)
-        except ValueError:
-            print("student is not enrolled in course")
+        didRemove = False
+        for lStudents in self.students:
+            if lStudents == student:
+                self.students.remove(lStudents)
+                didRemove = True
+        if didRemove == False:
+            raise ValueError("student is not enrolled in course")
 
     def get_description(self):
         """
@@ -265,17 +296,10 @@ class Course:
         :return: a description of the course, as described above
         :rtype: str
         """
-        return self.description
+        numStudents = len(self.students)
+        stringStudents = ', '.join(self.students)
+        returnString = "{} ({}): \n{} \n{} students: {}".format(self.code, self.crn, self.description, numStudents,
+                                                                stringStudents)
+        return returnString
 
 
-
-
-MUS105 = Course("MUS105", 43357, "Computation and Music")
-MUS105.add_student("kevin zhou")
-MUS105.add_student("evan")
-MUS105.remove_student("kevin zhou")
-MUS105.remove_student("Yeet")
-print(MUS105.get_description())
-print(MUS105.print_school)
-print(str_to_int2("0b123"))
-print(str_to_int2("0n39392"))
