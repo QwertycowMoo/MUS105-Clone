@@ -138,19 +138,24 @@ def str_to_int2(num_string):
     :rtype: int
     """
     try:
+        isBaseValid = False
         base = num_string[0:2]
         if base == "0b":
+            isBaseValid = True
             return int(num_string, 2)
         elif base == "0o":
+            isBaseValid = True
             return int(num_string, 8)
         elif base == "0x":
+            isBaseValid = True
             return int(num_string, 16)
         elif base.isdigit():
+            isBaseValid = True
             return int(num_string)
         else:
-            return -1
+            return "unrecognized base"
     except ValueError:
-        return "unrecognized base"
+        return "incorrect formatting"
 
 
 def nth_element(n, my_list):
@@ -172,7 +177,11 @@ def nth_element(n, my_list):
     :return: nth element in my_list
     :rtype: float
     """
-    pass
+    try:
+        my_list.sort()
+        return my_list[n-1]
+    except (ValueError, IndexError) as e:
+        return "Cannot find nth element of inputs ({},{})".format(n, my_list)
 
 class Course:
     """
@@ -205,6 +214,8 @@ class Course:
         This function takes no parameters and returns nothing. The only thing it should do is print:
             "The University is: {Course.university}"
         """
+        print("The University is: " + Course.university)
+
     def __init__(self, code, crn, description):
         """
         Initializer, your code should set instance variables with the same name as the parameters to their respective
@@ -221,15 +232,18 @@ class Course:
         """
 
         self.code = code
+        self.crn = crn
+        self.description = str(description)
+        self.students = []
 
     def add_student(self, student):
         """
-        adds a student to the roster, by appending their netID to the end of the list
++        adds a student to the roster, by appending their netID to the end of the list
 
         :param student: netID of student to add
         :type student: str
         """
-        pass
+        self.students.append(student)
 
     def remove_student(self, student):
         """
@@ -240,7 +254,10 @@ class Course:
         :param student: netID of student to remove
         :type student: str
         """
-        pass
+        try:
+            self.students.remove(student)
+        except ValueError:
+            print("student is not enrolled in course")
 
     def get_description(self):
         """
@@ -248,8 +265,17 @@ class Course:
         :return: a description of the course, as described above
         :rtype: str
         """
+        return self.description
 
 
-print(is_palindrome("racecar"));
-print(is_palindrome("race car"));
-print(is_palindrome("rac e car"));
+
+
+MUS105 = Course("MUS105", 43357, "Computation and Music")
+MUS105.add_student("kevin zhou")
+MUS105.add_student("evan")
+MUS105.remove_student("kevin zhou")
+MUS105.remove_student("Yeet")
+print(MUS105.get_description())
+print(MUS105.print_school)
+print(str_to_int2("0b123"))
+print(str_to_int2("0n39392"))
