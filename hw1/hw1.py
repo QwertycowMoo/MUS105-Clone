@@ -298,7 +298,7 @@ class Course:
         """
         numStudents = len(self.students)
         stringStudents = ', '.join(self.students)
-        returnString = "{} ({}): \n{} \n{} students: {}".format(self.code, self.crn, self.description, numStudents,
+        returnString = "{}({}): \n{} \n{} students: {}".format(self.code, self.crn, self.description, numStudents,
                                                                 stringStudents)
         return returnString
 
