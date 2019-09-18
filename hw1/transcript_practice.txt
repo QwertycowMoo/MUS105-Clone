@@ -21,18 +21,18 @@
       [  input = [[4, 3, 2, 1]]  ]  your_output = True desired_output = True  (2/2)
     function: str_to_int2
       [import]: success  (1/1)
-      [  input = ['0x3a']  ]  your_output = 58 desired_output = 58  (2/2)
+      [  input = ['0x3a']  ]  your_output = $exception$ desired_output = 58  (0/2)
       [  input = ['0o1274']  ]  your_output = 700 desired_output = 700  (2/2)
       [  input = ['0b1010000']  ]  your_output = 80 desired_output = 80  (2/2)
       [  input = ['15']  ]  your_output = 15 desired_output = 15  (2/2)
-      [  input = ['0a111']  ]  your_output = unrecognized base desired_output = $exception$  (0/2)
-      [  input = ['0b123']  ]  your_output = incorrect formatting desired_output = $exception$  (0/2)
-      [  input = ['5b657']  ]  your_output = unrecognized base desired_output = $exception$  (0/2)
+      [  input = ['0a111']  ]  your_output = $exception$ desired_output = $exception$  (2/2)
+      [  input = ['0b123']  ]  your_output = $exception$ desired_output = $exception$  (2/2)
+      [  input = ['5b657']  ]  your_output = $exception$ desired_output = $exception$  (2/2)
     function: nth_element
       [import]: success  (1/1)
       [  input = [3, [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]  ]  your_output = 3 desired_output = 3  (2/2)
       [  input = [8, [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]  ]  your_output = 8 desired_output = 8  (2/2)
-      [  input = [15, [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]  ]  your_output = Cannot find nth element of inputs (15,[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) desired_output = $exception$  (0/2)
+      [  input = [15, [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]  ]  your_output = $exception$ desired_output = $exception$  (2/2)
       [  input = [1, [15, 25, 3, 14, 18, 28, 420, 600090]]  ]  your_output = 3 desired_output = 3  (2/2)
       [  input = [8, [15, 25, 3, 14, 18, 28, 420, 600090]]  ]  your_output = 600090 desired_output = 600090  (2/2)
     class: Course
@@ -52,14 +52,16 @@
         [  check variable  ]  your_output = $none$ desired_output = ['haiziyu7']  (0/2)
       method: 8___obj___remove_student
         [import]: success  (1/1)
-        [  input = ['taube']  ]  your_output = None desired_output = $exception$  (0/2)
+        [  input = ['taube']  ]  your_output = $exception$ desired_output = $exception$  (2/2)
       method: 9___obj___add_student
         [import]: success  (1/1)
         [  input = ['taube']  ]  your_output = None desired_output = None  (1/1)
         [  input = ['shijiel2']  ]  your_output = None desired_output = None  (1/1)
       method: 10___obj___get_description
         [import]: success  (1/1)
-        [  input = []  ]  your_output = Computation and Music 1 desired_output = MUS105(65879):
+        [  input = []  ]  your_output = MUS105 (65879): 
+Computation and Music 1 
+3 students: haiziyu7, taube, shijiel2 desired_output = MUS105(65879):
 Computation and Music 1
 3 students: haiziyu7, taube, shijiel2  (0/2)
-Total score: (62/78)
+Total score: (70/78)
