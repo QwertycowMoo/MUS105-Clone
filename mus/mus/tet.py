@@ -65,7 +65,8 @@ def midi_to_hertz(midi): #done
 #  midi key number.
 def midi_to_pc(midi):
     if check_midi(midi):
-        return midi % 12
+        #will have to round the midi
+        return round(midi) % 12
     else:
         raise ValueError("The MIDI value is outside the valid MIDI range. Your input was {}".format(midi))
 
@@ -93,9 +94,79 @@ def midi_to_pc(midi):
 #  The function should signal a ValueError if the input is not a valid
 #  pitch name or produces an invalid midi key number.
 def pitch_to_midi(pitch):
-    pass
+    pitchList = list(pitch)
+    #              0      2      4   5      7      9     11  Used to find the midi key for a pitch class
+    letterList = ['C','','D','','E','F','','G','','A','','B']
+    # .upper used if the user tries to use a lowercase letter
+    if pitchList[0].upper() in letterList and pitchList[0] != '':
+
+        midi = letterList.index(pitchList[0].upper())
+
+        #checks for #, ##, b, bb, and natural and nothing else
+        if pitchList[1] == '#' or pitchList[1] == 's':
+            if pitchList[2] == '#' or pitchList[2] == 's':
+                midi += 2
+                if check_if_valid_octave(pitchList, 3):
+                    return find_octave_in_pitch(pitchList, midi)
+                else:
+                    raise ValueError("The input pitch is not a valid pitch")
+            else:
+                midi += 1
+                if check_if_valid_octave(pitchList, 2):
+                    return find_octave_in_pitch(pitchList, midi)
+                else:
+                    raise ValueError("The input pitch is not a valid pitch")
+        elif pitchList[1] == 'b' or pitchList[1] == 'f':
+            if pitchList[2] == 'b' or pitchList[2] == 'f':
+                midi -= 2
+                if check_if_valid_octave(pitchList, 3):
+                    return find_octave_in_pitch(pitchList, midi)
+                else:
+                    raise ValueError("The input pitch is not a valid pitch")
+            else:
+                midi -= 1
+                if check_if_valid_octave(pitchList, 2):
+                    return find_octave_in_pitch(pitchList, midi)
+                else:
+                    raise ValueError("The input pitch is not a valid pitch")
+        #needs to check if there are any other characters in the pitch other than numbers, uses check_if_valid_octave
+        else:
+            if check_if_valid_octave(pitchList, 1):
+                return find_octave_in_pitch(pitchList, midi)
+            else:
+                raise ValueError("The input pitch is not a valid pitch")
+    else:
+        raise ValueError("The input pitch is not a valid pitch")
+
+#checking for 00 vs 0
+#creates a string with all numbers in the pitch
+#then returns the total midi value with the appropriate amount of octaves
+#throws Value Error if outside the valid midi range
+
+def find_octave_in_pitch(pitchList, midi):
+
+    octaves = [num for num in pitchList if num.isdigit()]
+    octaves = ''.join(octaves)
+    if octaves == '':
+        raise ValueError("The input pitch is not a valid pitch")
+
+    if octaves == '00':
+        return midi
+    else:
+        midi += (int(octaves) + 1) * 12
+        if check_midi(midi):
+            return midi
+        else:
+            raise ValueError(
+                "The input pitch is outside the valid MIDI range of 0-127. Your MIDI value was {}".format(midi))
 
 
+#Checks if the rest of the pitch is a valid pitch string, specifically the octave
+def check_if_valid_octave(pitchList, preceedingChars):
+    for num in range(preceedingChars, len(pitchList)):
+        if not(str(pitchList[num]).isdigit()):
+            return False
+    return True
 ## Returns a pitch name for the given key number.
 #  If no accidental is proved in the call, white key numbers produce
 #  pitch names with no accidentals and black key numbers return C# Eb F# Ab Bb.
@@ -172,7 +243,7 @@ def check_midi(midi):
 
 if __name__ == '__main__':
     print("Testing...")
-
+    print(pitch_to_midi(""))
     # add whatever test code you want here!
 
     print("Done!")
