@@ -32,11 +32,15 @@ import math
 #  The function should raise a ValueError if the input
 #  is not a positive number or does not produce a valid
 #  midi key number.
-def hertz_to_midi(hertz):
-    pass
+def hertz_to_midi(hertz): #done
 
+    hertzConv = round(69 + math.log((hertz/440), 2) * 12)
+    if hertzConv < 128 and hertzConv >= 0:
+        return hertzConv
+    else:
+        raise ValueError("The hertz value is outside of the valid MIDI range of 0-127. Your value was {}".format(hertzConv))
 
-## Returns the hertz value for a given midi key number.
+# Returns the hertz value for a given midi key number.
 #  The formula for mapping midi key numbers into hertz is
 #  440.0 * 2 ** ((midi-69)/12).
 #  @param midi  The midi key number to convert.
@@ -44,8 +48,11 @@ def hertz_to_midi(hertz):
 #
 #  The function should raise a ValueError if the input
 #  is not a valid midi key number.
-def midi_to_hertz(midi):
-    pass
+def midi_to_hertz(midi): #done
+    if check_midi(midi):
+        return 440.0 * 2 ** ((round(midi) - 69) / 12)
+    else:
+        raise ValueError("The MIDI value is outside the valid MIDI range. Your input was {}".format(midi))
 
 
 ## Returns the pitch class integer for a given midi key number.
@@ -57,7 +64,10 @@ def midi_to_hertz(midi):
 #  The function should raise a ValueError if the input is not valid
 #  midi key number.
 def midi_to_pc(midi):
-    pass
+    if check_midi(midi):
+        return midi % 12
+    else:
+        raise ValueError("The MIDI value is outside the valid MIDI range. Your input was {}".format(midi))
 
 ## Converts a pitch name into a midi key number. The BNF grammar of a
 #  pitch string is:
@@ -99,6 +109,7 @@ def pitch_to_midi(pitch):
 #  is invalid or if the pitch requested does not support the specified
 #  accidental.
 def midi_to_pitch(midi, accidental=None):
+    #will use divmod
     pass
 
 ## Returns a pitch name for the given hertz value.
@@ -106,7 +117,12 @@ def midi_to_pitch(midi, accidental=None):
 #  @param hertz  The integer midi key number to convert.
 #  @returns A floating point hertz value.
 def hertz_to_pitch(hertz):
-    pass
+    #absolutely not done
+    midi = hertz_to_midi(hertz)
+    if(check_midi(midi)):
+        pass
+    else:
+        raise ValueError("The Hertz value is outside the valid Hertz range.")
 
 
 ## Returns a hertz value for the given pitch.
@@ -114,8 +130,14 @@ def hertz_to_pitch(hertz):
 #  @param pitch  The pitch name to convert.
 #  @returns A floating point hertz value.
 def pitch_to_hertz(pitch):
+    #pitch_to_midi()
+    #midi to hertz
     pass
 
+def check_midi(midi):
+    if midi > 127 or midi < 0:
+        return False
+    return True
 
 ###############################################################################
 # There are two methods you can use to test out code as you develop it.
@@ -150,7 +172,7 @@ def pitch_to_hertz(pitch):
 
 if __name__ == '__main__':
     print("Testing...")
-    
+
     # add whatever test code you want here!
 
     print("Done!")
