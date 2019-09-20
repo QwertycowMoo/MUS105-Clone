@@ -104,35 +104,67 @@ def pitch_to_midi(pitch):
 
         #checks for #, ##, b, bb, and natural and nothing else
         if pitchList[1] == '#' or pitchList[1] == 's':
+            #if "##"
             if pitchList[2] == '#' or pitchList[2] == 's':
                 midi += 2
+                #checks for a valid octave number, makes sure there are no other characters other than digits
                 if check_if_valid_octave(pitchList, 3):
-                    return find_octave_in_pitch(pitchList, midi)
+                    #finds the midi number
+                    return_midi = find_octave_in_pitch(pitchList, midi)
+                    #checks the midi number to see if it is in the valid midi range and raises and error if not
+                    if check_midi(return_midi):
+                        return return_midi
+                    else:
+                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
+            #if "#"
             else:
                 midi += 1
                 if check_if_valid_octave(pitchList, 2):
-                    return find_octave_in_pitch(pitchList, midi)
+                    return_midi = find_octave_in_pitch(pitchList, midi)
+                    if check_midi(return_midi):
+                        return return_midi
+                    else:
+                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
+        # if flats
         elif pitchList[1] == 'b' or pitchList[1] == 'f':
+            #if 'bb'
             if pitchList[2] == 'b' or pitchList[2] == 'f':
                 midi -= 2
                 if check_if_valid_octave(pitchList, 3):
-                    return find_octave_in_pitch(pitchList, midi)
+                    return_midi = find_octave_in_pitch(pitchList, midi)
+                    if check_midi(return_midi):
+                        return return_midi
+                    else:
+                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
+            #if 'b'
             else:
                 midi -= 1
                 if check_if_valid_octave(pitchList, 2):
-                    return find_octave_in_pitch(pitchList, midi)
+                    return_midi = find_octave_in_pitch(pitchList, midi)
+                    if check_midi(return_midi):
+                        return return_midi
+                    else:
+                        raise ValueError(
+                            "The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(
+                                return_midi))
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
         #needs to check if there are any other characters in the pitch other than numbers, uses check_if_valid_octave
         else:
             if check_if_valid_octave(pitchList, 1):
-                return find_octave_in_pitch(pitchList, midi)
+                return_midi = find_octave_in_pitch(pitchList, midi)
+                if check_midi(return_midi):
+                    return return_midi
+                else:
+                    raise ValueError(
+                        "The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(
+                            return_midi))
             else:
                 raise ValueError("The input pitch is not a valid pitch")
     else:
@@ -243,7 +275,7 @@ def check_midi(midi):
 
 if __name__ == '__main__':
     print("Testing...")
-    print(pitch_to_midi(""))
+    print(pitch_to_midi("Cb0"))
     # add whatever test code you want here!
 
     print("Done!")
