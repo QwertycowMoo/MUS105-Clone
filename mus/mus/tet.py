@@ -212,8 +212,118 @@ def check_if_valid_octave(pitchList, preceedingChars):
 #  is invalid or if the pitch requested does not support the specified
 #  accidental.
 def midi_to_pitch(midi, accidental=None):
-    #will use divmod
-    pass
+    if check_midi(midi):
+        noteNumPitch = divmod(midi, 12)
+        print(noteNumPitch)
+        octave = noteNumPitch[0]
+        if octave == 0:
+            octave = '00'
+        else:
+            octave = str(noteNumPitch[0] - 1)
+        if noteNumPitch[1] == 0:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Dbb'+ octave
+            elif accidental == '#' or accidental == 's':
+                return 'B#' + octave
+            elif accidental == None:
+                return 'C' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 1:
+            if accidental == 'b' or accidental == 'f':
+                return 'Db' + octave
+            elif accidental == '#' or accidental == 's':
+                return 'C#' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 2:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Ebb' + octave
+            elif accidental == '##' or accidental == 'ss':
+                return 'C##' + octave
+            elif accidental == None:
+                return 'D' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 3:
+            if accidental == '#' or accidental == 's':
+                return 'D#' + octave
+            elif accidental == 'b' or accidental == 'f':
+                return 'Eb' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 4:
+            if accidental == 'b' or accidental == 'f':
+                return 'Fb' + octave
+            elif accidental == '##' or accidental == 'ss':
+                return 'D##' + octave
+            elif accidental == None:
+               return 'E' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 5:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Gbb' + octave
+            elif accidental == '#' or accidental == 's':
+                return 'E#' + octave
+            elif accidental == None:
+               return 'F' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+
+        if noteNumPitch[1] == 6:
+            if accidental == 'b' or accidental == 'f':
+                return 'Gb' + octave
+            elif accidental == '#' or accidental == 's':
+                return 'F#' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 7:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Abb' + octave
+            elif accidental == '##' or accidental == 'ss':
+                return 'F##' + octave
+            elif accidental == None:
+                return 'G' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+
+        if noteNumPitch[1] == 8:
+            if accidental == 'b' or accidental == 'f':
+                return 'Ab' + octave
+            elif accidental == '#' or accidental == 's':
+                return 'G#' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+        if noteNumPitch[1] == 9:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Bbb' + octave
+            elif accidental == '##' or accidental == 'ss':
+                return 'G##' + octave
+            elif accidental == None:
+                return 'A' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+
+        if noteNumPitch[1] == 10:
+            if accidental == 'b' or accidental == 'f':
+                return 'Bb' + octave
+            elif accidental == '#' or accidental == 's':
+                return 'A#' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+
+        if noteNumPitch[1] == 11:
+            if accidental == 'b' or accidental == 'f':
+                return 'Cb' + octave
+            elif accidental == '##' or accidental == 'ss':
+                return 'A##' + octave
+            elif accidental == None:
+                return 'B' + octave
+            else:
+                raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
+    else:
+        raise ValueError("Midi value is not a valid number. Your midi value was {}".format(midi))
 
 ## Returns a pitch name for the given hertz value.
 #  Hint: first convert the hertz value to midi.
@@ -223,7 +333,7 @@ def hertz_to_pitch(hertz):
     #absolutely not done
     midi = hertz_to_midi(hertz)
     if(check_midi(midi)):
-        pass
+        return midi_to_pitch(midi)
     else:
         raise ValueError("The Hertz value is outside the valid Hertz range.")
 
@@ -233,9 +343,8 @@ def hertz_to_pitch(hertz):
 #  @param pitch  The pitch name to convert.
 #  @returns A floating point hertz value.
 def pitch_to_hertz(pitch):
-    #pitch_to_midi()
-    #midi to hertz
-    pass
+    return midi_to_hertz(pitch_to_midi(pitch))
+
 
 def check_midi(midi):
     if midi > 127 or midi < 0:
@@ -276,6 +385,7 @@ def check_midi(midi):
 if __name__ == '__main__':
     print("Testing...")
     print(pitch_to_midi("Cb0"))
+    print(midi_to_pitch(pitch_to_midi("C4")))
     # add whatever test code you want here!
 
     print("Done!")
