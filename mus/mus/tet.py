@@ -96,6 +96,8 @@ def midi_to_pc(midi):
 def pitch_to_midi(pitch):
     pitchList = list(pitch)
     #              0      2      4   5      7      9     11  Used to find the midi key for a pitch class
+    # just use a dictionary dummy
+    # dictionary.get('key','if not found')
     letterList = ['C','','D','','E','F','','G','','A','','B']
     # .upper used if the user tries to use a lowercase letter
     if pitchList[0].upper() in letterList and pitchList[0] != '':
@@ -212,6 +214,8 @@ def check_if_valid_octave(pitchList, preceedingChars):
 #  is invalid or if the pitch requested does not support the specified
 #  accidental.
 def midi_to_pitch(midi, accidental=None):
+    #can redo using a dictionary
+    #or do a 3 lists, pitch class, accidental, and octave
     if check_midi(midi):
         noteNumPitch = divmod(midi, 12)
         print(noteNumPitch)
@@ -232,7 +236,7 @@ def midi_to_pitch(midi, accidental=None):
         if noteNumPitch[1] == 1:
             if accidental == 'b' or accidental == 'f':
                 return 'Db' + octave
-            elif accidental == '#' or accidental == 's':
+            elif accidental == '#' or accidental == 's' or accidental == None:
                 return 'C#' + octave
             else:
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
@@ -248,7 +252,7 @@ def midi_to_pitch(midi, accidental=None):
         if noteNumPitch[1] == 3:
             if accidental == '#' or accidental == 's':
                 return 'D#' + octave
-            elif accidental == 'b' or accidental == 'f':
+            elif accidental == 'b' or accidental == 'f' or accidental == None:
                 return 'Eb' + octave
             else:
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
@@ -274,7 +278,7 @@ def midi_to_pitch(midi, accidental=None):
         if noteNumPitch[1] == 6:
             if accidental == 'b' or accidental == 'f':
                 return 'Gb' + octave
-            elif accidental == '#' or accidental == 's':
+            elif accidental == '#' or accidental == 's' or accidental == None:
                 return 'F#' + octave
             else:
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
@@ -289,7 +293,7 @@ def midi_to_pitch(midi, accidental=None):
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
 
         if noteNumPitch[1] == 8:
-            if accidental == 'b' or accidental == 'f':
+            if accidental == 'b' or accidental == 'f' or accidental == None:
                 return 'Ab' + octave
             elif accidental == '#' or accidental == 's':
                 return 'G#' + octave
@@ -306,7 +310,7 @@ def midi_to_pitch(midi, accidental=None):
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
 
         if noteNumPitch[1] == 10:
-            if accidental == 'b' or accidental == 'f':
+            if accidental == 'b' or accidental == 'f' or accidental == None:
                 return 'Bb' + octave
             elif accidental == '#' or accidental == 's':
                 return 'A#' + octave
