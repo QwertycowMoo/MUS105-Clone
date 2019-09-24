@@ -49,7 +49,7 @@ def hertz_to_midi(hertz): #done
 #  The function should raise a ValueError if the input
 #  is not a valid midi key number.
 def midi_to_hertz(midi): #done
-    if check_midi(midi):
+    if check_midi(midi) and isinstance(midi, int):
         return 440.0 * 2 ** ((round(midi) - 69) / 12)
     else:
         raise ValueError("The MIDI value is outside the valid MIDI range. Your input was {}".format(midi))
@@ -94,17 +94,25 @@ def midi_to_pc(midi):
 #  The function should signal a ValueError if the input is not a valid
 #  pitch name or produces an invalid midi key number.
 def pitch_to_midi(pitch):
-    pitchList = list(pitch)
+    if isinstance(pitch, str):
+        pitchList = list(pitch)
+    else:
+        raise ValueError("Your input pitch is not a valid pitch")
     #              0      2      4   5      7      9     11  Used to find the midi key for a pitch class
     # just use a dictionary dummy
     # dictionary.get('key','if not found')
-    letterList = ['C','','D','','E','F','','G','','A','','B']
+    letterDict = {'C':0,
+                  'D':2,
+                  'E':4,
+                  'F':5,
+                  'G':7,
+                  'A':9,
+                  'B':11,}
+
     # .upper used if the user tries to use a lowercase letter
-    if pitchList[0].upper() in letterList and pitchList[0] != '':
-
-        midi = letterList.index(pitchList[0].upper())
-
-        #checks for #, ##, b, bb, and natural and nothing else
+    midi = letterDict.get(pitchList[0],"Not Found")
+    if midi != "Not Found":
+    #checks for #, ##, b, bb, and natural and nothing else
         if pitchList[1] == '#' or pitchList[1] == 's':
             #if "##"
             if pitchList[2] == '#' or pitchList[2] == 's':
@@ -112,23 +120,16 @@ def pitch_to_midi(pitch):
                 #checks for a valid octave number, makes sure there are no other characters other than digits
                 if check_if_valid_octave(pitchList, 3):
                     #finds the midi number
-                    return_midi = find_octave_in_pitch(pitchList, midi)
+                    return find_octave_in_pitch(pitchList, midi)
                     #checks the midi number to see if it is in the valid midi range and raises and error if not
-                    if check_midi(return_midi):
-                        return return_midi
-                    else:
-                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
+
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
             #if "#"
             else:
                 midi += 1
                 if check_if_valid_octave(pitchList, 2):
-                    return_midi = find_octave_in_pitch(pitchList, midi)
-                    if check_midi(return_midi):
-                        return return_midi
-                    else:
-                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
+                    return find_octave_in_pitch(pitchList, midi)
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
         # if flats
@@ -137,36 +138,22 @@ def pitch_to_midi(pitch):
             if pitchList[2] == 'b' or pitchList[2] == 'f':
                 midi -= 2
                 if check_if_valid_octave(pitchList, 3):
-                    return_midi = find_octave_in_pitch(pitchList, midi)
-                    if check_midi(return_midi):
-                        return return_midi
-                    else:
-                        raise ValueError("The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(return_midi))
+                    return find_octave_in_pitch(pitchList, midi)
+
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
             #if 'b'
             else:
                 midi -= 1
                 if check_if_valid_octave(pitchList, 2):
-                    return_midi = find_octave_in_pitch(pitchList, midi)
-                    if check_midi(return_midi):
-                        return return_midi
-                    else:
-                        raise ValueError(
-                            "The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(
-                                return_midi))
+                    return find_octave_in_pitch(pitchList, midi)
+
                 else:
                     raise ValueError("The input pitch is not a valid pitch")
         #needs to check if there are any other characters in the pitch other than numbers, uses check_if_valid_octave
         else:
             if check_if_valid_octave(pitchList, 1):
-                return_midi = find_octave_in_pitch(pitchList, midi)
-                if check_midi(return_midi):
-                    return return_midi
-                else:
-                    raise ValueError(
-                        "The input pitch is outside the valid MIDI range. Your pitch is MIDI value {}".format(
-                            return_midi))
+                return find_octave_in_pitch(pitchList, midi)
             else:
                 raise ValueError("The input pitch is not a valid pitch")
     else:
@@ -186,14 +173,15 @@ def find_octave_in_pitch(pitchList, midi):
 
     if octaves == '00':
         return midi
-    else:
+    elif len(octaves) < 2:
         midi += (int(octaves) + 1) * 12
         if check_midi(midi):
             return midi
         else:
             raise ValueError(
                 "The input pitch is outside the valid MIDI range of 0-127. Your MIDI value was {}".format(midi))
-
+    else:
+        raise ValueError("The input pitch is not a valid pitch")
 
 #Checks if the rest of the pitch is a valid pitch string, specifically the octave
 def check_if_valid_octave(pitchList, preceedingChars):
@@ -216,9 +204,12 @@ def check_if_valid_octave(pitchList, preceedingChars):
 def midi_to_pitch(midi, accidental=None):
     #can redo using a dictionary
     #or do a 3 lists, pitch class, accidental, and octave
+    keyList = ['C','D','E','F','G','A','B']
+    accidentalList = ['bb','ff','b','f','','#','s','##','ss']
+    octaveList = ['00','0','1','2','3','4','5','6','7','8','9']
+    #still need to check how the edge case of B# works
     if check_midi(midi):
         noteNumPitch = divmod(midi, 12)
-        print(noteNumPitch)
         octave = noteNumPitch[0]
         if octave == 0:
             octave = '00'
@@ -228,7 +219,7 @@ def midi_to_pitch(midi, accidental=None):
             if accidental == 'bb' or accidental == 'ff':
                 return 'Dbb'+ octave
             elif accidental == '#' or accidental == 's':
-                return 'B#' + octave
+                return 'B#' + str((int(octave) - 1))
             elif accidental == None:
                 return 'C' + octave
             else:
@@ -310,6 +301,8 @@ def midi_to_pitch(midi, accidental=None):
                 raise ValueError("Pitch requested is not valid based on the midi number of {}".format(midi))
 
         if noteNumPitch[1] == 10:
+            if accidental == 'bb' or accidental == 'ff':
+                return 'Cbb' + str(int(octave) + 1)
             if accidental == 'b' or accidental == 'f' or accidental == None:
                 return 'Bb' + octave
             elif accidental == '#' or accidental == 's':
