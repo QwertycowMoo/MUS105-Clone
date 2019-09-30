@@ -34,34 +34,44 @@ class Ratio:
     #  The constructor should raise a TypeError if the num or den is not a integer,
     #  string or float and a DivisionByZero error if the denominator is 0.
     def __init__(self, num, den=None):
-        self.num = num
-        self.den = den
+
         if den == None:
             if isinstance(num, str):
 
                 strRatio = num.split("/")
-                if isinstance(strRatio[0], int) and isinstance(strRatio[1]):
-                    self.num = strRatio[0]
-                    self.den = strRatio[1]
-
+                print(strRatio)
+                try:
+                    self.num = int(strRatio[0])
+                    self.den = int(strRatio[1])
+                    if self.num < 0 and self.den < 0:
+                        self.num = -int(strRatio[0])
+                        self.den = -int(strRatio[1])
+                except ValueError:
+                    raise ValueError("The Ratio is not a valid ratio")
             if isinstance(num, float):
-                tupRatio = num.to_integer_ratio()
+                tupRatio = num.as_integer_ratio()
                 self.num = tupRatio[0]
                 self.den = tupRatio[1]
             if isinstance(num, int):
                 self.num = num
                 self.den = 1
-    def formatRatio(self, num, den):
-        pass
+        else:
+            if isinstance(num, int) and isinstance(den, int):
+                self.num = num // math.gcd(num, den)
+                self.den = den // math.gcd(num, den)
+            else:
+                raise ValueError("The Ratio does not have valid inputs. Your inputs were {} and {}".format(num, den))
+
+
     ## Returns a string showing the ratio's fraction and the hex
     #  hex value of the ratio's memory address.
     #  Example: <Ratio: 1/4 0x10610d2b0>
     def __str__(self):
-        pass
+        return "<Ratio: {}/{} {}>".format(self.num, self.den, hex(id(self)))
 
     ## Returns a string expression that will evaluate to this ratio.
     def __repr__(self):
-        pass
+        return "Ratio({},{})".format(self.num, self.den)
 
     ## Implements Ratio*Ratio, Ratio*int and Ratio*float.
     # @param other An Ratio, int or float.
@@ -69,7 +79,14 @@ class Ratio:
     #
     # A TypeError should be raised if other is not a Ratio, int or float.
     def __mul__(self, other):
-        pass
+        if isinstance(other, Ratio):
+            return Ratio(self.num * other.num, self.den * other.den)
+        if isinstance(other, int):
+            return Ratio(self.num * other, self.den)
+        if isinstance(other, float):
+            return other * self.num / self.den
+        else:
+            raise TypeError("You can only multiply by a Ratio, integer, or float")
 
     ## Implements right side multiplication by calling __mul__
     #__rmul__ = __mul__
@@ -80,24 +97,47 @@ class Ratio:
     #
     # A TypeError should be raised if other is not a Ratio, int or float.
     def __truediv__(self, other):
-        pass
+        if isinstance(other, Ratio):
+            return Ratio(self.num * other.den, self.den * other.num)
+        if isinstance(other, int):
+            return Ratio(self.num / other, self.den)
+        if isinstance(other, float):
+            return (self.num / other) / self.den
+        else:
+            raise TypeError("You can only multiply by a Ratio, integer, or float")
 
     ## Implements int / Ratio or float / Ratio (right side division).
     #  @returns A new Ratio.
     def __rtruediv__(self, other):
-        pass
+        if isinstance(other, Ratio):
+            return Ratio(self.den * other.num, self.num * other.den)
+        if isinstance(other, int):
+            return other / self.num * self.den
+        if isinstance(other, float):
+            return other / self.num * self.den
+        else:
+            raise TypeError("You cannot divide {} by a Ratio".format(other))
 
     ## Implements 1 / ratio (reciprocal).
     #  @returns A new Ratio.
     def __invert__(self):
-        pass
+        return Ratio(self.den, self.num)
 
     ## Implements Ratio + Ratio, Ratio + int and Ratio + float. In order to
     #  add two ratios their denominators must be converted to the
     #  least common multiple of the current denominator. See: lcm().
     #  @returns A new Ratio.
     def __add__(self, other):
-        pass
+        if isinstance(other, Ratio):
+            lcm = Ratio.lcm(self.den, other.den)
+            return Ratio((self.num * other.den) + (other.num * self.den), self.den * other.den)
+        if isinstance(other, int):
+            return Ratio(self.num + (other * self.den), self.den)
+        if isinstance(other, float):
+            return Ratio((self.num / self.den) + other)
+        else:
+            raise TypeError("You cannot add {} with a Ratio".format(other))
+
 
     ## Implements right side addition by calling __add__.
     #  @returns A new Ratio.
@@ -106,13 +146,21 @@ class Ratio:
     ## Implements -ratio (negation).
     #  @returns A new Ratio.
     def __neg__(self):
-        pass
+        return Ratio(-self.num, self.den)
 
     ## Implements ratio - ratio, ratio - int and ratio - float.
     #  @returns A new Ratio.
     def __sub__(self, other):
-        return self.__add__(other.__neg__())
-        pass
+        if isinstance(other, Ratio):
+            return self.__add__(other.__neg__())
+        if isinstance(other, int):
+            return self.__add__(other.__neg__())
+        if isinstance(other, float):
+            return self.__add__(other.__neg__())
+        else:
+            raise TypeError("You cannot subtract a Ratio with your input, {}".format(other))
+
+
 
     ## Implements int - ratio and float-ratio (right side subtraction).
     #  @returns A new Ratio.
@@ -193,7 +241,7 @@ class Ratio:
 
     ## Returns 1/ratio.
     def reciprocal(self):
-        pass
+        return Ratio(self.den, self.num)
 
     ## Returns the musical 'dotted' value of the ratio, e.g. 1/4 with
     #  one dot is 1/4 + 1/8 = 3/8.
@@ -240,4 +288,5 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio("12,4")
+    yeet = Ratio("1/7")
+    print(Ratio(2,5) )
