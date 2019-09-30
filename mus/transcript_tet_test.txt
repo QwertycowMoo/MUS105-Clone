@@ -96,4 +96,10 @@
       [  input = E5#  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Bbbb1  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = F000  ]  your_output = $exception$  desired_output = $exception$  (2/2)
-Total score: (170/170)
+Total raw score: (170/170)
+
+----------------------
+Base score (if you do nothing but just turn in the starter code): 8
+Extra credit (if applicable): 0
+Adjusted score (Final): 162/162
+
