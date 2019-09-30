@@ -38,13 +38,21 @@ class Ratio:
         self.den = den
         if den == None:
             if isinstance(num, str):
-                pass
+
+                strRatio = num.split("/")
+                if isinstance(strRatio[0], int) and isinstance(strRatio[1]):
+                    self.num = strRatio[0]
+                    self.den = strRatio[1]
+
             if isinstance(num, float):
-                pass
+                tupRatio = num.to_integer_ratio()
+                self.num = tupRatio[0]
+                self.den = tupRatio[1]
             if isinstance(num, int):
-                num = 
-
-
+                self.num = num
+                self.den = 1
+    def formatRatio(self, num, den):
+        pass
     ## Returns a string showing the ratio's fraction and the hex
     #  hex value of the ratio's memory address.
     #  Example: <Ratio: 1/4 0x10610d2b0>
@@ -232,4 +240,4 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    pass
+    yeet = Ratio("12,4")
