@@ -36,6 +36,13 @@ class Ratio:
     def __init__(self, num, den=None):
         self.num = num
         self.den = den
+        if den == None:
+            if isinstance(num, str):
+                pass
+            if isinstance(num, float):
+                pass
+            if isinstance(num, int):
+                num = 
 
 
     ## Returns a string showing the ratio's fraction and the hex
