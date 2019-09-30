@@ -1,6 +1,8 @@
 __all__ = [
-    'tet'
+    'tet',
+    'ratio'
 ]
 
 from .tet import *
+from .ratio import *
 
