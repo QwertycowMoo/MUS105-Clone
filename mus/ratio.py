@@ -34,7 +34,9 @@ class Ratio:
     #  The constructor should raise a TypeError if the num or den is not a integer,
     #  string or float and a DivisionByZero error if the denominator is 0.
     def __init__(self, num, den=None):
-        pass
+        self.num = num
+        self.den = den
+
 
     ## Returns a string showing the ratio's fraction and the hex
     #  hex value of the ratio's memory address.
@@ -156,13 +158,19 @@ class Ratio:
     # a negative value if self is less than other and a positive value if self is
     # GEQ other. Given two ratios the comparison is (num1*den2) - (num2/den1)
     def compare(self, other):
-        pass
+        if isinstance(other, Ratio):
+            #basically only taking the top part of the fraction comparison
+            return (self.num * other.den) - (other.num * self.den)
+        else:
+            raise ValueError("What is being compared to is not a Ratio!")
 
     ## A static method that returns the lowest common multiple of two integers
     # a and b. lcm be calculated using gcd(): (a*b) // gcd(a,b)
     @staticmethod
     def lcm(a, b):
-        pass
+        return (a*b) // math.gcd(a,b)
+
+
 
     ## Returns the string name of the ratio 'num/den'.
     def string(self):
