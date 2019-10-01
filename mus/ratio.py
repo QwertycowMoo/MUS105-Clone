@@ -129,7 +129,6 @@ class Ratio:
     #  @returns A new Ratio.
     def __add__(self, other):
         if isinstance(other, Ratio):
-            lcm = Ratio.lcm(self.den, other.den)
             return Ratio((self.num * other.den) + (other.num * self.den), self.den * other.den)
         if isinstance(other, int):
             return Ratio(self.num + (other * self.den), self.den)
@@ -166,12 +165,28 @@ class Ratio:
     #  @returns A new Ratio.
     def __rsub__(self, other):
         # other is the LEFT side non-ratio operand.
-        pass
+
+        if isinstance(other, int):
+            return Ratio((other * self.den) - self.num, self.den)
+        if isinstance(other, float):
+            return Ratio(other.as_integer_ratio()[0], other.as_integer_ratio()[1]).__add__(self.__neg__())
+        else:
+            raise TypeError("You cannot subtract a Ratio with your input, {}".format(other))
 
     ## Implements ratio % ratio.
     #  @returns A new Ratio.
     def __mod__(self, other):
-        pass
+        if isinstance(other, Ratio) or isinstance(other, int) or isinstance(other, float):
+            modRatio = Ratio(self.num, self.den)
+            while modRatio.num > 0:
+                modRatio = modRatio.__sub__(other)
+            if modRatio.num == 0:
+                return modRatio
+            else:
+                return modRatio.__add__(other)
+        else:
+            raise TypeError("You cannot use modulo with your input {}".format(other))
+
 
 
     ## Implements Ratio**int, Ratio**float, and Ratio**Ratio.
@@ -179,16 +194,32 @@ class Ratio:
     #  a Ratio should be returned. Otherwise for Ratio or float
     #  exponents a float should be returned. See: math.pow().
     def __pow__(self, other):
-        pass
-
+        if isinstance(other, int):
+            expRatio = Ratio(self.num, self.den)
+            if other > 0:
+                for i in range(other - 1):
+                    expRatio *= self
+                return expRatio
+            elif other < 0:
+                for i in range(abs(other) - 1):
+                    expRatio /= self
+                return expRatio
+            elif other == 0:
+                return Ratio(1,1)
+        elif isinstance(other, Ratio) or isinstance(other, float):
+            return math.pow(self.num / self.den, other)
+        else:
+            raise ValueError("You cannot raise a Ratio by {}".format(other))
     ## Implements an int**ratio or float**ratio
     #  @param other  The base integer or float.
     #  @returns A floating point number.
     #
     #  The function can be implemented using math.pow().
     def __rpow__(self, other):
-        pass
-
+        if isinstance(other, int) or isinstance(other, float):
+            return math.pow(other, self.num/self.den)
+        else:
+            raise ValueError("You cannot raise {} by a Ratio".format(other))
     ## Implements Ratio < Ratio, Ratio < int, Ratio < float. See: compare().
     def __lt__(self, other):
         pass
@@ -288,5 +319,5 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio("1/7")
-    print(Ratio(2,5) )
+    yeet = Ratio("1/4")
+
