@@ -68,6 +68,12 @@ class Ratio:
                 #negatives have to be in the numerator: need to fix
                 self.num = num // math.gcd(num, den)
                 self.den = den // math.gcd(num, den)
+                if self.num < 0 and self.den < 0:
+                    self.num = -self.num
+                    self.den = -self.den
+                elif self.num >= 0 and self.den < 0:
+                    self.num = -self.num
+                    self.den = -self.den
             else:
                 raise ValueError("The Ratio does not have valid inputs. Your inputs were {} and {}".format(num, den))
 
@@ -178,7 +184,7 @@ class Ratio:
         if isinstance(other, int):
             return Ratio((other * self.den) - self.num, self.den)
         if isinstance(other, float):
-            return Ratio(other.as_integer_ratio()[0], other.as_integer_ratio()[1]).__add__(self.__neg__())
+            return other - (self.num / self.den)
         else:
             raise TypeError("You cannot subtract a Ratio with your input, {}".format(other))
 
@@ -215,7 +221,9 @@ class Ratio:
                 return expRatio
             elif other == 0:
                 return Ratio(1,1)
-        elif isinstance(other, Ratio) or isinstance(other, float):
+        elif isinstance(other, Ratio):
+            return math.pow(self.num / self.den, other.num / other.den)
+        elif isinstance(other, float):
             return math.pow(self.num / self.den, other)
         else:
             raise ValueError("You cannot raise a Ratio by {}".format(other))
@@ -350,7 +358,7 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio('3/4')
+    yeet = Ratio('7/4')
     print(yeet)
-    print(yeet - 1.0)
+    print(Ratio(-12, -11).reciprocal())
 
