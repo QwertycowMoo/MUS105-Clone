@@ -43,13 +43,15 @@ class Ratio:
                 try:
                     self.num = int(strRatio[0]) / math.gcd(int(strRatio[0]), int(strRatio[1]))
                     self.den = int(strRatio[1]) / math.gcd(int(strRatio[0]), int(strRatio[1]))
+                    self.num = int(self.num)
+                    self.den = int(self.den)
                     #negatives have to be in numerator: need to fix
                     if self.num < 0 and self.den < 0:
-                        self.num = -int(self.num)
-                        self.den = -int(self.den)
+                        self.num = -self.num
+                        self.den = -self.den
                     elif self.num >= 0 and self.den < 0:
-                        self.num = -int(self.num)
-                        self.den = -int(self.den)
+                        self.num = -self.num
+                        self.den = -self.den
                 except ValueError:
                     raise ValueError("The Ratio is not a valid ratio")
             if isinstance(num, float):
@@ -61,6 +63,8 @@ class Ratio:
                 self.den = 1
         else:
             if isinstance(num, int) and isinstance(den, int):
+                if den == 0:
+                    raise ZeroDivisionError("You cannot make a ratio with 0 in the denominator")
                 #negatives have to be in the numerator: need to fix
                 self.num = num // math.gcd(num, den)
                 self.den = den // math.gcd(num, den)
@@ -94,7 +98,7 @@ class Ratio:
             raise TypeError("You can only multiply by a Ratio, integer, or float")
 
     ## Implements right side multiplication by calling __mul__
-    #__rmul__ = __mul__
+    __rmul__ = __mul__
 
     ## Implements Ratio/Ratio, Ratio/int and Ratio/float.
     # @param other A Ratio, int or float.
@@ -105,7 +109,7 @@ class Ratio:
         if isinstance(other, Ratio):
             return Ratio(self.num * other.den, self.den * other.num)
         if isinstance(other, int):
-            return Ratio(self.num / other, self.den)
+            return Ratio(self.num, self.den * other)
         if isinstance(other, float):
             return (self.num / other) / self.den
         else:
@@ -117,7 +121,7 @@ class Ratio:
         if isinstance(other, Ratio):
             return Ratio(self.den * other.num, self.num * other.den)
         if isinstance(other, int):
-            return other / self.num * self.den
+            return Ratio(other / self.num * self.den)
         if isinstance(other, float):
             return other / self.num * self.den
         else:
@@ -346,7 +350,7 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio('2/10')
+    yeet = Ratio('3/4')
     print(yeet)
-    print(4 + yeet)
+    print(yeet - 1.0)
 
