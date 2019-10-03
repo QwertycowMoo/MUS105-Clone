@@ -39,17 +39,17 @@ class Ratio:
             if isinstance(num, str):
 
                 strRatio = num.split("/")
-                print(strRatio)
+
                 try:
-                    self.num = int(strRatio[0])
-                    self.den = int(strRatio[1])
+                    self.num = int(strRatio[0]) / math.gcd(int(strRatio[0]), int(strRatio[1]))
+                    self.den = int(strRatio[1]) / math.gcd(int(strRatio[0]), int(strRatio[1]))
                     #negatives have to be in numerator: need to fix
                     if self.num < 0 and self.den < 0:
-                        self.num = -self.num
-                        self.den = -self.den
+                        self.num = -int(self.num)
+                        self.den = -int(self.den)
                     elif self.num >= 0 and self.den < 0:
-                        self.num = -self.num
-                        self.den = -self.den
+                        self.num = -int(self.num)
+                        self.den = -int(self.den)
                 except ValueError:
                     raise ValueError("The Ratio is not a valid ratio")
             if isinstance(num, float):
@@ -138,7 +138,7 @@ class Ratio:
         if isinstance(other, int):
             return Ratio(self.num + (other * self.den), self.den)
         if isinstance(other, float):
-            return Ratio((self.num / self.den) + other)
+            return other + (self.num/self.den)
         else:
             raise TypeError("You cannot add {} with a Ratio".format(other))
 
@@ -346,7 +346,7 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio("-1/-4")
-    print(yeet.__repr__())
+    yeet = Ratio('2/10')
+    print(yeet)
     print(4 + yeet)
 
