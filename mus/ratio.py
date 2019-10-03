@@ -43,9 +43,13 @@ class Ratio:
                 try:
                     self.num = int(strRatio[0])
                     self.den = int(strRatio[1])
+                    #negatives have to be in numerator: need to fix
                     if self.num < 0 and self.den < 0:
-                        self.num = -int(strRatio[0])
-                        self.den = -int(strRatio[1])
+                        self.num = -self.num
+                        self.den = -self.den
+                    elif self.num >= 0 and self.den < 0:
+                        self.num = -self.num
+                        self.den = -self.den
                 except ValueError:
                     raise ValueError("The Ratio is not a valid ratio")
             if isinstance(num, float):
@@ -57,6 +61,7 @@ class Ratio:
                 self.den = 1
         else:
             if isinstance(num, int) and isinstance(den, int):
+                #negatives have to be in the numerator: need to fix
                 self.num = num // math.gcd(num, den)
                 self.den = den // math.gcd(num, den)
             else:
@@ -67,11 +72,11 @@ class Ratio:
     #  hex value of the ratio's memory address.
     #  Example: <Ratio: 1/4 0x10610d2b0>
     def __str__(self):
-        return "<Ratio: {}/{} {}>".format(self.num, self.den, hex(id(self)))
+        return '<Ratio: {}/{} {}>'.format(self.num, self.den, hex(id(self)))
 
     ## Returns a string expression that will evaluate to this ratio.
     def __repr__(self):
-        return "Ratio({},{})".format(self.num, self.den)
+        return f'Ratio("{self.string()}")'
 
     ## Implements Ratio*Ratio, Ratio*int and Ratio*float.
     # @param other An Ratio, int or float.
@@ -140,7 +145,7 @@ class Ratio:
 
     ## Implements right side addition by calling __add__.
     #  @returns A new Ratio.
-    #__radd__ = __add__
+    __radd__ = __add__
 
     ## Implements -ratio (negation).
     #  @returns A new Ratio.
@@ -222,27 +227,45 @@ class Ratio:
             raise ValueError("You cannot raise {} by a Ratio".format(other))
     ## Implements Ratio < Ratio, Ratio < int, Ratio < float. See: compare().
     def __lt__(self, other):
-        pass
+        if self.compare(other) < 0:
+            return True
+        else:
+            return False
 
     ## Implements Ratio <= Ratio, Ratio <= int, Ratio <= float. See: compare().
     def __le__(self, other):
-        pass
+        if self.compare(other) <= 0:
+            return True
+        else:
+            return False
 
     ## Implements Ratio <= Ratio, Ratio <= int, Ratio <= float. See: compare().
     def __eq__(self, other):
-        pass
+        if self.compare(other) == 0:
+            return True
+        else:
+            return False
 
     ## Implements Ratio != Ratio, Ratio != int, Ratio != float. See: compare().
     def __ne__(self, other):
-        pass
+        if self.compare(other) == 0:
+            return False
+        else:
+            return True
 
     ## Implements Ratio >= Ratio, Ratio >= int, Ratio >= float. See: compare().
     def __ge__(self, other):
-        pass
+        if self.compare(other) >= 0:
+            return True
+        else:
+            return False
 
     ## Implements Ratio>Ratio, Ratio > int, Ratio > float. See: compare().
     def __gt__(self, other):
-        pass
+        if self.compare(other) > 0:
+            return True
+        else:
+            return False
 
     ## Returns a single integer hash value for the ratio: (num<<16 + den)
     def __hash__(self):
@@ -255,8 +278,12 @@ class Ratio:
         if isinstance(other, Ratio):
             #basically only taking the top part of the fraction comparison
             return (self.num * other.den) - (other.num * self.den)
+        elif isinstance(other, int):
+            pass
+        elif isinstance(other, float):
+            return (self.num / self.den) - other
         else:
-            raise ValueError("What is being compared to is not a Ratio!")
+            raise ValueError("What is being compared to cannot be compared to a Ratio!")
 
     ## A static method that returns the lowest common multiple of two integers
     # a and b. lcm be calculated using gcd(): (a*b) // gcd(a,b)
@@ -268,7 +295,7 @@ class Ratio:
 
     ## Returns the string name of the ratio 'num/den'.
     def string(self):
-        pass
+        return f"{self.num}/{self.den}"
 
     ## Returns 1/ratio.
     def reciprocal(self):
@@ -319,5 +346,7 @@ class Ratio:
 
 
 if __name__ == '__main__':
-    yeet = Ratio("1/4")
+    yeet = Ratio("-1/-4")
+    print(yeet.__repr__())
+    print(4 + yeet)
 
