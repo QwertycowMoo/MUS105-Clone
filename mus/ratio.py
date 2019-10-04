@@ -8,7 +8,7 @@
 #  Ratios are compared and combined using the standard math operators.
 
 import math
-
+import decimal
 
 class Ratio:
 
@@ -55,7 +55,8 @@ class Ratio:
                 except ValueError:
                     raise ValueError("The Ratio is not a valid ratio")
             if isinstance(num, float):
-                tupRatio = num.as_integer_ratio()
+                num = str(num)
+                tupRatio = decimal.Decimal(num).as_integer_ratio()
                 self.num = tupRatio[0]
                 self.den = tupRatio[1]
             if isinstance(num, int):
@@ -281,7 +282,7 @@ class Ratio:
 
     ## Returns a single integer hash value for the ratio: (num<<16 + den)
     def __hash__(self):
-        pass
+        return hex(id(self))
 
     ## Helper method implements ratio comparison. Returns 0 if the ratios are equal,
     # a negative value if self is less than other and a positive value if self is
@@ -301,7 +302,7 @@ class Ratio:
     # a and b. lcm be calculated using gcd(): (a*b) // gcd(a,b)
     @staticmethod
     def lcm(a, b):
-        return (a*b) // math.gcd(a,b)
+        return (a*b) // math.gcd(a, b)
 
 
 
@@ -321,7 +322,15 @@ class Ratio:
 
     # The method should raise a ValueError if dots is not a positive integer.
     def dotted(self, dots=1):
-        pass
+        if dots > 0:
+            totalRatio = self
+            for i in range(0 , dots):
+                totalRatio = totalRatio / 2
+                self += totalRatio
+
+            return self
+        else:
+            raise ValueError("You cannot have a negative or zero dot value")
 
     ## Returns a list of num sub-divisions (metric 'tuples') that sum to
     #  value of ratio*num.
@@ -334,7 +343,14 @@ class Ratio:
     #  which sum to Ratio(1,4).  Ratio(1,4).tuplets(3,2) returns three
     #  tuplets [1/6, 1/6, 1/6] which sum to ratio*2, or 1/2.
     def tuplets(self, num, intimeof=1):
-        pass
+        if isinstance(num, int) and num > 0 and intimeof > 0:
+            totalRatio = self * intimeof
+            tupletList = []
+            for i in range(num):
+                tupletList.append(totalRatio / num)
+            return tupletList
+        else:
+            raise ValueError("Invalid inputs")
 
     ## Returns the ratio representing num divisions of this ratio.
     #  @param num  The number to divide this ratio by.
@@ -342,23 +358,25 @@ class Ratio:
     #
     #  Example:  Ratio(1,4).tup(5) is 1/20
     def tup(self, num):
-        pass
+        return self / num;
 
     ## Returns the ratio as a floating point number.
     def float(self):
-        pass
+        return self.num / self.den
 
     ## Converts the ratio to floating point seconds according to a
     #  given tempo and beat:
     #  @param tempo  The tempo in beats per minute. Defaults to 60.
     #  @param beat  A ratio representing the beat. Defaults to 1/4 (quarter note).
     def seconds(self, tempo=60, beat=None):
-        pass
-
+        if beat is None:
+            beat = Ratio(1/4)
+        newRatio = self / beat
+        return (newRatio.num / newRatio.den) / (tempo / 60)
 
 
 if __name__ == '__main__':
-    yeet = Ratio('7/4')
+    yeet = Ratio(3,4)
     print(yeet)
-    print(Ratio(-12, -11).reciprocal())
+    print(yeet.seconds(110, Ratio(1,8)))
 
