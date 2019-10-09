@@ -1,8 +1,10 @@
 __all__ = [
     'tet',
-    'ratio'
+    'ratio',
+    'pitch'
 ]
 
 from .tet import *
 from .ratio import *
+from .pitch import *
 

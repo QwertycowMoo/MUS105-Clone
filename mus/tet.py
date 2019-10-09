@@ -94,6 +94,14 @@ def midi_to_pc(midi):
 #  The function should signal a ValueError if the input is not a valid
 #  pitch name or produces an invalid midi key number.
 def pitch_to_midi(pitch):
+    letterDict = {'C': 0,
+                  'D': 2,
+                  'E': 4,
+                  'F': 5,
+                  'G': 7,
+                  'A': 9,
+                  'B': 11, }
+
     if isinstance(pitch, str):
         pitchList = list(pitch)
     else:
@@ -101,13 +109,7 @@ def pitch_to_midi(pitch):
     #              0      2      4   5      7      9     11  Used to find the midi key for a pitch class
     # just use a dictionary dummy
     # dictionary.get('key','if not found')
-    letterDict = {'C':0,
-                  'D':2,
-                  'E':4,
-                  'F':5,
-                  'G':7,
-                  'A':9,
-                  'B':11,}
+
 
     # .upper used if the user tries to use a lowercase letter
     midi = letterDict.get(pitchList[0],"Not Found")
