@@ -35,11 +35,23 @@ class Pitch:
                   4: 'G',
                   5: 'A',
                   6: 'B'}
-    accDict = {0: 'ff',
-               1: 'f',
+    accDict = {0: 'bb',
+               1: 'b',
                2: '',
-               3: 's',
-               4: 'ss'}
+               3: '#',
+               4: '##'}
+    octDict = {0: '00',
+               1: '0',
+               2: '1',
+               3: '2',
+               4: '3',
+               5: '4',
+               6: '5',
+               7: '6',
+               8: '7',
+               9: '8',
+               10: '9'}
+
 
     pnums = IntEnum('Pnum', [('Cff', 0b00000000),
                              ('Cf', 0b00000001),
@@ -76,7 +88,6 @@ class Pitch:
                              ('B', 0b01110010),
                              ('Bs', 0b01110011),
                              ('Bss', 0b01110100)])
-
 
     ## Creates a Pitch from a string or list, if neither is provided
     #  an empty Pitch is returned.
@@ -157,13 +168,15 @@ class Pitch:
             else:
                 self.accidental = 0
             if pitchList[octaveIndex] == '0':
-                if pitchList[octaveIndex + 1] == '0':
+                if len(pitchList) == octaveIndex + 1:
+                    self.octave = 1
+                elif len(pitchList) == octaveIndex + 2 and pitchList[octaveIndex + 1]:
                     self.octave = 0
                 else:
-                    self.octave = 1
+                    raise ValueError("This is not a valid pitch")
             elif pitchList[octaveIndex].isdigit():
                 if int(pitchList[octaveIndex]) < 10 or int(pitchList[octaveIndex]) > 0:
-                    self.octave = int(pitchList[octaveIndex])
+                    self.octave = int(pitchList[octaveIndex]) + 1
                 else:
                     raise ValueError("This is not a valid pitch")
             else:
@@ -194,7 +207,7 @@ class Pitch:
     #  empty the string will show '<Pitch: empty 0x10f263b50>'.
     #  See also: string().
     def __str__(self):
-        return ''
+        return f'<Pitch: {self.string()} {hex(id(self))}>'
 
     ## Prints the external form of the Pitch that, if evaluated
     #  would create a Pitch with the same content as this pitch.
@@ -203,7 +216,7 @@ class Pitch:
         if self.letter is None:
             return 'Pitch()'
         else:
-            return
+            return f'Pitch("{self.string()}")'
 
 
 
@@ -283,7 +296,10 @@ class Pitch:
     #  letter, accidental, and octave.  For example,
     #  Pitch("C#7").string() would return 'C#7'.
     def string(self):
-        pass
+        if self.letter is None:
+            return "empty"
+        else:
+            return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}{Pitch.octDict[self.octave]}"
 
     ## Returns the midi key number of the Pitch.
     def keynum(self):
@@ -318,6 +334,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
-    print(Pitch.noteList)
-    print(Pitch.valueEnum)
+
     print(list(Pitch.pnums))
+    print(Pitch("C#00"))
