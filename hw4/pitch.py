@@ -26,7 +26,22 @@ class Pitch:
     #  python enum name be sure to use only the 'safe versions' of the accidental
     #  names: 'ff' upto 'ss'. The enum values are the one byte integers containing
     #  the letter and accidental indexes: (letter << 4) + accidental.
-    pnums = IntEnum('Pnum',[('Cff', 0b00000000),
+    # noteList = [l+a for l in ['C', 'D', 'E', 'F', 'G', 'A', 'B'] for a in ['ff','f','','s','ss']]
+    # valueEnum = [x<<4 + y for x, y in enumerate([0, 1, 2, 3, 4, 5, 6])]
+    letterDict = {0: 'C',
+                  1: 'D',
+                  2: 'E',
+                  3: 'F',
+                  4: 'G',
+                  5: 'A',
+                  6: 'B'}
+    accDict = {0: 'ff',
+               1: 'f',
+               2: '',
+               3: 's',
+               4: 'ss'}
+
+    pnums = IntEnum('Pnum', [('Cff', 0b00000000),
                              ('Cf', 0b00000001),
                              ('C', 0b00000010),
                              ('Cs', 0b00000011),
@@ -60,8 +75,7 @@ class Pitch:
                              ('Bf', 0b01110001),
                              ('B', 0b01110010),
                              ('Bs', 0b01110011),
-                             ('Bss', 0b01110100),
-                             ])
+                             ('Bss', 0b01110100)])
 
 
     ## Creates a Pitch from a string or list, if neither is provided
@@ -112,7 +126,7 @@ class Pitch:
 
         ## A letter index 0-6.
         if ref is None:
-            self.letter = "empty"
+            self.letter = None
             self.octave = None
             self.accidental = None
         elif isinstance(ref, str):
@@ -139,7 +153,7 @@ class Pitch:
                 # if 'b'
                 else:
                     self.accidental = 1
-            # needs to check if there are any other characters in the pitch other than numbers, uses check_if_valid_octave
+
             else:
                 self.accidental = 0
             if pitchList[octaveIndex] == '0':
@@ -186,7 +200,12 @@ class Pitch:
     #  would create a Pitch with the same content as this pitch.
     #  Examples: 'Pitch("C#7")' and Pitch().  See also string().
     def __repr__(self):
-        return ''
+        if self.letter is None:
+            return 'Pitch()'
+        else:
+            return
+
+
 
     ## Implements Pitch < Pitch.
     # @param other The pitch to compare with this pitch.
@@ -251,7 +270,7 @@ class Pitch:
     #  the octave-letter-accidental space. The expression to calculate
     #  this value is (octave<<8) + (letter<<4) + accidental.
     def pos(self):
-        pass
+        return (self.octave << 8) + (self.letter << 4) + self.accidental
 
     ## Returns true if the Pitch is empty. A pitch is empty if its
     # letter, accidental and octave attributes are None. Only one of
@@ -299,5 +318,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
-    yeet = Pitch("a#9")
-    print(yeet)
+    print(Pitch.noteList)
+    print(Pitch.valueEnum)
+    print(list(Pitch.pnums))
