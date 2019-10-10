@@ -143,10 +143,11 @@ class Pitch:
         elif isinstance(ref, str):
 
             pitchList = list(ref)
-            octaveIndex = 2
+            #letter
             self.letter = letterDict.get(pitchList[0].upper(), "none")
             if self.letter == "none":
                 raise ValueError("This is not a valid pitch")
+            #accidental
             if pitchList[1] == '#' or pitchList[1] == 's':
                 # if "##"
                 if pitchList[2] == '#' or pitchList[2] == 's':
@@ -155,6 +156,7 @@ class Pitch:
                 # if "#"
                 else:
                    self.accidental = 3
+                   octaveIndex = 2
             # if flats
             elif pitchList[1] == 'b' or pitchList[1] == 'f':
                 # if 'bb'
@@ -164,18 +166,22 @@ class Pitch:
                 # if 'b'
                 else:
                     self.accidental = 1
-
+                    octaveIndex = 2
             else:
-                self.accidental = 0
+                self.accidental = 2
+
+            octaveIndex = 1
+            octaveStr = ''.join(pitchList[octaveIndex:])
+
+            print(octaveStr)
+            #octave
             if pitchList[octaveIndex] == '0':
-                if len(pitchList) == octaveIndex + 1:
-                    self.octave = 1
-                elif len(pitchList) == octaveIndex + 2 and pitchList[octaveIndex + 1]:
+                if ''.join(pitchList[octaveIndex:]) == '00':
                     self.octave = 0
                 else:
-                    raise ValueError("This is not a valid pitch")
-            elif pitchList[octaveIndex].isdigit():
-                if int(pitchList[octaveIndex]) < 10 or int(pitchList[octaveIndex]) > 0:
+                    self.octave = 1
+            elif octaveStr.isdigit():
+                if int(octaveStr) < 10 or int(octaveStr) > 0:
                     self.octave = int(pitchList[octaveIndex]) + 1
                 else:
                     raise ValueError("This is not a valid pitch")
@@ -213,7 +219,7 @@ class Pitch:
     #  would create a Pitch with the same content as this pitch.
     #  Examples: 'Pitch("C#7")' and Pitch().  See also string().
     def __repr__(self):
-        if self.letter is None:
+        if self.is_empty():
             return 'Pitch()'
         else:
             return f'Pitch("{self.string()}")'
@@ -290,26 +296,54 @@ class Pitch:
     # these attributes needs to be checked because __init__ will only
     # create a Pitch if all three are legal values or all three are None.
     def is_empty(self):
-        pass
+        if self.letter is None:
+            return True
+        return False
 
     ## Returns a string containing the pitch name including the
     #  letter, accidental, and octave.  For example,
     #  Pitch("C#7").string() would return 'C#7'.
     def string(self):
-        if self.letter is None:
+        if self.is_empty():
             return "empty"
         else:
             return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}{Pitch.octDict[self.octave]}"
 
     ## Returns the midi key number of the Pitch.
     def keynum(self):
-        pass
+        letterDict = {0: 0,
+                      1: 2,
+                      2: 4,
+                      3: 5,
+                      4: 7,
+                      5: 9,
+                      6: 11, }
+        accidentals = {0: -2,
+                       1: -1,
+                       2: 0,
+                       3: 1,
+                       4: 2}
+        midi = letterDict[self.letter]
+        midi = midi + accidentals[self.accidental]
+        midi += self.octave * 12
+        if midi < 127 and midi >= 0:
+            return midi
+        else:
+            raise ValueError(f"The pitch is outside the valid midi range of 0-127. Your pitch is midi value {midi}")
 
     ## Returns the pnum (pitch class enum) of the Pitch. Pnums enumerate
     #  and order the letter and accidental of a Pitch so they can be compared,
     #  e.g.: C < C# < Dbb. See also: pnums.
     def pnum(self):
-        pass
+        accidentals = {0: 'ff',
+                       1: 'f',
+                       2: '',
+                       3: 's',
+                       4: 'ss'}
+        pitchString = Pitch.letterDict[self.letter]
+        pitchString += accidentals[self.accidental]
+        return Pitch.pnums[pitchString]
+
 
     ## Returns the pitch class (0-11) of the Pitch.
     def pc(self):
@@ -334,6 +368,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
+    yeet = Pitch("A9")
 
-    print(list(Pitch.pnums))
-    print(Pitch("C#00"))
+    print(yeet.pnum().value)
