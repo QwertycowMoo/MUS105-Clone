@@ -143,6 +143,7 @@ class Pitch:
         elif isinstance(ref, str):
 
             pitchList = list(ref)
+            octaveIndex = 1
             #letter
             self.letter = letterDict.get(pitchList[0].upper(), "none")
             if self.letter == "none":
@@ -170,7 +171,7 @@ class Pitch:
             else:
                 self.accidental = 2
 
-            octaveIndex = 1
+
             octaveStr = ''.join(pitchList[octaveIndex:])
 
             print(octaveStr)
@@ -190,12 +191,12 @@ class Pitch:
 
 
         elif isinstance(ref, list):
-            if list[0] > 6 and list[0] < 0:
-                self.letter = list[0]
-                if list[1] > 4 and list[1] < 0:
-                    self.accidental = list[1]
-                    if list[2] > 10 and list[2] < 0:
-                        self.octave = list[2]
+            if ref[0] <= 6 and ref[0] >= 0:
+                self.letter = ref[0]
+                if ref[1] <= 4 and ref[1] >= 0:
+                    self.accidental = ref[1]
+                    if ref[2] <= 10 and ref[2] >= 0:
+                        self.octave = ref[2]
                     else:
                         raise ValueError("This is not a valid pitch")
                 else:
@@ -368,6 +369,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
-    yeet = Pitch("A9")
+    yeet = Pitch([0,0,0])
 
-    print(yeet.pnum().value)
+    print(yeet)
