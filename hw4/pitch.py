@@ -204,7 +204,8 @@ class Pitch:
             else:
                 raise ValueError("This is not a valid pitch")
 
-
+        if self.keynum() > 127 or self.keynum() < 0:
+            raise ValueError("This is not a valid pitch")
 
 
     ## Returns a string displaying information about the
@@ -369,6 +370,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
-    yeet = Pitch([0,0,0])
+    yeet = Pitch(1)
 
     print(yeet)
