@@ -202,6 +202,8 @@ class Pitch:
                 raise ValueError("This is not a valid pitch")
 
         elif isinstance(ref, list):
+            if len(ref) > 3:
+                raise ValueError("This is not a valid pitch")
             if ref[0] <= 6 and ref[0] >= 0:
                 self.letter = ref[0]
                 if ref[1] <= 4 and ref[1] >= 0:
@@ -244,7 +246,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # two values to compare. See: pos().
     def __lt__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError ("You cannot compare {} with a Pitch".format(other))
+        if self.pos() < other.pos():
+            return True
+        else:
+            return False
 
     ## Implements Pitch <= Pitch.
     # @param other The pitch to compare with this pitch.
@@ -254,7 +261,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __le__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError ("You cannot compare {} with a Pitch".format(other))
+        if self.pos() <= other.pos():
+            return True
+        else:
+            return False
 
     ## Implements Pitch == Pitch.
     # @param other The pitch to compare with this pitch.
@@ -264,7 +276,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __eq__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
+        if self.pos() == other.pos():
+            return True
+        else:
+            return False
 
     ## Implements Pitch != Pitch.
     # @param other The pitch to compare with this pitch.
@@ -274,7 +291,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __ne__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
+        if self.pos() != other.pos():
+            return True
+        else:
+            return False
 
     ## Implements Pitch >= Pitch.
     # @param other The pitch to compare with this pitch.
@@ -284,7 +306,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __ge__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
+        if self.pos() >= other.pos():
+            return True
+        else:
+            return False
 
     ## Implements Pitch > Pitch.
     # @param other The pitch to compare with this pitch.
@@ -294,7 +321,12 @@ class Pitch:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __gt__(self, other):
-        pass
+        if isinstance(other, Pitch):
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
+        if self.pos() > other.pos():
+            return True
+        else:
+            return False
 
     ## Returns a unique integer representing this pitch's position in
     #  the octave-letter-accidental space. The expression to calculate
