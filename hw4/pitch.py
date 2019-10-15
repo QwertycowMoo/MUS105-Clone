@@ -40,6 +40,15 @@ class Pitch:
                2: '',
                3: '#',
                4: '##'}
+    revAccDict = {"bb": 0,
+                  "ff": 0,
+                  "f": 1,
+                  "b": 1,
+                  "n": 2,
+                  "#": 3,
+                  "s": 3,
+                  "ss": 4,
+                  "##": 4}
     octDict = {0: '00',
                1: '0',
                2: '1',
@@ -149,6 +158,7 @@ class Pitch:
             if self.letter == "none":
                 raise ValueError("This is not a valid pitch")
             #accidental
+
             if pitchList[1] == '#' or pitchList[1] == 's':
                 # if "##"
                 if pitchList[2] == '#' or pitchList[2] == 's':
@@ -182,13 +192,14 @@ class Pitch:
                 else:
                     self.octave = 1
             elif octaveStr.isdigit():
-                if int(octaveStr) < 10 or int(octaveStr) > 0:
+                if int(octaveStr) < 10 and int(octaveStr) > 0:
                     self.octave = int(pitchList[octaveIndex]) + 1
                 else:
                     raise ValueError("This is not a valid pitch")
             else:
                 raise ValueError("This is not a valid pitch")
-
+            if self.keynum() > 127 or self.keynum() < 0:
+                raise ValueError("This is not a valid pitch")
 
         elif isinstance(ref, list):
             if ref[0] <= 6 and ref[0] >= 0:
@@ -204,8 +215,6 @@ class Pitch:
             else:
                 raise ValueError("This is not a valid pitch")
 
-        if self.keynum() > 127 or self.keynum() < 0:
-            raise ValueError("This is not a valid pitch")
 
 
     ## Returns a string displaying information about the
@@ -222,7 +231,7 @@ class Pitch:
     #  Examples: 'Pitch("C#7")' and Pitch().  See also string().
     def __repr__(self):
         if self.is_empty():
-            return 'Pitch()'
+            return 'Pitch(empty)'
         else:
             return f'Pitch("{self.string()}")'
 
@@ -309,7 +318,10 @@ class Pitch:
         if self.is_empty():
             return "empty"
         else:
-            return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}{Pitch.octDict[self.octave]}"
+            if self.octave == -1:
+                return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}00"
+            else:
+                return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}{Pitch.octDict[self.octave]}"
 
     ## Returns the midi key number of the Pitch.
     def keynum(self):
@@ -328,7 +340,7 @@ class Pitch:
         midi = letterDict[self.letter]
         midi = midi + accidentals[self.accidental]
         midi += self.octave * 12
-        if midi < 127 and midi >= 0:
+        if midi <= 127 and midi >= 0:
             return midi
         else:
             raise ValueError(f"The pitch is outside the valid midi range of 0-127. Your pitch is midi value {midi}")
@@ -370,6 +382,6 @@ class Pitch:
         pass
 
 if __name__ == '__main__':
-    yeet = Pitch(1)
+    yeet = Pitch([0,0,0])
 
     print(yeet)
