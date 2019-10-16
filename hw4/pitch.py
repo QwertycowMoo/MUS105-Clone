@@ -227,7 +227,10 @@ class Pitch:
     #  empty the string will show '<Pitch: empty 0x10f263b50>'.
     #  See also: string().
     def __str__(self):
-        return f'<Pitch: {self.string()} {hex(id(self))}>'
+        if self.is_empty():
+            return '<Pitch: empty>'
+        else:
+            return f'<Pitch: {self.string()} {hex(id(self))}>'
 
     ## Prints the external form of the Pitch that, if evaluated
     #  would create a Pitch with the same content as this pitch.
@@ -466,4 +469,4 @@ class Pitch:
             raise ValueError("This cannot be a valid pitch")
 
 if __name__ == '__main__':
-    print(Pitch.from_keynum(70, 'bbb'))
+    print(Pitch())
