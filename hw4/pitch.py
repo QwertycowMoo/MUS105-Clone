@@ -441,7 +441,7 @@ class Pitch:
                       7: ['G', '', 'Abb', '', 'G', '', 'F##', ''],
                       8: ['Ab', 'Bbbb', '', 'Ab', '', 'G#', '', 'F###'],
                       9: ['A', '', 'Bbb', '', 'A', '', 'G##', ''],
-                      10: ['Bb', '', 'Cbb', 'Bb', '', 'A#', '', 'G###'],
+                      10: ['Dbbb', '', 'Cbb', 'Bb', '', 'A#', '', 'G###'],
                       11: ['B','Dbbb', '', 'Cb', 'B', '', 'A##', ''],
                       }
         acciDict = {'bbb': 1,
@@ -458,7 +458,7 @@ class Pitch:
             else:
                 if pc == 0 and acci == '#':
                     octave -= 1
-                if (pc == 10 or pc == 11) and (acci == 'b' or acci == 'bb'):
+                if (pc == 10 and acci == 'bb') or (pc == 11 and acci == 'b'):
                     octave += 1
                 pitchString = letterDict[pc][acciDict[acci]] + str(octave - 1)
             return Pitch(pitchString)
