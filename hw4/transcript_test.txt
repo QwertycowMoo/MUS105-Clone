@@ -1,7 +1,7 @@
 ============= kjzhou2.hw4 transcript [test] =============
   module: pitch
     [import]: success  (1/1)
-      [  input = Pitch()  ]  your_output = <Pitch: empty>  desired_output = <Pitch: empty>  (0/2)
+      [  input = Pitch()  ]  your_output = <Pitch: empty>  desired_output = <Pitch: empty>  (2/2)
       [  input = Pitch('C4')  ]  your_output = <Pitch: C4>  desired_output = <Pitch: C4>  (2/2)
       [  input = Pitch('A8')  ]  your_output = <Pitch: A8>  desired_output = <Pitch: A8>  (2/2)
       [  input = Pitch('F##2')  ]  your_output = <Pitch: F##2>  desired_output = <Pitch: F##2>  (2/2)
@@ -118,15 +118,15 @@
       [  input = Pitch.from_keynum(80,'bb')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Pitch.from_keynum(80,'#')  ]  your_output = <Pitch: G#5>  desired_output = <Pitch: G#5>  (2/2)
       [  input = Pitch.from_keynum(80,'##')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
-      [  input = Pitch.from_keynum(70)  ]  your_output = $exception$  desired_output = <Pitch: Bb4>  (0/2)
+      [  input = Pitch.from_keynum(70)  ]  your_output = <Pitch: Bb4>  desired_output = <Pitch: Bb4>  (2/2)
       [  input = Pitch.from_keynum(70,'')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Pitch.from_keynum(70,'b')  ]  your_output = <Pitch: Bb4>  desired_output = <Pitch: Bb4>  (2/2)
       [  input = Pitch.from_keynum(70,'bb')  ]  your_output = <Pitch: Cbb5>  desired_output = <Pitch: Cbb5>  (2/2)
       [  input = Pitch.from_keynum(70,'bbb')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
-Total raw score: (237/245)
+Total raw score: (241/245)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 1
 Extra credit (if applicable): 0
-Adjusted score (Final): 236/244
+Adjusted score (Final): 240/244
 
