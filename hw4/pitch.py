@@ -237,7 +237,7 @@ class Pitch:
     #  Examples: 'Pitch("C#7")' and Pitch().  See also string().
     def __repr__(self):
         if self.is_empty():
-            return 'Pitch(empty)'
+            return 'Pitch()'
         else:
             return f'Pitch("{self.string()}")'
 
