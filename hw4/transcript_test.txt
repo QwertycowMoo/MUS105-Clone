@@ -30,7 +30,7 @@
       [  input = Pitch([0,3,6])  ]  your_output = <Pitch: C#5>  desired_output = <Pitch: C#5>  (2/2)
       [  input = Pitch([1,2,3])  ]  your_output = <Pitch: D2>  desired_output = <Pitch: D2>  (2/2)
       [  input = Pitch([5,4,3])  ]  your_output = <Pitch: A##2>  desired_output = <Pitch: A##2>  (2/2)
-      [  input = Pitch([0,0,0])  ]  your_output = <Pitch: Cbb00>  desired_output = <Pitch: Cbb00>  (2/2)
+      [  input = Pitch([0,0,0])  ]  your_output = <Pitch: Cbb00>  desired_output = $exception$  (0/2)
       [  input = Pitch(1)  ]  your_output = $__str__exception$  desired_output = $exception$  (0/2)
       [  input = Pitch(1.0)  ]  your_output = $__str__exception$  desired_output = $exception$  (0/2)
       [  input = Pitch([])  ]  your_output = $exception$  desired_output = $exception$  (2/2)
@@ -123,10 +123,10 @@
       [  input = Pitch.from_keynum(70,'b')  ]  your_output = None  desired_output = <Pitch: Bb4>  (0/2)
       [  input = Pitch.from_keynum(70,'bb')  ]  your_output = None  desired_output = <Pitch: Cbb5>  (0/2)
       [  input = Pitch.from_keynum(70,'bbb')  ]  your_output = None  desired_output = $exception$  (0/2)
-Total raw score: (95/245)
+Total raw score: (93/245)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 1
 Extra credit (if applicable): 0
-Adjusted score (Final): 94/244
+Adjusted score (Final): 92/244
 
