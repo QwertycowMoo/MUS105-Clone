@@ -183,8 +183,6 @@ class Pitch:
 
 
             octaveStr = ''.join(pitchList[octaveIndex:])
-
-            print(octaveStr)
             #octave
             if pitchList[octaveIndex] == '0':
                 if ''.join(pitchList[octaveIndex:]) == '00':
@@ -216,7 +214,10 @@ class Pitch:
                     raise ValueError("This is not a valid pitch")
             else:
                 raise ValueError("This is not a valid pitch")
-
+            if self.keynum() > 127 or self.keynum() < 0:
+                raise ValueError("This is not a valid pitch")
+        else:
+            raise ValueError("This is not a valid pitch")
 
 
     ## Returns a string displaying information about the
@@ -247,11 +248,12 @@ class Pitch:
     # two values to compare. See: pos().
     def __lt__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError ("You cannot compare {} with a Pitch".format(other))
-        if self.pos() < other.pos():
-            return True
+            if self.pos() < other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Implements Pitch <= Pitch.
     # @param other The pitch to compare with this pitch.
@@ -262,11 +264,12 @@ class Pitch:
     # values to compare. See: pos().
     def __le__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError ("You cannot compare {} with a Pitch".format(other))
-        if self.pos() <= other.pos():
-            return True
+            if self.pos() <= other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Implements Pitch == Pitch.
     # @param other The pitch to compare with this pitch.
@@ -277,11 +280,12 @@ class Pitch:
     # values to compare. See: pos().
     def __eq__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError("You cannot compare {} with a Pitch".format(other))
-        if self.pos() == other.pos():
-            return True
+            if self.pos() == other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Implements Pitch != Pitch.
     # @param other The pitch to compare with this pitch.
@@ -292,11 +296,12 @@ class Pitch:
     # values to compare. See: pos().
     def __ne__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError("You cannot compare {} with a Pitch".format(other))
-        if self.pos() != other.pos():
-            return True
+            if self.pos() != other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Implements Pitch >= Pitch.
     # @param other The pitch to compare with this pitch.
@@ -307,11 +312,12 @@ class Pitch:
     # values to compare. See: pos().
     def __ge__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError("You cannot compare {} with a Pitch".format(other))
-        if self.pos() >= other.pos():
-            return True
+            if self.pos() >= other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Implements Pitch > Pitch.
     # @param other The pitch to compare with this pitch.
@@ -322,11 +328,12 @@ class Pitch:
     # values to compare. See: pos().
     def __gt__(self, other):
         if isinstance(other, Pitch):
-            raise ValueError("You cannot compare {} with a Pitch".format(other))
-        if self.pos() > other.pos():
-            return True
+            if self.pos() > other.pos():
+                return True
+            else:
+                return False
         else:
-            return False
+            raise ValueError("You cannot compare {} with a Pitch".format(other))
 
     ## Returns a unique integer representing this pitch's position in
     #  the octave-letter-accidental space. The expression to calculate
@@ -348,7 +355,7 @@ class Pitch:
     #  Pitch("C#7").string() would return 'C#7'.
     def string(self):
         if self.is_empty():
-            return "empty"
+            return 'empty'
         else:
             if self.octave == -1:
                 return f"{Pitch.letterDict[self.letter]}{Pitch.accDict[self.accidental]}00"
@@ -393,11 +400,24 @@ class Pitch:
 
     ## Returns the pitch class (0-11) of the Pitch.
     def pc(self):
-        pass
+        letterDict = {0: 0,
+                      1: 2,
+                      2: 4,
+                      3: 5,
+                      4: 7,
+                      5: 9,
+                      6: 11, }
+        accidentals = {0: -2,
+                       1: -1,
+                       2: 0,
+                       3: 1,
+                       4: 2}
+        pc = letterDict[self.letter] + accidentals[self.accidental]
+        return pc % 12
 
     ## Returns the hertz value of the Pitch.
     def hertz(self):
-        pass
+        return 440.0 * 2 ** ((round(self.keynum()) - 69) / 12)
 
     ## A @classmethod that creates a Pitch for the specified
     #  midi key number.
@@ -411,9 +431,39 @@ class Pitch:
     #  accidental.
     @classmethod
     def from_keynum(cls, keynum, acci=None):
-        pass
+        letterDict = {0: ['C', 'Ebbb', 'Dbb', '', 'C', 'B#', '', 'A###'],
+                      1: ['C#', 'Ebb', '', 'Db', '', 'C#', '', 'B##'],
+                      2: ['D', 'Fbbb', 'Ebb', '', 'D', '', 'C##', 'B###'],
+                      3: ['Eb', '', 'Fbb', 'Eb', '', 'D#', '', 'C###'],
+                      4: ['E', '', '', 'Fb', 'E', 'D', 'D##', ''],
+                      5: ['F', '', 'Gbb', '', 'F', 'E#', '', 'D###'],
+                      6: ['F#', 'Abbb', '', 'Gb', '', 'F#', 'E##', ''],
+                      7: ['G', '', 'Abb', '', 'G', '', 'F##', ''],
+                      8: ['Ab', 'Bbbb', '', 'Ab', '', 'G#', '', 'F###'],
+                      9: ['A', '', 'Bbb', '', 'A', '', 'G##', ''],
+                      10: ['Bb', '', 'Cbb', 'Bb', '', 'A#', '', 'G###'],
+                      11: ['B','Dbbb', '', 'Cb', 'B', '', 'A##', ''],
+                      }
+        acciDict = {'bbb': 1,
+                    'bb': 2,
+                    'b': 3,
+                    '': 4,
+                    '#': 5,
+                    '##': 6,
+                    '###': 7}
+        if keynum <= 127 and keynum >= 0:
+            octave, pc = divmod(keynum, 12)
+            if acci is None:
+                pitchString = letterDict[pc][0] + str(octave - 1)
+            else:
+                if pc == 0 and acci == '#':
+                    octave -= 1
+                if (pc == 10 or pc == 11) and (acci == 'b' or acci == 'bb'):
+                    octave += 1
+                pitchString = letterDict[pc][acciDict[acci]] + str(octave - 1)
+            return Pitch(pitchString)
+        else:
+            raise ValueError("This cannot be a valid pitch")
 
 if __name__ == '__main__':
-    yeet = Pitch([0,0,0])
-
-    print(yeet)
+    print(Pitch.from_keynum(70, 'bbb'))
