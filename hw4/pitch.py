@@ -444,7 +444,7 @@ class Pitch:
                       7: ['G', '', 'Abb', '', 'G', '', 'F##', ''],
                       8: ['Ab', 'Bbbb', '', 'Ab', '', 'G#', '', 'F###'],
                       9: ['A', '', 'Bbb', '', 'A', '', 'G##', ''],
-                      10: ['Dbbb', '', 'Cbb', 'Bb', '', 'A#', '', 'G###'],
+                      10: ['Bb','Dbbb', 'Cbb', 'Bb', '', 'A#', 'G###'],
                       11: ['B','Dbbb', '', 'Cb', 'B', '', 'A##', ''],
                       }
         acciDict = {'bbb': 1,
@@ -469,4 +469,4 @@ class Pitch:
             raise ValueError("This cannot be a valid pitch")
 
 if __name__ == '__main__':
-    print(Pitch())
+    print(Pitch.from_keynum(70,'bbb'))
