@@ -1,6 +1,6 @@
 ###############################################################################
 
-from .pitch import Pitch
+from pitch import *
 
 ## A class that implements musical intervals.
 #
@@ -66,8 +66,71 @@ class Interval:
     # _init_from_pitches() method (see below).  Otherwise (if the input is not
     # a string, list of four integers, or two pitches) the method will raise a TypeError
     # for the offending value.
+
+    accidentalDict = {0: "ddddd",
+                      1: "dddd",
+                      2: "ddd",
+                      3: "dd",
+                      4: "d",
+                      5: "m",
+                      6: "P",
+                      7: "M",
+                      8: "a",
+                      9: "aa",
+                      10: "aaa",
+                      11: "aaaa",
+                      12: "aaaaa"
+                      }
+
     def __init__(self, arg, other=None):
-        pass
+        majorminor = [2,3,6,7]
+        perfect = [1,4,5,8]
+        if isinstance(arg, list) :
+            if len(arg) != 4:
+                raise ValueError("This is not a valid list to create an interval")
+            if (arg[0] > 0 and arg[0] < 9):
+                self.span = arg[0]
+            else:
+                raise ValueError("This is not a valid span")
+            if (Interval.accidentalDict.get(arg[1], "none") != "none"):
+
+                #check for valid minor/Perfect/Major
+                for interval in majorminor:
+                    if self.span == interval:
+                        if (arg[1] == 6):
+                            raise ValueError(f"A span of {self.span} cannot be a Perfect interval")
+                        self.quality = arg[1]
+                        break
+                #already checked if it is a major or a minor
+                #we can assume that is a perfect interval because it already passed the span tests
+                #but need to not check this if we already have something
+                for interval in perfect:
+                    if self.span == interval:
+                        if (arg[1] == 5 or arg[1] == 7):
+                            raise ValueError(f"A span of {self.span} cannot be a major or minor interval")
+                        self.quality = arg[1]
+                        break
+            else:
+                raise ValueError("This is not a valid quality")
+            if arg[2] >= 0 and arg[2] <= 10:
+                self.xoct = arg[2]
+            else:
+                raise ValueError("This is not a valid amount of extra octave(s)")
+            if arg[3] == 1:
+                self.sign = arg[3]
+            elif arg[3] == -1:
+                self.sign = arg[3]
+            else:
+                raise ValueError("This is not a valid directions")
+        elif isinstance(arg, str):
+            pass
+        elif other != None and isinstance(other, Pitch):
+            pass
+        else:
+            raise ValueError("This is not a valid interval")
+
+
+
 
     ## A private method that checks four integer values (span, qual, xoct, sign) to make sure
     # they are valid index values for the span, qual, xoct and sign attributes. Legal values
@@ -123,7 +186,7 @@ class Interval:
     #  <Interval: oooo8 [7, 1, 0, 1] 0x1075bf6d0>
     #  See also: string().
     def __str__(self):
-        return ''
+        return f'<Interval: {Interval.accidentalDict[self.quality]}{self.span + self.xoct * 8} [{self.span}, {self.quality}, {self.xoct}, {self.sign} {hex(id(self))}'
 
     ## The string the console prints shows the external form.
     # Example: Interval("oooo8")
@@ -398,3 +461,5 @@ class Interval:
     def transpose(self, pref):
         # Do NOT implement this method yet.
         pass
+if __name__ == "__main__":
+    yeet = Interval([3,7,0,1])
