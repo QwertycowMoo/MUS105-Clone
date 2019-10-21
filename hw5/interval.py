@@ -93,8 +93,9 @@ class Interval:
                 self.qual = interval[1]
                 self.xoct = interval[2]
                 self.sign = interval[3]
+
         elif isinstance(arg, str):
-            interval = self._init_from_string(str)
+            interval = self._init_from_string(arg)
             self.span = interval[0]
             self.qual = interval[1]
             self.xoct = interval[2]
@@ -127,8 +128,7 @@ class Interval:
         majorminor = [2, 3, 6, 7]
         perfect = [1, 4, 5, 8]
 
-        if span > 0 and span < 9:
-            #
+        if span >= 0 and span < 9:
             if (Interval.accidentalDict.get(qual, "none") != "none"):
 
                 # check for valid minor/Perfect/Major
@@ -169,8 +169,8 @@ class Interval:
                         if sign == 1:
                             if span == 1 and qual < 6 or span == 2 and qual < 4 or span == 3 and qual < 2:
                                 raise ValueError("An ascending interval cannot have a negative number of semitones")
-                        elif sign != -1:
-                            raise ValueError("This is not a valid direction for the interval")
+                    else:
+                        raise ValueError("This is not a valid direction for the interval")
                 else:
                     raise ValueError("This is not a valid amount of extra octave(s)")
             else:
@@ -191,7 +191,25 @@ class Interval:
         span, qual, xoct, sign = (-1, -1, -1, -1)
         # ... pass on to check an assign instance attributes.
         invert_acci_dict = dict([[v, k] for k, v in Interval.accidentalDict.items()])
-        
+
+        intervalChar = list(string)
+        num = intervalChar.pop(len(intervalChar) - 1)
+        if num.isnumeric():
+            num = int(num)
+            xoct, span = divmod(num, 8)
+        if num == "0":
+            if intervalChar[len(intervalChar) - 2] == "1":
+                num = 10
+                intervalChar.pop(len(intervalChar) - 2)
+
+        print(intervalChar[0])
+        if intervalChar[0] == '-':
+            sign == -1
+            intervalChar.pop(0)
+        else:
+            sign == 1
+            intervalChar.pop(0)
+        qual = invert_acci_dict.get("".join(intervalChar), "none")
         return self._init_from_list(span, qual, xoct, sign)
 
     ## A private method that determines approprite span, qual, xoct, sign
@@ -214,12 +232,12 @@ class Interval:
     #  <Interval: oooo8 [7, 1, 0, 1] 0x1075bf6d0>
     #  See also: string().
     def __str__(self):
-        return f'<Interval: {Interval.accidentalDict[self.qual]}{self.span + self.xoct * 8} [{self.span}, {self.qual}, {self.xoct}, {self.sign}] {hex(id(self))}>'
+        return f'<Interval: {self.string()} [{self.span}, {self.qual}, {self.xoct}, {self.sign}] {hex(id(self))}>'
 
     ## The string the console prints shows the external form.
     # Example: Interval("oooo8")
     def __repr__(self):
-        return f'Interval("{Interval.accidentalDict[self.qual]}{self.span + self.xoct * 8}")'
+        return f'Interval({self.string()})'
 
     ## Implements Interval < Interval.
     # @param other The interval to compare with this interval.
@@ -295,7 +313,9 @@ class Interval:
     ## Returns a string containing the interval name.
     #  For example, Interval('-P5').string() would return '-P5'.
     def string(self):
-        return ''
+        if self.sign == -1:
+            intString = "-"
+        return intString + str(Interval.accidentalDict[self.qual]) + str(self.span + self.xoct * 8)
 
     ## Returns the full interval name, e.g. 'doubly-augmented third'
     #  or 'descending augmented sixth'
@@ -492,5 +512,5 @@ class Interval:
 
 
 if __name__ == "__main__":
-    print(Interval([5,8,10,1]))
+    print(Interval("-P5"))
 
