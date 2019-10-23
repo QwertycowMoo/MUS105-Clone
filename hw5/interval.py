@@ -67,7 +67,10 @@ class Interval:
     # a string, list of four integers, or two pitches) the method will raise a TypeError
     # for the offending value.
 
-    _5dim_qual, _4dim_qual, _3dim_qual, _2dim_qual, _1dim_qual, _min_qual, _perf_qual, _maj_qual, _1aug_qual, _2aug_qual, _3aug_qual, _4aug_qual, _5aug_qual = range(13)
+    _5dim_qual, _4dim_qual, _3dim_qual, _2dim_qual, _1dim_qual, _min_qual, _perf_qual,\
+    _maj_qual, _1aug_qual, _2aug_qual, _3aug_qual, _4aug_qual, _5aug_qual = range(13)
+
+    _unison_span, _2nd_span, _3rd_span, _4th_span, _5th_span, _6th_span, _7th_span, _octave_span = range(8)
     accidentalSafeDict = {0: "ddddd",
                           1: "dddd",
                           2: "ddd",
@@ -120,8 +123,8 @@ class Interval:
                        6: 'seventh',
                        7: 'octave'}
 
-    majorminor = [2, 3, 6, 7]
-    perfect = [1, 4, 5, 8]
+    majorminor = [1, 2, 5, 6]
+    perfect = [0, 3, 4, 7]
 
     def __init__(self, arg, other=None):
 
@@ -187,31 +190,33 @@ class Interval:
 
                 for interval in Interval.perfect:
                     if span == interval:
-                        if qual == 5 or qual == 7:
+                        if qual == Interval._maj_qual or qual == Interval._min_qual:
                             raise ValueError(f"A span of {self.span} cannot be a major or minor interval")
-                        if qual == 0 and not span == 5:
+                        if qual == Interval._5dim_qual and not span == Interval._5th_span:
                             raise ValueError("Only a fifth can be quintuply diminished")
-                        if qual == 12 and not span == 4:
+                        if qual == Interval._5aug_qual and not span == Interval._4th_span:
                             raise ValueError("Only a fourth can be quintuply augmented")
                         break
                 if xoct >= 0 and xoct <= 10:
                     # checking for octave perfect unison
-                    if span == 0 and xoct > 0:
-                        span = 7
+                    if span == Interval._unison_span and xoct > 0:
+                        span = Interval._octave_span
                         xoct -= 1
 
                     # checking for outside the 127 range
-                    if xoct == 10 and span > 6:
+                    if xoct == 10 and span > Interval._7th_span:
                         raise ValueError("This interval is outside the range of 127 semitones")
-                    elif xoct == 10 and span == 6 and qual > 4:
+                    elif xoct == 10 and span == Interval._7th_span and qual > Interval._1dim_qual:
                         raise ValueError("This interval is outside the range of 127 semitones")
-                    elif xoct == 10 and span == 5 and qual > 6:
+                    elif xoct == 10 and span == Interval._6th_span and qual > Interval._perf_qual:
                         raise ValueError("This interval is outside the range of 127 semitones")
-                    elif xoct == 10 and span == 4 and qual > 9:
+                    elif xoct == 10 and span == Interval._5th_span and qual > Interval._2aug_qual:
                         raise ValueError("This interval is outside the range of 127 semitones")
                     if not sign == 1 or not sign == -1:
                         if sign == 1:
-                            if span == 1 and qual < 6 or span == 2 and qual < 4 or span == 3 and qual < 2:
+                            if span == Interval._unison_span and qual < Interval._perf_qual\
+                                    or span == Interval._2nd_span and qual < Interval._1dim_qual\
+                                    or span == Interval._3rd_span and qual < Interval._3dim_qual:
                                 raise ValueError("An ascending interval cannot have a negative number of semitones")
                     else:
                         raise ValueError("This is not a valid direction for the interval")
@@ -304,7 +309,7 @@ class Interval:
             sign = 1
         else:
             sign = -1
-            pitch2.octave -= 1
+            pitch2.octave += 1
             temp = pitch1
             pitch1 = pitch2
             pitch2 = temp
