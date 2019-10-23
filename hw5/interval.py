@@ -67,6 +67,7 @@ class Interval:
     # a string, list of four integers, or two pitches) the method will raise a TypeError
     # for the offending value.
 
+    _5dim_qual, _4dim_qual, _3dim_qual, _2dim_qual, _1dim_qual, _min_qual, _perf_qual, _maj_qual, _1aug_qual, _2aug_qual, _3aug_qual, _4aug_qual, _5aug_qual = range(13)
     accidentalSafeDict = {0: "ddddd",
                           1: "dddd",
                           2: "ddd",
@@ -97,6 +98,31 @@ class Interval:
                       12: "+++++"
                       }
 
+    acciStrDict = {12: 'quintuply-augmented',
+                   11: 'quadruply-augmented',
+                   10: 'triply-augmented',
+                   9: 'doubly-augmented',
+                   8: 'augmented',
+                   7: 'major',
+                   6: 'perfect',
+                   5: 'minor',
+                   4: 'diminished',
+                   3: 'doubly-diminished',
+                   2: 'triply-diminished',
+                   1: 'quadruply-diminished',
+                   0: 'quintuply-diminished'}
+    intervalStrDict = {0: 'unison',
+                       1: 'second',
+                       2: 'third',
+                       3: 'fourth',
+                       4: 'fifth',
+                       5: 'sixth',
+                       6: 'seventh',
+                       7: 'octave'}
+
+    majorminor = [2, 3, 6, 7]
+    perfect = [1, 4, 5, 8]
+
     def __init__(self, arg, other=None):
 
         if isinstance(arg, list):
@@ -115,8 +141,12 @@ class Interval:
             self.qual = interval[1]
             self.xoct = interval[2]
             self.sign = interval[3]
-        elif other != None and isinstance(other, Pitch) and isinstance(arg, Pitch):
-            pass
+        elif isinstance(other, Pitch) and isinstance(arg, Pitch):
+            interval = self._init_from_pitches(arg, other)
+            self.span = interval[0]
+            self.qual = interval[1]
+            self.xoct = interval[2]
+            self.sign = interval[3]
         else:
             raise ValueError("This is not a valid interval")
 
@@ -140,14 +170,13 @@ class Interval:
     # the four values to the attributes, e.g. self.span=span, self.qual=qual, and
     # so on. Otherwise if any edge case fails the method should raise a ValueError.
     def _init_from_list(self, span, qual, xoct, sign):
-        majorminor = [2, 3, 6, 7]
-        perfect = [1, 4, 5, 8]
+
 
         if span >= 0 and span < 9:
             if (Interval.accidentalDict.get(qual, "none") != "none"):
 
                 # check for valid minor/Perfect/Major
-                for interval in majorminor:
+                for interval in Interval.majorminor:
                     if span == interval:
                         if qual == 6:
                             raise ValueError(f"A span of {self.span} cannot be a Perfect interval")
@@ -156,7 +185,7 @@ class Interval:
                 # we can assume that is a perfect interval because it already passed the span tests
                 # but need to not check this if we already have something
 
-                for interval in perfect:
+                for interval in Interval.perfect:
                     if span == interval:
                         if qual == 5 or qual == 7:
                             raise ValueError(f"A span of {self.span} cannot be a major or minor interval")
@@ -236,17 +265,68 @@ class Interval:
     #
     # Do NOT implement this method yet.
     def _init_from_pitches(self, pitch1, pitch2):
+
+        diatonicDict = {0: 0,
+                        1: 2,
+                        2: 4,
+                        3: 5,
+                        4: 7,
+                        5: 9,
+                        6: 11,
+                        7: 12}
+
+        majMinAdj = {-5: Interval._4dim_qual,
+                     -4: Interval._3dim_qual,
+                     -3: Interval._2dim_qual,
+                     -2: Interval._1dim_qual,
+                     -1: Interval._min_qual,
+                     0: Interval._maj_qual,
+                     1: Interval._1aug_qual,
+                     2: Interval._2aug_qual,
+                     3: Interval._3aug_qual,
+                     4: Interval._4aug_qual}
+        perfAdj = {-5: Interval._5dim_qual,
+                   -4: Interval._4dim_qual,
+                   -3: Interval._3dim_qual,
+                   -2: Interval._2dim_qual,
+                   -1: Interval._1dim_qual,
+                   0: Interval._perf_qual,
+                   1: Interval._1aug_qual,
+                   2: Interval._2aug_qual,
+                   3: Interval._3aug_qual,
+                   4: Interval._4aug_qual,
+                   5: Interval._5aug_qual}
+
         # ... parse the string into a span, qual, xoct and sign values
         span, qual, xoct, sign = (-1, -1, -1, -1)
+        isComplement = False
         if (pitch1 < pitch2):
             sign = 1
         else:
             sign = -1
+            pitch2.octave -= 1
+            temp = pitch1
+            pitch1 = pitch2
+            pitch2 = temp
+            isComplement = True
+            # find the complement
+
+        span = pitch2.letter - pitch1.letter
+        semitones = pitch2.keynum() - pitch1.keynum()
+        diaSeparation = diatonicDict.get(pitch2.letter) - diatonicDict.get(pitch1.letter)
+        xoct, qual = divmod(semitones - diaSeparation, 12)
+        if span in Interval.majorminor:
+            qual = majMinAdj.get(qual)
+        else:
+            qual = perfAdj.get(qual)
+        if isComplement:
+            xoct += 1
         # find direction first. Then whether the letter is higher in the index than the other
         # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
-
+        print(span, qual, xoct, sign)
+        #needs to fix complement and octaves and such
         # ... pass on to check and assign instance attributes.
-        self._init_from_list(span, qual, xoct, sign)
+        return self._init_from_list(span, qual, xoct, sign)
 
     ## Returns a string displaying information about the
     #  Interval within angle brackets. Information includes the
@@ -346,51 +426,36 @@ class Interval:
     # @param sign If true then "descending" will appear in the
     # name if it is a descending interval.
     def full_name(self, *, sign=True):
-        acciStrDict = {12: 'quintuply-augmented',
-                          11: 'quadruply-augmented',
-                          10: 'triply-augmented',
-                          9: 'doubly-augmented',
-                          8: 'augmented',
-                          7: 'major',
-                          6: 'perfect',
-                          5: 'minor',
-                          4: 'diminished',
-                          3: 'doubly-diminished',
-                          2: 'triply-diminished',
-                          1: 'quadruply-diminished',
-                          0: 'quintuply-diminished'}
-        intervalStrDict = {0: 'unison',
-                           1: 'second',
-                           2: 'third',
-                           3: 'fourth',
-                           4: 'fifth',
-                           5: 'sixth',
-                           6: 'seventh',
-                           7: 'octave'}
+
         returnStr = ""
         if sign == True:
             if self.sign == -1:
                 returnStr += "descending "
-            returnStr += acciStrDict.get(self.qual, "none") + " "
-            returnStr += intervalStrDict.get(self.span, "none")
+            returnStr += self.span_name() + " "
+            returnStr += self.quality_name()
         return returnStr
-
-
 
     ## Returns the full name of the interval's span, e.g. a
     # unison would return "unison" and so on.
     def span_name(self):
-        pass
+        return Interval.acciStrDict.get(self.qual, "none")
 
     ## Returns the full name of the interval's quality, e.g. a
     # perfect unison would return "perfect" and so on.
     def quality_name(self):
-        pass
+        return Interval.intervalStrDict.get(self.span, "none")
 
     ## Returns true if this interval and the other interval have the
     # same span, quality and sign. The extra octaves are ignored.
     def matches(self, other):
-        pass
+        if isinstance(other, Interval):
+            if self.sign == other.sign:
+                if self.qual == other.qual:
+                    if self.span == other.span:
+                        return True
+            return False
+        else:
+            raise ValueError(f"You cannot compare {other} to an interval!")
 
     ## Returns the interval's number of lines and spaces, e.g.
     # a unison will return 1.
