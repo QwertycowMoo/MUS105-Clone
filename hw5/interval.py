@@ -1,6 +1,6 @@
 ###############################################################################
 
-from pitch import *
+from .pitch import Pitch
 
 
 ## A class that implements musical intervals.
@@ -67,19 +67,34 @@ class Interval:
     # a string, list of four integers, or two pitches) the method will raise a TypeError
     # for the offending value.
 
-    accidentalDict = {0: "ddddd",
-                      1: "dddd",
-                      2: "ddd",
-                      3: "dd",
-                      4: "d",
+    accidentalSafeDict = {0: "ddddd",
+                          1: "dddd",
+                          2: "ddd",
+                          3: "dd",
+                          4: "d",
+                          5: "m",
+                          6: "P",
+                          7: "M",
+                          8: "A",
+                          9: "AA",
+                          10: "AAA",
+                          11: "AAAA",
+                          12: "AAAAA"
+                          }
+
+    accidentalDict = {0: "ooooo",
+                      1: "oooo",
+                      2: "ooo",
+                      3: "oo",
+                      4: "o",
                       5: "m",
                       6: "P",
                       7: "M",
-                      8: "a",
-                      9: "aa",
-                      10: "aaa",
-                      11: "aaaa",
-                      12: "aaaaa"
+                      8: "+",
+                      9: "++",
+                      10: "+++",
+                      11: "++++",
+                      12: "+++++"
                       }
 
     def __init__(self, arg, other=None):
@@ -151,12 +166,12 @@ class Interval:
                             raise ValueError("Only a fourth can be quintuply augmented")
                         break
                 if xoct >= 0 and xoct <= 10:
-                    #checking for octave perfect unison
+                    # checking for octave perfect unison
                     if span == 0 and xoct > 0:
                         span = 7
                         xoct -= 1
 
-                    #checking for outside the 127 range
+                    # checking for outside the 127 range
                     if xoct == 10 and span > 6:
                         raise ValueError("This interval is outside the range of 127 semitones")
                     elif xoct == 10 and span == 6 and qual > 4:
@@ -191,6 +206,7 @@ class Interval:
         span, qual, xoct, sign = (-1, -1, -1, -1)
         # ... pass on to check an assign instance attributes.
         invert_acci_dict = dict([[v, k] for k, v in Interval.accidentalDict.items()])
+        invert_accisafe_dict = dict([[v, k] for k, v in Interval.accidentalSafeDict.items()])
 
         intervalChar = list(string)
         num = intervalChar.pop(len(intervalChar) - 1)
@@ -201,16 +217,16 @@ class Interval:
             if intervalChar[len(intervalChar) - 2] == "1":
                 num = 10
                 intervalChar.pop(len(intervalChar) - 2)
-
-        print(intervalChar[0])
         if intervalChar[0] == '-':
-            sign == -1
+            sign = -1
             intervalChar.pop(0)
         else:
-            sign == 1
-            intervalChar.pop(0)
+            sign = 1
+
         qual = invert_acci_dict.get("".join(intervalChar), "none")
-        return self._init_from_list(span, qual, xoct, sign)
+        if qual == "none":
+            qual = invert_accisafe_dict.get("".join(intervalChar), "none")
+        return self._init_from_list(span - 1, qual, xoct, sign)
 
     ## A private method that determines approprite span, qual, xoct, sign
     # from two pitches. If pitch2 is lower than pitch1 then a descending
@@ -222,6 +238,13 @@ class Interval:
     def _init_from_pitches(self, pitch1, pitch2):
         # ... parse the string into a span, qual, xoct and sign values
         span, qual, xoct, sign = (-1, -1, -1, -1)
+        if (pitch1 < pitch2):
+            sign = 1
+        else:
+            sign = -1
+        # find direction first. Then whether the letter is higher in the index than the other
+        # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
+
         # ... pass on to check and assign instance attributes.
         self._init_from_list(span, qual, xoct, sign)
 
@@ -313,16 +336,46 @@ class Interval:
     ## Returns a string containing the interval name.
     #  For example, Interval('-P5').string() would return '-P5'.
     def string(self):
+        intString = ""
         if self.sign == -1:
             intString = "-"
-        return intString + str(Interval.accidentalDict[self.qual]) + str(self.span + self.xoct * 8)
+        return intString + str(Interval.accidentalDict[self.qual]) + str(self.span + 1 + self.xoct * 8)
 
     ## Returns the full interval name, e.g. 'doubly-augmented third'
     #  or 'descending augmented sixth'
     # @param sign If true then "descending" will appear in the
     # name if it is a descending interval.
     def full_name(self, *, sign=True):
-        pass
+        acciStrDict = {12: 'quintuply-augmented',
+                          11: 'quadruply-augmented',
+                          10: 'triply-augmented',
+                          9: 'doubly-augmented',
+                          8: 'augmented',
+                          7: 'major',
+                          6: 'perfect',
+                          5: 'minor',
+                          4: 'diminished',
+                          3: 'doubly-diminished',
+                          2: 'triply-diminished',
+                          1: 'quadruply-diminished',
+                          0: 'quintuply-diminished'}
+        intervalStrDict = {0: 'unison',
+                           1: 'second',
+                           2: 'third',
+                           3: 'fourth',
+                           4: 'fifth',
+                           5: 'sixth',
+                           6: 'seventh',
+                           7: 'octave'}
+        returnStr = ""
+        if sign == True:
+            if self.sign == -1:
+                returnStr += "descending "
+            returnStr += acciStrDict.get(self.qual, "none") + " "
+            returnStr += intervalStrDict.get(self.span, "none")
+        return returnStr
+
+
 
     ## Returns the full name of the interval's span, e.g. a
     # unison would return "unison" and so on.
@@ -342,7 +395,9 @@ class Interval:
     ## Returns the interval's number of lines and spaces, e.g.
     # a unison will return 1.
     def lines_and_spaces(self):
-        pass
+        if self.span == 0:
+            return 1
+        return self.span
 
     ## Private method that returns a zero based interval quality from its 
     #  external name. Raises an assertion if the name is invalid. See:
@@ -509,8 +564,3 @@ class Interval:
     def transpose(self, pref):
         # Do NOT implement this method yet.
         pass
-
-
-if __name__ == "__main__":
-    print(Interval("-P5"))
-

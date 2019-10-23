@@ -1,11 +1,11 @@
-============= kjzhou2.hw5 transcript [test] =============
+I============= kjzhou2.hw5 transcript [test] =============
   module: interval
     [import]: failed  (0/1)
       [  input = Interval('')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Interval(' ')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Interval('0')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Interval('M0')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
-      [  input = Interval('1')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
+      [  input = Interval('1')  ]  your_output = $exception$  desired_output = $exception$  (2/2)Inte
       [  input = Interval('X1')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Interval('+++')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
       [  input = Interval('+-+5')  ]  your_output = $exception$  desired_output = $exception$  (2/2)
