@@ -304,28 +304,34 @@ class Interval:
 
         # ... parse the string into a span, qual, xoct and sign values
         span, qual, xoct, sign = (-1, -1, -1, -1)
-        isComplement = False
+
         if (pitch1 < pitch2):
+
             sign = 1
         else:
             sign = -1
-            pitch2.octave += 1
             temp = pitch1
             pitch1 = pitch2
             pitch2 = temp
-            isComplement = True
-            # find the complement
 
         span = pitch2.letter - pitch1.letter
+        while span < 0:
+            span += Interval._octave_span
         semitones = pitch2.keynum() - pitch1.keynum()
         diaSeparation = diatonicDict.get(pitch2.letter) - diatonicDict.get(pitch1.letter)
+        while diaSeparation < 0:
+            diaSeparation += 12
+        print("span:" + str(span), "semitones" + str(semitones), "diatonic separation:" + str(diaSeparation))
         xoct, qual = divmod(semitones - diaSeparation, 12)
+        print("xtraOct: " + str(xoct), "qual: " + str(qual))
         if span in Interval.majorminor:
+            if pitch1.letter == 2 or pitch1.letter == 6:
+                qual -= 1
             qual = majMinAdj.get(qual)
         else:
+            if pitch1.letter == 6:
+                qual -= 1
             qual = perfAdj.get(qual)
-        if isComplement:
-            xoct += 1
         # find direction first. Then whether the letter is higher in the index than the other
         # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
         print(span, qual, xoct, sign)
@@ -424,7 +430,7 @@ class Interval:
         intString = ""
         if self.sign == -1:
             intString = "-"
-        return intString + str(Interval.accidentalDict[self.qual]) + str(self.span + 1 + self.xoct * 8)
+        return intString + str(Interval.accidentalDict[self.qual]) + str(self.span + 1 + self.xoct * 7)
 
     ## Returns the full interval name, e.g. 'doubly-augmented third'
     #  or 'descending augmented sixth'
