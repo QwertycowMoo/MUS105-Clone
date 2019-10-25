@@ -123,6 +123,9 @@ class Interval:
                        6: 'seventh',
                        7: 'octave'}
 
+    invert_acci_dict = dict([[v, k] for k, v in accidentalDict.items()])
+    invert_accisafe_dict = dict([[v, k] for k, v in accidentalSafeDict.items()])
+
     majorminor = [1, 2, 5, 6]
     perfect = [0, 3, 4, 7]
 
@@ -239,8 +242,6 @@ class Interval:
         # ... parse the string into a span, qual, xoct and sign values
         span, qual, xoct, sign = (-1, -1, -1, -1)
         # ... pass on to check an assign instance attributes.
-        invert_acci_dict = dict([[v, k] for k, v in Interval.accidentalDict.items()])
-        invert_accisafe_dict = dict([[v, k] for k, v in Interval.accidentalSafeDict.items()])
 
         intervalChar = list(string)
         num = intervalChar.pop(len(intervalChar) - 1)
@@ -257,9 +258,9 @@ class Interval:
         else:
             sign = 1
 
-        qual = invert_acci_dict.get("".join(intervalChar), "none")
+        qual = Interval.invert_acci_dict.get("".join(intervalChar), "none")
         if qual == "none":
-            qual = invert_accisafe_dict.get("".join(intervalChar), "none")
+            qual = Interval.invert_accisafe_dict.get("".join(intervalChar), "none")
         return self._init_from_list(span - 1, qual, xoct, sign)
 
     ## A private method that determines approprite span, qual, xoct, sign
@@ -361,7 +362,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __lt__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() < self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Implements Interval <= Interval.
     # @param other The interval to compare with this interval.
@@ -371,7 +378,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __le__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() <= self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Implements Interval == Interval.
     # @param other The interval to compare with this interval.
@@ -381,7 +394,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __eq__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() == self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Implements Interval != Interval.
     # @param other The interval to compare with this interval.
@@ -391,7 +410,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __ne__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() != self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Implements Interval >= Interval.
     # @param other The interval to compare with this interval.
@@ -401,7 +426,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __ge__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() >= self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Implements Interval > Interval.
     # @param other The interval to compare with this interval.
@@ -411,7 +442,13 @@ class Interval:
     # This method should call self.pos() and other.pos() to get the
     # values to compare. See: pos().
     def __gt__(self, other):
-        pass
+        if isinstance(other, Interval):
+            if other.pos() > self.pos():
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("What is being compared is not an Interval")
 
     ## Returns a numerical value for comparing the size of this interval to
     # another. The comparison depends on the span, extra octaves, and quality
@@ -422,7 +459,7 @@ class Interval:
     # larger than the second if its quality is larger. This value can be
     # encoded as a 16 bit integer: (((span + (xoct * 7)) + 1) << 8) + qual  
     def pos(self):
-        pass
+        return (((self.span + (self.xoct * 7)) + 1) << 8) + self.qual
 
     ## Returns a string containing the interval name.
     #  For example, Interval('-P5').string() would return '-P5'.
@@ -490,87 +527,185 @@ class Interval:
     # quality of unison, which can be any valid quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_unison(self, qual=None):
-        pass
+        if self.span == Interval._unison_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a second otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of second, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_second(self, qual=None):
-        pass
+        if self.span == Interval._2nd_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a third otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of third, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_third(self, qual=None):
-        pass
+        if self.span == Interval._3rd_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a fourth otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of fourth, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_fourth(self, qual=None):
-        pass
+        if self.span == Interval._4th_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a fifth otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of fifth, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_fifth(self, qual=None):
-        pass
+        if self.span == Interval._5th_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a sixth otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of sixth, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_sixth(self, qual=None):
-        pass
+        if self.span == Interval._6th_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is a seventh otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of seventh, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_seventh(self, qual=None):
-        pass
+        if self.span == Interval._7th_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns true if the interval is an octave otherwise false.
     # @param qual If specified the predicate tests for that specific
     # quality of octave, which can be any quality symbol, e.g.
     # 'P', 'M' 'm' 'd' 'A' 'o' '+' and so on. See: _to_iq().
     def is_octave(self, qual=None):
-        pass
+        if self.span == Interval._octave_span:
+            if qual == None:
+                return True
+            else:
+                if isinstance(qual, str):
+                    if Interval.invert_acci_dict(qual, "none") != "none":
+                        return True
+                    else:
+                        return False
+                else:
+                    raise ValueError('This is not a valid quality')
 
     ## Returns a 'diminution count' 1-5 if the interval is diminished else False.
     # For example, if the interval is doubly-diminished then 2 is returned.
     # If the interval not diminished at all (e.g. is perfect, augmented, minor or
     # major) then False is returned.
     def is_diminished(self):
-        pass
+        if self.qual > 4:
+            return False
+        else:
+            return self.qual + 1
 
     ## Returns true if the interval is minor, otherwise false.
     def is_minor(self):
-        pass
+        if self.qual == 5:
+            return True
+        else:
+            return False
 
     ## Returns true if the interval is perfect, otherwise false.
     def is_perfect(self):
-        pass
+        if self.qual == 6:
+            return True
+        else:
+            return False
 
     ## Returns true if the interval is major, otherwise false.
     def is_major(self):
-        pass
+        if self.qual == 7:
+            return True
+        else:
+            return False
 
     ## Returns a 'augmentation count' 1-5 if the interval is augmented else False.
     # For example, if the interval is doubly-augmented then 2 is returned.
     # If the interval not augmented at all (e.g. is perfect, diminished, minor or
     # major) then False is returned.
     def is_augmented(self):
-        pass
+        if self.qual < 8:
+            return False
+        else:
+            return 6 - (13 - self.qual)
 
     ## Returns true if the interval belongs to the 'perfect interval'
     #  family, i.e. it is a Unison, 4th, 5th, or Octave.
     def is_perfect_type(self):
-        pass
+        if self.span in Interval.perfect:
+            return True
+        else:
+            return False
 
     ## Returns true if this interval belongs to the 'imperfect interval'
     #  family, i.e. it is a 2nd, 3rd, 6th, or 7th.
