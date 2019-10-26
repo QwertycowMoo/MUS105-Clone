@@ -253,10 +253,20 @@ class Interval:
         # ... pass on to check an assign instance attributes.
 
         intervalChar = list(string)
-        num = intervalChar.pop(len(intervalChar) - 1)
-        if num.isnumeric():
-            num = int(num)
-            xoct, span = divmod(num, 8)
+        counter = 1
+        num = intervalChar[len(intervalChar) - counter]
+
+        while num.isnumeric():
+            counter += 1
+            num = intervalChar[len(intervalChar) - counter]
+        counter -= 1
+        num = int(''.join(intervalChar[len(intervalChar) - counter:]))
+
+        intervalChar = intervalChar[:len(intervalChar) - counter]
+        print(intervalChar)
+        xoct, span = divmod(num, 8)
+        if xoct == 0:
+            span -= 1
         if num == "0":
             if intervalChar[len(intervalChar) - 2] == "1":
                 num = 10
@@ -270,7 +280,8 @@ class Interval:
         qual = Interval.invert_acci_dict.get("".join(intervalChar), "none")
         if qual == "none":
             qual = Interval.invert_accisafe_dict.get("".join(intervalChar), "none")
-        return self._init_from_list(span - 1, qual, xoct, sign)
+        print(span, qual, xoct, sign)
+        return self._init_from_list(span, qual, xoct, sign)
 
     ## A private method that determines approprite span, qual, xoct, sign
     # from two pitches. If pitch2 is lower than pitch1 then a descending
@@ -340,7 +351,7 @@ class Interval:
             qual = majMinAdj.get(qual)
         else:
             if pitch1.letter == 6:
-                qual -= 1
+                qual += 1
             qual = perfAdj.get(qual)
         # find direction first. Then whether the letter is higher in the index than the other
         # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
@@ -372,7 +383,8 @@ class Interval:
     # values to compare. See: pos().
     def __lt__(self, other):
         if isinstance(other, Interval):
-            if other.pos() < self.pos():
+            print(other.pos(), self.pos())
+            if other.pos() > self.pos():
                 return True
             else:
                 return False
@@ -388,7 +400,7 @@ class Interval:
     # values to compare. See: pos().
     def __le__(self, other):
         if isinstance(other, Interval):
-            if other.pos() <= self.pos():
+            if other.pos() >= self.pos():
                 return True
             else:
                 return False
@@ -436,7 +448,7 @@ class Interval:
     # values to compare. See: pos().
     def __ge__(self, other):
         if isinstance(other, Interval):
-            if other.pos() >= self.pos():
+            if other.pos() <= self.pos():
                 return True
             else:
                 return False
@@ -452,7 +464,7 @@ class Interval:
     # values to compare. See: pos().
     def __gt__(self, other):
         if isinstance(other, Interval):
-            if other.pos() > self.pos():
+            if other.pos() < self.pos():
                 return True
             else:
                 return False
@@ -495,12 +507,12 @@ class Interval:
     ## Returns the full name of the interval's span, e.g. a
     # unison would return "unison" and so on.
     def span_name(self):
-        return Interval.acciStrDict.get(self.qual, "none")
+        return Interval.intervalStrDict.get(self.span, "none")
 
     ## Returns the full name of the interval's quality, e.g. a
     # perfect unison would return "perfect" and so on.
     def quality_name(self):
-        return Interval.intervalStrDict.get(self.span, "none")
+        return Interval.acciStrDict.get(self.qual, "none")
 
     ## Returns true if this interval and the other interval have the
     # same span, quality and sign. The extra octaves are ignored.
@@ -519,7 +531,7 @@ class Interval:
     def lines_and_spaces(self):
         if self.span == 0:
             return 1
-        return self.span
+        return self.span + 1
 
     ## Private method that returns a zero based interval quality from its 
     #  external name. Raises an assertion if the name is invalid. See:
@@ -541,9 +553,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -558,9 +572,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -575,9 +591,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -592,9 +610,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -609,9 +629,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -626,9 +648,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -643,9 +667,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
@@ -660,9 +686,11 @@ class Interval:
                 return True
             else:
                 if isinstance(qual, str):
-                    if Interval.invert_acci_dict(qual, "none") != "none":
+                    if Interval.invert_acci_dict.get(qual, "none") == self.qual:
                         return True
                     else:
+                        if Interval.invert_accisafe_dict.get(qual, "none") == self.qual:
+                            return True
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
