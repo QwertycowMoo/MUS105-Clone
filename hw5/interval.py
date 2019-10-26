@@ -710,41 +710,69 @@ class Interval:
     ## Returns true if this interval belongs to the 'imperfect interval'
     #  family, i.e. it is a 2nd, 3rd, 6th, or 7th.
     def is_imperfect_type(self):
-        pass
+        if self.span in Interval.majorminor:
+            return True
+        else:
+            return False
 
     ## Returns true if this is a simple interval, i.e. its span is
     #  less-than-or-equal to an octave.
     def is_simple(self):
-        pass
+        if self.xoct == 0:
+            return True
+        else:
+            return False
 
     ## Returns true if this is a compound interval, i.e. its span is
     #  more than an octave (an octave is a simple interval).
     def is_compound(self):
-        pass
+        if self.xoct > 0:
+            return True
+        else:
+            return False
 
     ## Returns true if this interval's sign is 1.
     def is_ascending(self):
-        pass
+        if self.sign == 1:
+            return True
+        else:
+            return False
 
     ## Returns true if this interval's sign is -1.
     def is_descending(self):
-        pass
+        if self.sign == -1:
+            return True
+        else:
+            return False
 
     ## Returns true if the interval is a consonant interval. In this
     # context the perfect fourth should be considered consonant.
     def is_consonant(self):
-        pass
+        if self.is_imperfect_type():
+            if self.is_major() or self.is_minor():
+                return True
+            else:
+                return False
+        else:
+            if self.is_perfect():
+                return True
+            else:
+                return False
+
 
     ## Returns true if the interval is not a consonant interval.
     def is_dissonant(self):
-        pass
+        if self.is_augmented() or self.is_diminished():
+            return True
+        else:
+            return False
 
     ##  Returns a complemented copy of the interval. To complement an interval
     # you invert its span and quality. To invert the span, subtract it from
     # the maximum span index (the octave index). To invert the  quality subtract
     # it from the maximum quality index (quintuply augmented).
     def complemented(self):
-        pass
+        return Interval([Interval._octave_span - self.span, Interval._5aug_qual - self.qual, self.xoct, self.sign])
 
     ## Returns the number of semitones in the interval. It is possible
     # to determine the number of semitones by looking at the span and
