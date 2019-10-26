@@ -129,6 +129,15 @@ class Interval:
     majorminor = [1, 2, 5, 6]
     perfect = [0, 3, 4, 7]
 
+    diatonicDict = {0: 0,
+                    1: 2,
+                    2: 4,
+                    3: 5,
+                    4: 7,
+                    5: 9,
+                    6: 11,
+                    7: 12}
+
     def __init__(self, arg, other=None):
 
         if isinstance(arg, list):
@@ -352,7 +361,7 @@ class Interval:
     ## The string the console prints shows the external form.
     # Example: Interval("oooo8")
     def __repr__(self):
-        return f'Interval({self.string()})'
+        return f'Interval("{self.string()}")'
 
     ## Implements Interval < Interval.
     # @param other The interval to compare with this interval.
@@ -783,7 +792,34 @@ class Interval:
     #
     # This value will be negative for descending intervals otherwise positive.
     def semitones(self):
-        pass
+        majMinAdj = {Interval._4dim_qual : -5,
+                     Interval._3dim_qual : -4,
+                     Interval._2dim_qual : -3,
+                     Interval._1dim_qual : -2,
+                     Interval._min_qual : -1,
+                     Interval._maj_qual : 0,
+                     Interval._1aug_qual : 1,
+                     Interval._2aug_qual : 2,
+                     Interval._3aug_qual : 3,
+                     Interval._4aug_qual : 4}
+        perfAdj = {Interval._5dim_qual : -5,
+                   Interval._4dim_qual : -4,
+                   Interval._3dim_qual : -3,
+                   Interval._2dim_qual : -2,
+                   Interval._1dim_qual : -1,
+                   Interval._perf_qual : 0,
+                   Interval._1aug_qual : 1,
+                   Interval._2aug_qual : 1,
+                   Interval._3aug_qual : 2,
+                   Interval._4aug_qual : 4,
+                   Interval._5aug_qual : 5}
+        semitones = Interval.diatonicDict.get(self.span)
+        if self.qual in Interval.majorminor:
+            semitones += majMinAdj.get(self.qual)
+        else:
+            semitones += perfAdj.get(self.qual)
+        return semitones
+
 
     ## Adds a specified interval to this interval.
     #  @return  a new interval expressing the total span of both intervals.
@@ -793,7 +829,10 @@ class Interval:
     # NotImplementedError if either intervals are descending.
     def add(self, other):
         # Do NOT implement this method yet.
-        pass
+        if isinstance(other, Interval):
+            span = ((self.span + other.span) - 1) % 7
+            #still need to finish
+
 
     # Transposes a Pitch or Pnum by the interval. Pnum transposition
     #  has no direction so if the interval is negative its complement
