@@ -250,7 +250,8 @@ class Interval:
                             if span == Interval._unison_span and qual < Interval._perf_qual \
                                     or span == Interval._2nd_span and qual < Interval._1dim_qual \
                                     or span == Interval._3rd_span and qual < Interval._3dim_qual:
-                                raise ValueError("An ascending interval cannot have a negative number of semitones")
+                                if xoct == 0:
+                                    raise ValueError("An ascending interval cannot have a negative number of semitones")
                     else:
                         raise ValueError("This is not a valid direction for the interval")
                 else:
@@ -845,9 +846,10 @@ class Interval:
     #
     # This value will be negative for descending intervals otherwise positive.
     def semitones(self):
-
         semitones = Interval.diatonicDict.get(self.span)
-        if self.qual in Interval.majorminor:
+        if self.xoct > 0:
+             semitones = semitones + (12 * self.xoct)
+        if self.span in Interval.majorminor:
             semitones += Interval.majMinAdj.get(self.qual)
         else:
             semitones += Interval.perfAdj.get(self.qual)
