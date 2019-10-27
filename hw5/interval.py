@@ -67,7 +67,7 @@ class Interval:
     # a string, list of four integers, or two pitches) the method will raise a TypeError
     # for the offending value.
 
-    _5dim_qual, _4dim_qual, _3dim_qual, _2dim_qual, _1dim_qual, _min_qual, _perf_qual,\
+    _5dim_qual, _4dim_qual, _3dim_qual, _2dim_qual, _1dim_qual, _min_qual, _perf_qual, \
     _maj_qual, _1aug_qual, _2aug_qual, _3aug_qual, _4aug_qual, _5aug_qual = range(13)
 
     _unison_span, _2nd_span, _3rd_span, _4th_span, _5th_span, _6th_span, _7th_span, _octave_span = range(8)
@@ -138,6 +138,28 @@ class Interval:
                     6: 11,
                     7: 12}
 
+    majMinAdj = {_4dim_qual: -5,
+                 _3dim_qual: -4,
+                 _2dim_qual: -3,
+                 _1dim_qual: -2,
+                 _min_qual: -1,
+                 _maj_qual: 0,
+                 _1aug_qual: 1,
+                 _2aug_qual: 2,
+                 _3aug_qual: 3,
+                 _4aug_qual: 4}
+    perfAdj = {_5dim_qual: -5,
+               _4dim_qual: -4,
+               _3dim_qual: -3,
+               _2dim_qual: -2,
+               _1dim_qual: -1,
+               _perf_qual: 0,
+               _1aug_qual: 1,
+               _2aug_qual: 2,
+               _3aug_qual: 3,
+               _4aug_qual: 4,
+               _5aug_qual: 5}
+
     def __init__(self, arg, other=None):
 
         if isinstance(arg, list):
@@ -186,7 +208,6 @@ class Interval:
     # so on. Otherwise if any edge case fails the method should raise a ValueError.
     def _init_from_list(self, span, qual, xoct, sign):
 
-
         if span >= 0 and span < 9:
             if (Interval.accidentalDict.get(qual, "none") != "none"):
 
@@ -226,8 +247,8 @@ class Interval:
                         raise ValueError("This interval is outside the range of 127 semitones")
                     if not sign == 1 or not sign == -1:
                         if sign == 1:
-                            if span == Interval._unison_span and qual < Interval._perf_qual\
-                                    or span == Interval._2nd_span and qual < Interval._1dim_qual\
+                            if span == Interval._unison_span and qual < Interval._perf_qual \
+                                    or span == Interval._2nd_span and qual < Interval._1dim_qual \
                                     or span == Interval._3rd_span and qual < Interval._3dim_qual:
                                 raise ValueError("An ascending interval cannot have a negative number of semitones")
                     else:
@@ -342,21 +363,26 @@ class Interval:
         diaSeparation = diatonicDict.get(pitch2.letter) - diatonicDict.get(pitch1.letter)
         while diaSeparation < 0:
             diaSeparation += 12
-        print("span:" + str(span), "semitones" + str(semitones), "diatonic separation:" + str(diaSeparation))
-        xoct, qual = divmod(semitones - diaSeparation, 12)
+        print("span:" + str(span), "semitones: " + str(semitones), "diatonic separation:" + str(diaSeparation))
+        if semitones - diaSeparation < 0:
+            xoct, qual = divmod(semitones - diaSeparation, -12)
+        else:
+            xoct, qual = divmod(semitones - diaSeparation, 12)
         print("xtraOct: " + str(xoct), "qual: " + str(qual))
         if span in Interval.majorminor:
             if pitch1.letter == 2 or pitch1.letter == 6:
                 qual -= 1
             qual = majMinAdj.get(qual)
         else:
-            if pitch1.letter == 6:
+            if pitch1.letter == 3 and pitch2.letter == 6:
                 qual += 1
+            elif pitch1.letter == 6 and pitch2.letter != 2:
+                qual -= 1
             qual = perfAdj.get(qual)
         # find direction first. Then whether the letter is higher in the index than the other
         # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
         print(span, qual, xoct, sign)
-        #needs to fix complement and octaves and such
+        # needs to fix complement and octaves and such
         # ... pass on to check and assign instance attributes.
         return self._init_from_list(span, qual, xoct, sign)
 
@@ -796,7 +822,6 @@ class Interval:
             else:
                 return False
 
-
     ## Returns true if the interval is not a consonant interval.
     def is_dissonant(self):
         if self.is_augmented() or self.is_diminished():
@@ -820,34 +845,13 @@ class Interval:
     #
     # This value will be negative for descending intervals otherwise positive.
     def semitones(self):
-        majMinAdj = {Interval._4dim_qual : -5,
-                     Interval._3dim_qual : -4,
-                     Interval._2dim_qual : -3,
-                     Interval._1dim_qual : -2,
-                     Interval._min_qual : -1,
-                     Interval._maj_qual : 0,
-                     Interval._1aug_qual : 1,
-                     Interval._2aug_qual : 2,
-                     Interval._3aug_qual : 3,
-                     Interval._4aug_qual : 4}
-        perfAdj = {Interval._5dim_qual : -5,
-                   Interval._4dim_qual : -4,
-                   Interval._3dim_qual : -3,
-                   Interval._2dim_qual : -2,
-                   Interval._1dim_qual : -1,
-                   Interval._perf_qual : 0,
-                   Interval._1aug_qual : 1,
-                   Interval._2aug_qual : 1,
-                   Interval._3aug_qual : 2,
-                   Interval._4aug_qual : 4,
-                   Interval._5aug_qual : 5}
+
         semitones = Interval.diatonicDict.get(self.span)
         if self.qual in Interval.majorminor:
-            semitones += majMinAdj.get(self.qual)
+            semitones += Interval.majMinAdj.get(self.qual)
         else:
-            semitones += perfAdj.get(self.qual)
+            semitones += Interval.perfAdj.get(self.qual)
         return semitones
-
 
     ## Adds a specified interval to this interval.
     #  @return  a new interval expressing the total span of both intervals.
@@ -856,11 +860,9 @@ class Interval:
     # A TypeError should be raised if other is not an interval. A
     # NotImplementedError if either intervals are descending.
     def add(self, other):
-        # Do NOT implement this method yet.
         if isinstance(other, Interval):
             span = ((self.span + other.span) - 1) % 7
-            #still need to finish
-
+            # still need to finish
 
     # Transposes a Pitch or Pnum by the interval. Pnum transposition
     #  has no direction so if the interval is negative its complement
@@ -868,5 +870,21 @@ class Interval:
     #  @param pref  The Pitch or Pnum to transpose.
     #  @return The transposed Pitch or Pnum.
     def transpose(self, pref):
-        # Do NOT implement this method yet.
-        pass
+        #still need handle pnum cases
+        if isinstance(pref, Pitch):
+            if self.sign == -1:
+                if self.span > pref.letter:
+                    pref.octave -= 1
+                pref.letter = (pref.letter + 7 - self.span) % 7
+                if self.is_major() or self.is_minor():
+                    pref.accidental -= Interval.majMinAdj.get(self.qual)
+                else:
+                    pref.accidental -= Interval.perfAdj.get(self.qual)
+            else:
+                pref.letter = pref.letter + self.span % 7
+                if self.is_major() or self.is_minor():
+                    pref.accidental += Interval.majMinAdj.get(self.qual)
+                else:
+                    pref.accidental += Interval.perfAdj.get(self.qual)
+            return Pitch(pref.string())
+
