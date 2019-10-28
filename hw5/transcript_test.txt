@@ -380,6 +380,6 @@ Total raw score: (641/751)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 1
-Extra credit (if applicable): 0
-Adjusted score (Final): 640/750
+Extra credit (if applicable): 62
+Adjusted score (Final): 640/688
 
