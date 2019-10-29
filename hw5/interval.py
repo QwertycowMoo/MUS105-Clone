@@ -285,7 +285,6 @@ class Interval:
         num = int(''.join(intervalChar[len(intervalChar) - counter:]))
 
         intervalChar = intervalChar[:len(intervalChar) - counter]
-        print(intervalChar)
         xoct, span = divmod(num, 8)
         if xoct == 0:
             span -= 1
@@ -302,7 +301,6 @@ class Interval:
         qual = Interval.invert_acci_dict.get("".join(intervalChar), "none")
         if qual == "none":
             qual = Interval.invert_accisafe_dict.get("".join(intervalChar), "none")
-        print(span, qual, xoct, sign)
         return self._init_from_list(span, qual, xoct, sign)
 
     ## A private method that determines approprite span, qual, xoct, sign
@@ -364,12 +362,10 @@ class Interval:
         diaSeparation = diatonicDict.get(pitch2.letter) - diatonicDict.get(pitch1.letter)
         while diaSeparation < 0:
             diaSeparation += 12
-        print("span:" + str(span), "semitones: " + str(semitones), "diatonic separation:" + str(diaSeparation))
         if semitones - diaSeparation < 0:
             xoct, qual = divmod(semitones - diaSeparation, -12)
         else:
             xoct, qual = divmod(semitones - diaSeparation, 12)
-        print("xtraOct: " + str(xoct), "qual: " + str(qual))
         if span in Interval.majorminor:
             if pitch1.letter == 2 or pitch1.letter == 6:
                 qual -= 1
@@ -382,7 +378,6 @@ class Interval:
             qual = perfAdj.get(qual)
         # find direction first. Then whether the letter is higher in the index than the other
         # complement of an interval is 8va - (L1 - L2), regular span is L2 - L1
-        print(span, qual, xoct, sign)
         # needs to fix complement and octaves and such
         # ... pass on to check and assign instance attributes.
         return self._init_from_list(span, qual, xoct, sign)
@@ -410,7 +405,6 @@ class Interval:
     # values to compare. See: pos().
     def __lt__(self, other):
         if isinstance(other, Interval):
-            print(other.pos(), self.pos())
             if other.pos() > self.pos():
                 return True
             else:
@@ -588,6 +582,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a second otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -607,6 +603,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a third otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -626,6 +624,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a fourth otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -645,6 +645,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a fifth otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -664,6 +666,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a sixth otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -683,6 +687,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is a seventh otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -702,6 +708,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns true if the interval is an octave otherwise false.
     # @param qual If specified the predicate tests for that specific
@@ -721,6 +729,8 @@ class Interval:
                         return False
                 else:
                     raise ValueError('This is not a valid quality')
+        else:
+            return False
 
     ## Returns a 'diminution count' 1-5 if the interval is diminished else False.
     # For example, if the interval is doubly-diminished then 2 is returned.
@@ -730,7 +740,7 @@ class Interval:
         if self.qual > 4:
             return False
         else:
-            return self.qual + 1
+            return abs(self.qual - 5)
 
     ## Returns true if the interval is minor, otherwise false.
     def is_minor(self):
