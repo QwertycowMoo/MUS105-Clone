@@ -66,13 +66,20 @@ class Key:
 
     def __init__(self, signum, mode):
         if (isinstance(signum, int)):
-            self.signum = signum
-            if (mode in Key.modeNames):
-                self.mode = mode
-            elif mode == "Ionian":
-                self.mode = Key.modeNames[0]
-            elif mode == "Aeolian":
-                self.mode = Key.modeNames[5]
+            if (isinstance(mode, str)):
+                if abs(signum) > 7:
+                    raise ValueError("You cannot have more than 7 flats or sharps")
+                self.signum = signum
+                if (mode in Key.modeNames):
+                    self.mode = mode
+                elif mode == "Ionian":
+                    self.mode = Key.modeNames[0]
+                elif mode == "Aeolian":
+                    self.mode = Key.modeNames[5]
+                else:
+                    raise ValueError("The mode must be one of the seven church modes or major or minor")
+            else:
+                raise ValueError("mode must be a string")
         else:
             raise ValueError("signum must be an int")
 

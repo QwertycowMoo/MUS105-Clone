@@ -11,14 +11,21 @@ from enum import IntEnum
 # them their corresponding enum value.
 class Mode (IntEnum):
     # Create enums here...
-
-
+    MAJOR = 0
+    DORIAN = 1
+    PHRYGIAN = 2
+    LYDIAN = 3
+    MIXOLYDIAN = 4
+    MINOR = 5
+    LOCRIAN = 6
+    IONIAN = MAJOR
+    AEOLIAN = MINOR
     ## Returns only the first three characters of the mode's name.
     def short_name(self):
-        pass
+        return self.name[:3]
 
     ## Returns the integer degree number representing the starting
     # scale degree of the mode. Thus IONIAN and MAJOR are 0,
     # DORIAN is 1, LOCRIAN is 6 and so on.
     def tonic_degree(self):
-        pass
+        return self.value

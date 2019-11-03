@@ -83,4 +83,4 @@ class Mark (IntEnum):
     # bits of the enum.
     def group(self):
         groupMask = 0b1111111100000000
-        return (self.value & groupMask) >> 8
+        return (self.value & groupMask)
