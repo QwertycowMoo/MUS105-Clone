@@ -70,9 +70,9 @@ class Key:
             if (mode in Key.modeNames):
                 self.mode = mode
             elif mode == "Ionian":
-                self.mode = mode[0]
+                self.mode = Key.modeNames[0]
             elif mode == "Aeolian":
-                self.mode = mode[5]
+                self.mode = Key.modeNames[5]
         else:
             raise ValueError("signum must be an int")
 
