@@ -120,15 +120,17 @@ class Meter:
     def beat(self):
         if self.is_compound() or self.is_simple():
             if self.is_duple():
-                return Ratio(self.num / 2, self.den)
+                return Ratio(int(self.num / 2), self.den)
             if self.is_triple():
-                return Ratio(self.num / 3, self.den)
+                return Ratio(int(self.num / 3), self.den)
             if self.is_quadruple():
-                return Ratio(self.num / 4, self.den)
+                return Ratio(int(self.num / 4), self.den)
             if self.is_quintuple():
-                return Ratio(self.num / 5, self.den)
+                return Ratio(int(self.num / 5), self.den)
             if self.is_septuple():
-                return Ratio(self.num / 7, self.den)
+                return Ratio(int(self.num / 7), self.den)
+            else:
+                return Ratio(self.num, self.den)
         else:
             raise NotImplementedError("Nope")
 
