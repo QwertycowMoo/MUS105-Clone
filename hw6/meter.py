@@ -136,4 +136,4 @@ class Meter:
     # For example, 4/4 returns a duration ratio of 1/1, 6/8 meter returns 3/4,
     # and 3/2 returns a duration of 3/2. See: Ratio.
     def measure_dur(self):
-        pass
+        return Ratio(self.num, self.den)
