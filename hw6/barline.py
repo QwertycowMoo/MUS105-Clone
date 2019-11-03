@@ -1,6 +1,6 @@
 ###############################################################################
 
-from enum import Enum, auto
+from enum import Enum
 
 ## A barline represents the right or left side delimiter of a bar.  The set
 # of bar lines are: STANDARD, DOTTED, DASHED, TICKED, SHORT, HEAVY,
@@ -9,16 +9,16 @@ from enum import Enum, auto
 # See: https://en.wikipedia.org/wiki/Bar_(music)
 class Barline (Enum):
     # Create enums here...
-    STANDARD = Enum.auto()
-    DOTTED = Enum.auto()
-    DASHED = Enum.auto()
-    TICKED = Enum.auto()
-    SHORT = Enum.auto()
-    HEAVY = Enum.auto()
-    INTERIOR_DOUBLE = Enum.auto()
-    FINAL_DOUBLE = Enum.auto()
-    LEFT_REPEAT = Enum.auto()
-    RIGHT_REPEAT = Enum.auto()
-    MIDDLE_REPEAT = Enum.auto()
+    STANDARD = 0
+    DOTTED = 1
+    DASHED = 2
+    TICKED = 3
+    SHORT = 4
+    HEAVY = 5
+    INTERIOR_DOUBLE = 6
+    FINAL_DOUBLE = 7
+    LEFT_REPEAT = 8
+    RIGHT_REPEAT = 9
+    MIDDLE_REPEAT = 10
 
 

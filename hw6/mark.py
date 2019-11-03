@@ -77,10 +77,10 @@ class Mark (IntEnum):
     # bits of the enum.
     def rank(self):
         rankMask = 0b0000000011111111
-        return self.value & rankMask >> 8
+        return (self.value & rankMask)
 
     ## Returns the mark's group number from the upper eight
     # bits of the enum.
     def group(self):
         groupMask = 0b1111111100000000
-        return self.value & groupMask >> 8
+        return (self.value & groupMask) >> 8
