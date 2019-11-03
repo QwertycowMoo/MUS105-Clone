@@ -48,20 +48,21 @@ class Key:
             }
 
     modeTranspose = {'Major': Interval('P1'),
-                 'Dorian': Interval('M2'),
-                 'Phrygian': Interval('M3'),
-                 'Lydian': Interval('P4'),
-                 'Mixolydian': Interval('P5'),
-                 'Minor': Interval('M6'),
-                 'Locrian': Interval('M7')}
+                     'Dorian': Interval('M2'),
+                     'Phrygian': Interval('M3'),
+                     'Lydian': Interval('P4'),
+                     'Mixolydian': Interval('P5'),
+                     'Minor': Interval('M6'),
+                     'Locrian': Interval('M7')}
 
-    majorIntervals = {Interval('M2'),Interval('M2'),Interval('m2'),Interval('M2'),Interval('M2'),Interval('M2'),Interval('m2')}
+    majorIntervals = [Interval('M2'), Interval('M2'), Interval('m2'), Interval('M2'), Interval('M2'), Interval('M2'),
+                      Interval('m2')]
     dorianIntervals = majorIntervals[1:] + majorIntervals[:1]
-    phrygianIntervals = majorIntervals[1:] + majorIntervals[:1]
-    lydianIntervals = majorIntervals[1:] + majorIntervals[:1]
-    mixolydianIntervals = majorIntervals[1:] + majorIntervals[:1]
-    minorIntervals = majorIntervals[1:] + majorIntervals[:1]
-    locrianIntervals = majorIntervals[1:] + majorIntervals[:1]
+    phrygianIntervals = majorIntervals[2:] + majorIntervals[:2]
+    lydianIntervals = majorIntervals[3:] + majorIntervals[:3]
+    mixolydianIntervals = majorIntervals[4:] + majorIntervals[:4]
+    minorIntervals = majorIntervals[5:] + majorIntervals[:5]
+    locrianIntervals = majorIntervals[6:] + majorIntervals[:6]
 
     def __init__(self, signum, mode):
         if (isinstance(signum, int)):
@@ -74,7 +75,6 @@ class Key:
                 self.mode = mode[5]
         else:
             raise ValueError("signum must be an int")
-
 
     ## Returns the print representation of the key. The string should
     # include the class name, tonic, mode, number of sharps or flats,
@@ -89,9 +89,9 @@ class Key:
         if self.signum < 0:
             return f'Key: {self.string()} ({abs(self.signum)} flat(s)) {hex(id(self))}'
         elif self.signum > 0:
-            return return f'Key: {self.string()} ({abs(self.signum)} sharp(s)) {hex(id(self))}'
+            return f'Key: {self.string()} ({abs(self.signum)} sharp(s)) {hex(id(self))}'
         else:
-            return return f'Key: {self.string()} ({abs(self.signum)} sharps or flats) {hex(id(self))}'
+            return f'Key: {self.string()} ({abs(self.signum)} sharps or flats) {hex(id(self))}'
 
     ## Returns the external representation of the Key including the
     # constructor name, signum, and the capitalized version of the
@@ -125,12 +125,30 @@ class Key:
     # Key(-6, "phrygian").tonic() is Pnum Bf.
     def tonic(self):
         if self.signum in Key.keys:
-            return Key.modeTranspose.get(self.mode).transpose(Key.get(self.signum))
+            return Key.modeTranspose.get(self.mode).transpose(Key.keys.get(self.signum))
 
     ## Returns a list of Pnums representing the unique pitches of the key's
     # diatonic scale. The octave completion should NOT be included in the list.
     def scale(self):
         if self.mode == "Major":
-            return [i.transponse(Key.keys.get(self.signum)) for i in Key.majorIntervals]
+            return self.makeScale(Key.majorIntervals)
+        elif self.mode == "Dorian":
+            return self.makeScale(Key.dorianIntervals)
+        elif self.mode == "Phrygian":
+            return self.makeScale(Key.phrygianIntervals)
+        elif self.mode == "Lydian":
+            return self.makeScale(Key.lydianIntervals)
+        elif self.mode == "Mixolydian":
+            return self.makeScale(Key.mixolydianIntervals)
+        elif self.mode == "Minor":
+            return self.makeScale(Key.minorIntervals)
+        elif self.mode == "Locrian":
+            return self.makeScale(Key.locrianIntervals)
 
-
+    def makeScale(self, intervals):
+        scale = []
+        pitch = self.tonic()
+        for i in intervals:
+            scale.append(pitch)
+            pitch = i.transpose(pitch)
+        return scale
