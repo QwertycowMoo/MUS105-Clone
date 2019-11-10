@@ -19,40 +19,59 @@ class Bar:
     # Initialize self.voices to an empty list and self.staff to None.
     # See also: Staff, Voice, https://en.wikipedia.org/wiki/Bar_(music)
     def __init__(self, bid, clef=None, key=None, meter=None, barline=None, partial=False):
-        pass
-
+        self.id = bid
+        self.clef = clef
+        self.key = key
+        self.meter = meter
+        self.barline = barline
+        self.partial = partial
+        self.voices = []
+        self.staff = None
     ## Returns a string showing the bars unique id and all attributes
     # except self.voices if that attribute is not None. The order of
     # printing is id, clef, key, meter, barline, followed by the
     # hex id of the instance.
     # Example: '<Bar: 0 Treble A-Major 2/4 STANDARD 0x109667790>'
     def __str__(self):
-        return ''
+        return f'<Bar: {self.id}' \
+               f' {self.clef if self.clef is not None else ""}' \
+               f' {self.key if self.key is not None else ""}' \
+               f' {self.meter if self.meter is not None else ""}' \
+               f' {self.barline if self.barline is not None else ""}' \
+               f' {hex(id(self))}>'
 
     ## Define __repr__ to be the same as __str__ except there is
     # no hex id included.
     # Example: '<Bar: 0 Treble A-Major 2/4 STANDARD>'
     def __repr__(self):
-        return ''
+        return f'<Bar: {self.id}' \
+               f' {self.clef if self.clef is not None else ""}' \
+               f' {self.key if self.key is not None else ""}' \
+               f' {self.meter if self.meter is not None else ""}' \
+               f' {self.barline if self.barline is not None else ""}>'
 
     ## Implements Bar iteration by returning an iterator for the bar's
     # voices. See: Python's iter() function.
     def __iter__(self):
-        pass
+        return self.voices
 
     ## Appends a Voice to the bars's voice list and assigns
     # itself to the voice's bar attribute.
     # @param voice The Voice to append to the bar's voice list.
     # The method should raise a TypeError if voice is not a Voice instance.
     def add_voice(self, voice):
-        pass
+        if (isinstance(voice, Voice)):
+            voice.bar = self.id
+            self.voices.append(voice)
+        else:
+            raise TypeError("This is not a voice instance")
 
     ## Returns the bar's voice identifiers in the same order
     # that they occur in the voices list.
     def voice_ids(self):
-        pass
+        return [i.id for i in self.voices]
 
     ## Returns the number of voices in the bar.
     def num_voices(self):
-        pass
+        return len(self.voices)
 
