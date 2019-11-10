@@ -20,25 +20,37 @@ class Chord(Durational):
     # See also: Rest, Note, https://en.wikipedia.org/wiki/Chord_(music)
 
     def __init__(self, notes):
-        pass
+        super(notes[0].dur)
+        for i in range(len(notes)):
+            if notes[i].dur != notes[0].dur:
+                raise TypeError("All notes are not the same length")
+        self.notes = notes
+        self.voice = []
 
     ## Returns a string showing the chords's pitches, duration,
     # and the hex id of the instance. See: string()
     # Example: '<Chord: (Eb3, Ab3, C4, Eb4) 1/4 0x10e2d5950>'
     def __str__(self):
-        return ''
+        return f'<Chord: {self.string()} {hex(id(self))}'
 
     ## Define __repr__ to be the same as __str__ except there is
     # no hex id included.
     # Example: '<Chord: (Eb3, Ab3, C4, Eb4) 1/4>'
     def __repr__(self):
-        return ''
+        return f'<Chord: {self.string()}>'
 
     # Returns a string displaying the chords's pitches and duration.
     # The pitches are parenthesized and separated by commas.
     # Example: '(Eb3, Ab3, C4, Eb4) 1/2'
     def string(self):
-        pass
+        chordNotes = ""
+        for note in self.notes:
+            if note == self.notes[len(self.notes) - 1]:
+                chordNotes += note.string()
+            else:
+                chordNotes += note.string() + ", "
+        return f'({chordNotes}) {self.dur.string()}'
+
 
 
 

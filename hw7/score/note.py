@@ -19,19 +19,23 @@ class Note (Durational):
     # The attribute self.voice should be initialized to None.
     # See also: Rest, Chord, Durational, https://en.wikipedia.org/wiki/Musical_note
     def __init__(self, pitch, dur, marks=[]):
-        pass
+        super.__init__(dur)
+        self.voice = None
+        self.pitch = pitch
+        self.dur = dur
+        self.marks = marks
 
     ## Returns a string showing the note's pitch, duration
     # and the hex id of the instance.
     # Example: '<Note: F#4 1/8 0x10e242d10>'
     def __str__(self):
-        return ''
+        return f'<Note: {self.pitch.string()} {self.dur.string()} {hex(id(self))}>'
 
     ## Define __repr__ to be the same as __str__ except there is
     # no hex id included.
     # Example: '<Note: F#4 1/8>'
     def __repr__(self):
-        return ''
+        return f'<Note: {self.pitch.string()} {self.dur.string()}>'
 
     ## Implements Note < Note.
     # @param other The note to compare with this note.
@@ -40,7 +44,13 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__lt__() to compare.
     def __lt__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__lt__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Implements Note <= Note.
     # @param other The note to compare with this note.
@@ -50,7 +60,13 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__le__() to compare.
     def __le__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__le__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Implements Note == Note.
     # @param other The note to compare with this note.
@@ -59,7 +75,13 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__eq__() to compare.
     def __eq__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__eq__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Implements Note != Note.
     # @param other The note to compare with this note.
@@ -68,7 +90,13 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__ne__() to compare.
     def __ne__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__ne__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Implements Note >= Note.
     # @param other The note to compare with this note.
@@ -78,7 +106,13 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__ge__() to compare.
     def __ge__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__ge__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Implements Note > Note.
     # @param other The note to compare with this note.
@@ -87,9 +121,15 @@ class Note (Durational):
     # A TypeError should be raised if other is not a Note.
     # This method can call self.pitch.__gt__() to compare.
     def __gt__(self, other):
-        pass
+        if (isinstance(other, Note)):
+            if self.pitch.__gt__(other.pitch):
+                return True
+            else:
+                return False
+        else:
+            raise TypeError("The object being compared to is not a note.")
 
     ## Returns a string that contains the note's pitch and duration.
     # Example: 'G#4 1/4'
     def string(self):
-       pass
+       return f'{self.pitch.string()} {self.dur.string()}'
