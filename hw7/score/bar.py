@@ -48,7 +48,7 @@ class Bar:
                f' {self.clef if self.clef is not None else ""}' \
                f' {self.key if self.key is not None else ""}' \
                f' {self.meter if self.meter is not None else ""}' \
-               f' {self.barline if self.barline.name is not None else ""}>'
+               f' {self.barline.name if self.barline is not None else ""}>'
 
     ## Implements Bar iteration by returning an iterator for the bar's
     # voices. See: Python's iter() function.
