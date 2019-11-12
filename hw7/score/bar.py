@@ -44,11 +44,16 @@ class Bar:
     # no hex id included.
     # Example: '<Bar: 0 Treble A-Major 2/4 STANDARD>'
     def __repr__(self):
-        return f'<Bar: {self.id}' \
-               f' {self.clef if self.clef is not None else ""}' \
-               f' {self.key if self.key is not None else ""}' \
-               f' {self.meter if self.meter is not None else ""}' \
-               f' {self.barline.name if self.barline is not None else ""}>'
+        outputString = f'<Bar: {self.id}'
+        if self.clef is not None:
+            outputString += f' {self.clef}'
+        if self.key is not None:
+            outputString += f' {self.key}'
+        if self.meter is not None:
+            outputString += f' {self.meter}'
+        if self.barline is not None:
+            outputString += f' {self.barline.name}'
+        return outputString + ">"
 
     ## Implements Bar iteration by returning an iterator for the bar's
     # voices. See: Python's iter() function.
