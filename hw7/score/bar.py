@@ -53,7 +53,7 @@ class Bar:
     ## Implements Bar iteration by returning an iterator for the bar's
     # voices. See: Python's iter() function.
     def __iter__(self):
-        return self.voices
+        return iter(self.voices)
 
     ## Appends a Voice to the bars's voice list and assigns
     # itself to the voice's bar attribute.

@@ -19,7 +19,7 @@ class Note (Durational):
     # The attribute self.voice should be initialized to None.
     # See also: Rest, Chord, Durational, https://en.wikipedia.org/wiki/Musical_note
     def __init__(self, pitch, dur, marks=[]):
-        super.__init__(dur)
+        super(Note, self).__init__(dur)
         self.voice = None
         self.pitch = pitch
         self.dur = dur
@@ -132,4 +132,7 @@ class Note (Durational):
     ## Returns a string that contains the note's pitch and duration.
     # Example: 'G#4 1/4'
     def string(self):
-       return f'{self.pitch.string()} {self.dur.string()}'
+        return f'{self.pitch.string()} {self.dur.string()}'
+
+    def noteName(self):
+        return f'{self.pitch.string()}'

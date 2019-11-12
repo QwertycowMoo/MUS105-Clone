@@ -17,7 +17,7 @@ class Rest (Durational):
     # See also: Note, Chord, Durational.
     def __init__(self, dur):
         self.voice = None
-        super.__init__(dur)
+        super(Rest, self).__init__(dur)
 
 
     ## Returns the print representation of the rest. Information includes

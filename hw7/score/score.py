@@ -36,7 +36,9 @@ class Score:
     # If parts are specified they should be added to the score by calling
     # add_part(). See also: Part.
     def __init__(self, metadata={}, parts=[]):
-        pass
+        if isinstance(metadata, dict):
+            self.metadata = metadata
+        self.parts = parts
 
     ## Returns a string showing the score's title and the unique
     # id of the instance printed in hex. To find the score title
@@ -48,18 +50,32 @@ class Score:
     # '<Score: "Aus meines Herzens Grunde" 0x103fa5780>'
     # '<Score: "(untitled)" 0x1334b57f0>'
     def __str__(self):
-        return ''
+        if self.get_metadata('work_title', 'no title') == 'no title':
+            if self.get_metadata('movement_title', 'no movement') == 'no movement':
+                return f'<Score: "(untitled)" {hex(id(self))}>'
+            else:
+                return f'<Score: "{self.get_metadata("movement_title")}" {hex(id(self))}>'
+        else:
+            return f'<Score: "{self.get_metadata("work_title")}" {hex(id(self))}>'
+
+
 
     ## Define __repr__ to be the same as __str__ except there is
     # no hex id included.
     # Example: '<Score: "(untitled)">'
     def __repr__(self):
-        return ''
+        if self.get_metadata('work_title', 'no title') == 'no title':
+            if self.get_metadata('movement_title', 'no movement') == 'no movement':
+                return f'<Score: "(untitled)">'
+            else:
+                return f'<Score: "{self.get_metadata("movement_title")}">'
+        else:
+            return f'<Score: "{self.get_metadata("work_title")}">'
 
     ## Implements Score iteration by returning an iterator for the score's
     # parts. See: Python's iter() function.
     def __iter__(self):
-        pass
+        return iter(self.parts)
 
     ## Returns a value from the score's metadata for the given key
     # (string), or the default value if the key does not exist.
@@ -67,36 +83,41 @@ class Score:
     # @param default A default value to return if key is not in the
     # metadata, defaults to None.
     def get_metadata(self, key, default=None):
-        pass
+        return self.metadata.get(key, default)
 
     ## Assigns a value to the given key in the score's metadata.
     # @param key The dictionary key (string) for the value.
     # @param value The new value to assign in the metadata.
     # @returns The new value in the metadata.
     def set_metadata(self, key, value):
-        pass
+        self.metadata[key] = value
+        return value
 
     ## Appends a Part to the score's part list and assigns
     # itself to the part's score attribute.
     # @param part The part to append to the Score's part list.
     # The method should raise a TypeError if part is not a Part instance.
     def add_part(self, part):
-        pass
+        if isinstance(part, Part):
+            part.score = self.get_metadata('work_title')
 
     ## Returns a list of the scores's part identifiers in the same order
     # that they occur in the parts list.
     def part_ids(self):
-        pass
+        return [i.id for i in self.parts]
 
     ## Returns the number of parts in the score.
     def num_parts(self):
-        pass
+        return len(self.parts)
 
     ## Returns the score part with the specified id or None if it cannot be found.
     # @param pid  The id of the part to return.
     # @return The part if it is found else None.
     def get_part(self, pid):
-        pass
+        for part in self.parts:
+            if pid == part.id:
+                return part
+        return None
 
     ## Returns a list of indented repr() strings. Every string in the list represents
     # one Score/Part/Staff/Bar/Voice/Note/Rest/Chord instance's repr() string
@@ -121,8 +142,18 @@ class Score:
     #           <Note: G4 1/4>
     def print_all_repr(self):
         s = []
-        indent = '  '
-        # TODO ...
+        ind = '  '
+        s.append(self.__repr__())
+        for part in self.parts:
+            s.append(ind + part.__repr__())
+            for staff in part.staffs:
+                s.append(ind + ind + staff.__repr__())
+                for bar in staff.bars:
+                    s.append(ind + ind + ind + bar.__repr__())
+                    for voice in bar.voices:
+                        s.append(ind + ind + ind + ind + voice.__repr__())
+                        for durational in voice.notes:
+                            s.append(ind + ind + ind + ind + ind + durational.__repr__())
         return s
 
     ## Prints the score to the terminal. This function has already been written for you.

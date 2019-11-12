@@ -20,7 +20,7 @@ class Chord(Durational):
     # See also: Rest, Note, https://en.wikipedia.org/wiki/Chord_(music)
 
     def __init__(self, notes):
-        super(notes[0].dur)
+        super(Chord, self).__init__(notes[0].dur)
         for i in range(len(notes)):
             if notes[i].dur != notes[0].dur:
                 raise TypeError("All notes are not the same length")
@@ -46,9 +46,9 @@ class Chord(Durational):
         chordNotes = ""
         for note in self.notes:
             if note == self.notes[len(self.notes) - 1]:
-                chordNotes += note.string()
+                chordNotes += note.noteName()
             else:
-                chordNotes += note.string() + ", "
+                chordNotes += note.noteName() + ", "
         return f'({chordNotes}) {self.dur.string()}'
 
 

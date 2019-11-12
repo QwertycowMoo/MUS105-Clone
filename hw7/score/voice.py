@@ -18,7 +18,6 @@ class Voice:
         self.id = voiceid
         self.notes = []
         self.bar = None
-        self.part = None
 
     ## Returns a string showing the voices's unique id and the
     # hex id of the instance.
@@ -35,7 +34,7 @@ class Voice:
     ## Implements Voice iteration by returning an iterator for the voices's
     # notes. See: Python's iter() function.
     def __iter__(self):
-        return self.notes
+        return iter(self.notes)
 
     ## Appends a Note, Chord or Rest to the voice's note list and assigns
     # itself to that object's voice attribute.
@@ -62,5 +61,5 @@ class Voice:
     # concatenation of the part's id with the voice's id: PARTID.VOICEID
     # Example: 'P1.1'
     def get_pvid(self):
-        return f'{self.part}.{self.id}'
+        return f'{self.bar.staff.part}.{self.id}'
 
