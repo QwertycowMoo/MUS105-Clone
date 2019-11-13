@@ -5,7 +5,7 @@
       [  input = disp[  0]  ]  your_output = <Score: "Prelude Op 28 No 20">  desired_output = <Score: "Prelude Op 28 No 20">  (2/2)
       [  input = disp[  1]  ]  your_output =   <Part: P1>  desired_output =   <Part: P1>  (2/2)
       [  input = disp[  2]  ]  your_output =     <Staff: 1>  desired_output =     <Staff: 1>  (2/2)
-      [  input = disp[  3]  ]  your_output =       <Bar: 1 Clef.TREBLE <Key: C-Minor (3 flats) 0x7f0c6bcd09d0> <Meter: 4/4 0x7f0c6bcbb950> STANDARD>  desired_output =       <Bar: 1 Treble C-Minor 4/4 STANDARD>  (0/2)
+      [  input = disp[  3]  ]  your_output =       <Bar: 1 Clef.TREBLE <Key: C-Minor (3 flats) 0x7f7277c8bb90> <Meter: 4/4 0x7f7277cf6390> STANDARD>  desired_output =       <Bar: 1 Treble C-Minor 4/4 STANDARD>  (0/2)
       [  input = disp[  4]  ]  your_output =         <Voice: 1>  desired_output =         <Voice: 1>  (2/2)
       [  input = disp[  5]  ]  your_output =           <Chord: (G3, C4, Eb4, G4) 1/4>  desired_output =           <Chord: (G3, C4, Eb4, G4) 1/4>  (2/2)
       [  input = disp[  6]  ]  your_output =           <Chord: (Ab3, C4, Eb4, Ab4) 1/4>  desired_output =           <Chord: (Ab3, C4, Eb4, Ab4) 1/4>  (2/2)
