@@ -46,7 +46,7 @@ class Bar:
     def __repr__(self):
         outputString = f'<Bar: {self.id}'
         if self.clef is not None:
-            outputString += f' {self.clef}'
+            outputString += f' {self.clef.name}'
         if self.key is not None:
             outputString += f' {self.key}'
         if self.meter is not None:
