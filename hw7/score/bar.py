@@ -50,7 +50,7 @@ class Bar:
         if self.key is not None:
             outputString += f' {self.key.string()}'
         if self.meter is not None:
-            outputString += f' {self.meter}'
+            outputString += f' {self.meter.string()}'
         if self.barline is not None:
             outputString += f' {self.barline.name}'
         return outputString + ">"
