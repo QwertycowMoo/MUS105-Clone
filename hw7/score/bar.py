@@ -48,7 +48,7 @@ class Bar:
         if self.clef is not None:
             outputString += f' {self.clef.name}'
         if self.key is not None:
-            outputString += f' {self.key}'
+            outputString += f' {self.key.string()}'
         if self.meter is not None:
             outputString += f' {self.meter}'
         if self.barline is not None:
