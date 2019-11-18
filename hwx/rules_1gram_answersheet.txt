@@ -1,0 +1,142 @@
+------------------------------
+[ pid=118, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+------------------------------
+[ pid=66, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=62, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=61, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=60, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=112, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=68, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=113, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=69, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=196, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=162, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
+
+------------------------------
+[ pid=157, ngram=1 ]
+* What concepts are considered here (use music language, e.g. music terms)?
+* Does this histogram agrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+* Does this histogram disagrees with one or multiple rules you learned in a music theory class?
+  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
+
+
+
