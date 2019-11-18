@@ -153,7 +153,6 @@ class MelStartNote(Rule):
 
     def apply(self):
         if self.firstPitch == self.scale[0]:
-            print("True")
             self.results['MEL_START_NOTE'] = True
         elif self.firstPitch == self.scale[2]:
             self.results['MEL_START_NOTE'] = True
@@ -179,8 +178,6 @@ class MelCadence(Rule):
     def apply(self):
         secondLast = self.notes[-2].pitch.pnum()
         last = self.notes[-1].pitch.pnum()
-
-        print(self.scale)
         if last == self.scale[0]:
             if secondLast == self.scale[6]:
                 self.results['MEL_CADENCE'] = True
@@ -242,13 +239,92 @@ class MelDiatonic(Rule):
     def apply(self):
         scale = self.key.scale()
         wrongNotes = []
-        for i in range(self.notes):
-            if self.notes[i] not in scale:
+        for i in range(len(self.notes)):
+            if self.notes[i].pitch.pnum() not in scale:
                 wrongNotes.append(i + 1)
         if len(wrongNotes) == 0:
             self.results['MEL_DIATONIC'] = True
         else:
             self.results['MEL_DIATONIC'] = wrongNotes
+
+class IntStepwise(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The piece is mostly stepwise')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+        self.key = analysis.score.metadata['main_key']
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        rip = zip(self.notes[:-1], self.notes[1:])
+        stepwiseCount = 0
+        for i in rip:
+            interval = Interval(i[0].pitch, i[1].pitch)
+            if interval.is_second():
+                stepwiseCount += 1
+        if (stepwiseCount / len(self.notes)) > .5:
+            self.results['INT_STEPWISE'] = True
+        else:
+            self.results['INT_STEPWISE'] = []
+
+class IntConsonant(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The intervals are all consonant')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongIntervals = []
+        for i in range(len(rip)):
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            if interval.is_second() or interval.is_unison():
+                pass
+            else:
+                if interval.is_dissonant():
+                    wrongIntervals.append(i)
+        if len(wrongIntervals) == 0:
+            self.results['INT_CONSONANT'] = True
+        else:
+            self.results['INT_CONSONANT'] = wrongIntervals
+
+class IntSimple(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The intervals are all simple')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongIntervals = []
+        for i in range(len(rip)):
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            if interval.is_compound():
+                wrongIntervals.append(i)
+        if len(wrongIntervals) == 0:
+            self.results['INT_SIMPLE'] = True
+        else:
+            self.results['INT_SIMPLE'] = wrongIntervals
 
 
 ## A class representing a melodic analysis of a voice in a score. The class
@@ -266,7 +342,8 @@ class MelodicAnalysis(Analysis):
         self.results = copy(melodic_checks)
         ## Create the list of rules this analysis runs. This example just
         # uses the demo Rule defined above.
-        self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)]
+        self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
+                      , IntStepwise(self), IntConsonant(self), IntSimple(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
@@ -291,5 +368,5 @@ class MelodicAnalysis(Analysis):
         return self.results
 
 #from hw8.laitz82 import *
-#s = import_score("C:/Users/qwert/School/MUS105/Laitz Melodic Scores/Laitz_p84A.musicxml")
+#s = import_score("C:/Users/qwert/School/MUS105/kjzhou2/hw8/xmls/Laitz_p84A.musicxml")
 #a = MelodicAnalysis(s)

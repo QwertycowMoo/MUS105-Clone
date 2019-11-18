@@ -1,4 +1,4 @@
-============= kjzhou2.hw8 transcript [test] =============
+(============= kjzhou2.hw8 transcript [test] =============
   module: laitz82
     [import]: success  (1/1)
       [  input = s1=import_score('xmls/Laitz_p84A.musicxml')  ]  your_output = None  desired_output = None  (2/2)
