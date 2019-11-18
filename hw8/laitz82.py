@@ -266,7 +266,7 @@ class MelodicAnalysis(Analysis):
         self.results = copy(melodic_checks)
         ## Create the list of rules this analysis runs. This example just
         # uses the demo Rule defined above.
-        self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self)]
+        self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
