@@ -143,6 +143,113 @@ class MyFirstRule(Rule):
 
 
 # ...ADD MORE RULES HERE!....
+class MelStartNote(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "The starting note is tonic, mediant, and subdominant")
+        self.score = analysis.score
+        self.results = analysis.results
+        self.scale = self.score.metadata['main_key'].scale()
+        self.firstPitch = self.score.parts[0].staffs[0].bars[0].voices[0].notes[0].pitch.pnum()
+
+    def apply(self):
+        if self.firstPitch == self.scale[0]:
+            print("True")
+            self.results['MEL_START_NOTE'] = True
+        elif self.firstPitch == self.scale[2]:
+            self.results['MEL_START_NOTE'] = True
+        elif self.firstPitch == self.scale[4]:
+            self.results['MEL_START_NOTE'] = True
+        else:
+            self.results['MEL_START_NOTE'] = []
+
+class MelCadence(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The last two notes are in a 2-1/7-1 cadence')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.scale = self.score.metadata['main_key'].scale()
+        self.notes = self.notes(self.score, 0, 0, 0)
+
+    def notes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        secondLast = self.notes[-2].pitch.pnum()
+        last = self.notes[-1].pitch.pnum()
+
+        print(self.scale)
+        if last == self.scale[0]:
+            if secondLast == self.scale[6]:
+                self.results['MEL_CADENCE'] = True
+            elif secondLast == self.scale[1]:
+                self.results['MEL_CADENCE'] = True
+            else:
+                self.results['MEL_CADENCE'] = []
+        else:
+            self.results['MEL_CADENCE'] = []
+
+class MelTessitura(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The majority(75%) is within the tessitura')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        top = Pitch('C00')
+        bottom = Pitch('G9')
+        for note in self.notes:
+            if note.pitch > top:
+                top = note.pitch
+            if note.pitch < bottom:
+                bottom = note.pitch
+        middle = int((top.keynum() - bottom.keynum()) / 2)
+        #perfect 4th plus major 3rd
+        bPitch = Pitch.from_keynum(middle - 5)
+        tPitch = Pitch.from_keynum(middle + 4)
+        inTess = 0
+        for note in self.notes:
+            if note.pitch > bPitch and note.pitch > tPitch:
+                inTess += 1
+        if (inTess / len(self.notes) >= .75):
+            self.results['MEL_TESSITURA'] = True
+        else:
+            self.results['MEL_TESSITURA'] = []
+
+class MelDiatonic(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The piece is diatonic')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+        self.key = analysis.score.metadata['main_key']
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
+    def apply(self):
+        scale = self.key.scale()
+        wrongNotes = []
+        for i in range(self.notes):
+            if self.notes[i] not in scale:
+                wrongNotes.append(i + 1)
+        if len(wrongNotes) == 0:
+            self.results['MEL_DIATONIC'] = True
+        else:
+            self.results['MEL_DIATONIC'] = wrongNotes
+
 
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
@@ -159,11 +266,10 @@ class MelodicAnalysis(Analysis):
         self.results = copy(melodic_checks)
         ## Create the list of rules this analysis runs. This example just
         # uses the demo Rule defined above.
-        self.rules = [MyFirstRule(self)]
+        self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self)]
 
-    ## You can define a cleanup function if you want.
-    # def cleanup(self):
-    #     self.melody, self.intervals, self.motions = [], [], []
+    def cleanup(self):
+        self.melody, self.intervals, self.motions = [], [], []
 
     ## You MUST define a setup function! A first few steps are
     # done for you, you can add more steps as you wish.
@@ -184,3 +290,6 @@ class MelodicAnalysis(Analysis):
         # Return the results to the caller.
         return self.results
 
+#from hw8.laitz82 import *
+#s = import_score("C:/Users/qwert/School/MUS105/Laitz Melodic Scores/Laitz_p84A.musicxml")
+#a = MelodicAnalysis(s)
