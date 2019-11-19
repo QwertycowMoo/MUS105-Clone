@@ -145,7 +145,7 @@ class MyFirstRule(Rule):
 # ...ADD MORE RULES HERE!....
 class MelStartNote(Rule):
     def __init__(self, analysis):
-        super().__init__(analysis, "The starting note is tonic, mediant, and subdominant")
+        super().__init__(analysis, "The starting note is tonic, mediant, and dominant")
         self.score = analysis.score
         self.results = analysis.results
         self.scale = self.score.metadata['main_key'].scale()
@@ -209,13 +209,14 @@ class MelTessitura(Rule):
                 top = note.pitch
             if note.pitch < bottom:
                 bottom = note.pitch
-        middle = int((top.keynum() - bottom.keynum()) / 2)
+        middle = int((top.keynum() + bottom.keynum()) / 2)
+        print(middle)
         #perfect 4th plus major 3rd
         bPitch = Pitch.from_keynum(middle - 5)
         tPitch = Pitch.from_keynum(middle + 4)
         inTess = 0
         for note in self.notes:
-            if note.pitch > bPitch and note.pitch > tPitch:
+            if note.pitch > bPitch and note.pitch < tPitch:
                 inTess += 1
         if (inTess / len(self.notes) >= .75):
             self.results['MEL_TESSITURA'] = True
@@ -325,6 +326,20 @@ class IntSimple(Rule):
             self.results['INT_SIMPLE'] = True
         else:
             self.results['INT_SIMPLE'] = wrongIntervals
+
+class IntNumLarge(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'The intervals are all simple')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = self.getNotes(self.score, 0, 0, 0)
+
+    def getNotes(self, score, p, s, v):
+        data = []
+        for b in score.parts[p].staffs[s]:
+            data += b.voices[v]
+        return data
+
 
 
 ## A class representing a melodic analysis of a voice in a score. The class
