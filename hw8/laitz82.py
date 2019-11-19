@@ -218,7 +218,12 @@ class MelDiatonic(Rule):
         self.key = analysis.score.metadata['main_key']
 
     def apply(self):
+        print(self.key.scale())
         scale = self.key.scale()
+        extraHarmonic = (Interval('+1').transpose(self.key.scale()[6]))
+        extraMelodic = (Interval('+1').transpose(self.key.scale()[5]))
+        scale.append(extraHarmonic)
+
         wrongNotes = []
         for i in range(len(self.notes)):
             if self.notes[i].pitch.pnum() not in scale:
