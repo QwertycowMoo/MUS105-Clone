@@ -1,0 +1,39 @@
+========== HOMEWORK X ==========
+   RECOGNIZE MUS-ROVER RULES
+================================
+
+
+To best display, open the two txt files containing the histograms in a FULLSCREEN mode!
+
+
+
+------------------------------
+INSTRUCTIONS ON READING HISTOGRAMS
+
+
+[ Source of Statistics: C-Score ]
+	All statistics (i.e. probabilities in the histograms) were collected from a corpus of
+	Bach's 4-part (SATB) chorales TRANSPOSED to the C-Score, or more precisely,
+	TRANSPOSED to a score whose key signature contains no accidentals (0 sharps, 0 flats).
+
+
+[ Form of the histograms ]
+	Every histogram displays, row by row,
+	the top K most probable feature values (labels) and their corresponding probabilities.
+	More specifically,
+	* K = min( 50, total # of feature values with non-zero probabilities );
+	* probabilities are rounded to 2 decimal places.
+
+	As a result, every observed 0.00 is not exactly 0, but a positive value that is close to 0.
+	Furthermore,
+	* when K < 50, every unseen feature value has a probability 0 (exact);
+	* when K = 50, every unseen feature value has either a probability 0 (exact) or a probability
+	  that is even smaller than the 50th smallest probability shown in the histogram.
+
+	Yet in any event, one should not bother too much about the actual value of a probability;
+	comparing the probabilities relatively is good enough.
+
+
+
+
+
