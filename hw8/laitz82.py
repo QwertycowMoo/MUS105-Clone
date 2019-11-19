@@ -114,6 +114,12 @@ melodic_checks = {
 }
 
 
+def getNotes(score, p, s, v):
+    data = []
+    for b in score.parts[p].staffs[s]:
+        data += b.voices[v]
+    return data
+
 # Here is an example of a rule. You can define as many rules as you want.
 # The purpose of running a rule is to perform some analytical check(s) and
 # then update the self.analysis.results dictionary with its findings.
@@ -167,14 +173,7 @@ class MelCadence(Rule):
         self.score = analysis.score
         self.results = analysis.results
         self.scale = self.score.metadata['main_key'].scale()
-        self.notes = self.notes(self.score, 0, 0, 0)
-
-    def notes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
-
+        self.notes = getNotes(self.score, 0, 0, 0)
     def apply(self):
         secondLast = self.notes[-2].pitch.pnum()
         last = self.notes[-1].pitch.pnum()
@@ -193,23 +192,14 @@ class MelTessitura(Rule):
         super().__init__(analysis, 'The majority(75%) is within the tessitura')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
+        self.notes = getNotes(self.score, 0, 0, 0)
 
     def apply(self):
         top = max(self.notes).pitch
         bottom = min(self.notes).pitch
-        print("top and bottom of piece:", top, bottom)
         middle = int((top.keynum() + bottom.keynum()) / 2)
         bPitch = Pitch.from_keynum(middle - 4)
         tPitch = Pitch.from_keynum(middle + 5)
-
-        print(bPitch, tPitch)
         inTess = 0
         for note in self.notes:
             if note.pitch >= bPitch and note.pitch <= tPitch:
@@ -224,14 +214,8 @@ class MelDiatonic(Rule):
         super().__init__(analysis, 'The piece is diatonic')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
+        self.notes = getNotes(self.score, 0, 0, 0)
         self.key = analysis.score.metadata['main_key']
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
 
     def apply(self):
         scale = self.key.scale()
@@ -249,14 +233,8 @@ class IntStepwise(Rule):
         super().__init__(analysis, 'The piece is mostly stepwise')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
+        self.notes = getNotes(self.score, 0, 0, 0)
         self.key = analysis.score.metadata['main_key']
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
 
     def apply(self):
         rip = zip(self.notes[:-1], self.notes[1:])
@@ -275,13 +253,7 @@ class IntConsonant(Rule):
         super().__init__(analysis, 'The intervals are all consonant')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
+        self.notes = getNotes(self.score, 0, 0, 0)
 
     def apply(self):
         rip = list(zip(self.notes[:-1], self.notes[1:]))
@@ -292,7 +264,7 @@ class IntConsonant(Rule):
                 pass
             else:
                 if interval.is_dissonant():
-                    wrongIntervals.append(i)
+                    wrongIntervals.append(i + 1)
         if len(wrongIntervals) == 0:
             self.results['INT_CONSONANT'] = True
         else:
@@ -303,13 +275,7 @@ class IntSimple(Rule):
         super().__init__(analysis, 'The intervals are all simple')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
+        self.notes = getNotes(self.score, 0, 0, 0)
 
     def apply(self):
         rip = list(zip(self.notes[:-1], self.notes[1:]))
@@ -317,7 +283,7 @@ class IntSimple(Rule):
         for i in range(len(rip)):
             interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
             if interval.is_compound():
-                wrongIntervals.append(i)
+                wrongIntervals.append(i + 1)
         if len(wrongIntervals) == 0:
             self.results['INT_SIMPLE'] = True
         else:
@@ -328,13 +294,7 @@ class IntNumLarge(Rule):
         super().__init__(analysis, 'There are no more than 1 large leap over a perfect fifth')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = self.getNotes(self.score, 0, 0, 0)
-
-    def getNotes(self, score, p, s, v):
-        data = []
-        for b in score.parts[p].staffs[s]:
-            data += b.voices[v]
-        return data
+        self.notes = getNotes(self.score, 0, 0, 0)
 
     def apply(self):
         rip = list(zip(self.notes[:-1], self.notes[1:]))
@@ -345,13 +305,57 @@ class IntNumLarge(Rule):
             if interval >= Interval('P5'):
                 numWrong += 1
                 if numWrong > 1:
-                    wrongIntervals.append(i)
+                    wrongIntervals.append(i + 1)
         if len(wrongIntervals) > 0:
             self.results['INT_NUM_LARGE'] = wrongIntervals
         else:
             self.results['INT_NUM_LARGE'] = True
 
+class IntNumUnison(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'There are no more than 1 occurances of a union')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = getNotes(self.score, 0, 0, 0)
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongIntervals = []
+        numWrong = 0
+        for i in range(len(rip)):
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            if interval.is_unison():
+                numWrong += 1
+                if numWrong > 1:
+                    wrongIntervals.append(i + 1)
+        if len(wrongIntervals) > 0:
+            self.results['INT_NUM_UNISON'] = wrongIntervals
+        else:
+            self.results['INT_NUM_UNISON'] = True
 
+class IntNumSameDir(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'There are no more than 1 large leap over a perfect fifth')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = getNotes(self.score, 0, 0, 0)
+
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongNotes = []
+        isAscending = True
+        inARow = 0
+        for i in range(len(rip)):
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            if interval.is_ascending() != isAscending:
+                isAscending = not isAscending
+                inARow = 0
+            inARow += 1
+            if inARow > 3:
+                wrongNotes.append(i + 2)
+        if len(wrongNotes) > 0:
+            self.results['INT_NUM_SAMEDIR'] = wrongNotes
+        else:
+            self.results['INT_NUM_SAMEDIR'] = True
 
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
@@ -369,8 +373,8 @@ class MelodicAnalysis(Analysis):
         ## Create the list of rules this analysis runs. This example just
         # uses the demo Rule defined above.
         self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
-                      , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self),
-                      ]
+                      , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self), IntNumUnison(self)
+                      , IntNumSameDir(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
