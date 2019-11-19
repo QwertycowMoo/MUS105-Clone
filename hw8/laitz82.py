@@ -239,7 +239,6 @@ class IntStepwise(Rule):
         self.score = analysis.score
         self.results = analysis.results
         self.notes = getNotes(self.score, 0, 0, 0)
-        self.key = analysis.score.metadata['main_key']
 
     def apply(self):
         rip = zip(self.notes[:-1], self.notes[1:])
@@ -248,7 +247,7 @@ class IntStepwise(Rule):
             interval = Interval(i[0].pitch, i[1].pitch)
             if interval.is_second():
                 stepwiseCount += 1
-        if (stepwiseCount / len(self.notes)) > .5:
+        if (stepwiseCount / len(self.notes)) >= .5:
             self.results['INT_STEPWISE'] = True
         else:
             self.results['INT_STEPWISE'] = []
@@ -361,6 +360,48 @@ class IntNumSameDir(Rule):
             self.results['INT_NUM_SAMEDIR'] = wrongNotes
         else:
             self.results['INT_NUM_SAMEDIR'] = True
+
+class LeapRecovery(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'Checks for law of recovery')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.notes = getNotes(self.score, 0, 0, 0)
+
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongNotes = []
+        isAscending = True
+
+        previousInt = Interval('P1')
+        for i in range(len(rip)):
+            changeDir = False
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            print(interval.lines_and_spaces())
+            if interval.is_ascending() == isAscending:
+                if interval > Interval('M2'):
+                    #only ascending intervals can be added, use this to check for ascending descending
+                    previousInt = copy(previousInt.add(interval))
+                    continue
+                else:
+                    previousInt = copy(interval)
+            else:
+                isAscending = not isAscending
+                previousInt = copy(interval)
+                changeDir = True
+
+            if previousInt >= Interval('P4'):
+                if previousInt >= Interval('P5'):
+                    if interval.lines_and_spaces() != 2:
+                        wrongNotes.append(-(i + 1))
+                else:
+                    if not changeDir:
+                        wrongNotes.append(i + 1)
+
+        if len(wrongNotes) == 0:
+            self.results['LEAP_RECOVERY'] = True
+        else:
+            self.results['LEAP_RECOVERY'] = wrongNotes
 
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
