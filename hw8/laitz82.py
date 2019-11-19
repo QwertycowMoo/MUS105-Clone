@@ -202,21 +202,17 @@ class MelTessitura(Rule):
         return data
 
     def apply(self):
-        top = Pitch('C00')
-        bottom = Pitch('G9')
-        for note in self.notes:
-            if note.pitch > top:
-                top = note.pitch
-            if note.pitch < bottom:
-                bottom = note.pitch
+        top = max(self.notes).pitch
+        bottom = min(self.notes).pitch
+        print("top and bottom of piece:", top, bottom)
         middle = int((top.keynum() + bottom.keynum()) / 2)
-        print(middle)
-        #perfect 4th plus major 3rd
-        bPitch = Pitch.from_keynum(middle - 5)
-        tPitch = Pitch.from_keynum(middle + 4)
+        bPitch = Pitch.from_keynum(middle - 4)
+        tPitch = Pitch.from_keynum(middle + 5)
+
+        print(bPitch, tPitch)
         inTess = 0
         for note in self.notes:
-            if note.pitch > bPitch and note.pitch < tPitch:
+            if note.pitch >= bPitch and note.pitch <= tPitch:
                 inTess += 1
         if (inTess / len(self.notes) >= .75):
             self.results['MEL_TESSITURA'] = True
@@ -329,7 +325,7 @@ class IntSimple(Rule):
 
 class IntNumLarge(Rule):
     def __init__(self, analysis):
-        super().__init__(analysis, 'The intervals are all simple')
+        super().__init__(analysis, 'There are no more than 1 large leap over a perfect fifth')
         self.score = analysis.score
         self.results = analysis.results
         self.notes = self.getNotes(self.score, 0, 0, 0)
@@ -339,6 +335,21 @@ class IntNumLarge(Rule):
         for b in score.parts[p].staffs[s]:
             data += b.voices[v]
         return data
+
+    def apply(self):
+        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        wrongIntervals = []
+        numWrong = 0
+        for i in range(len(rip)):
+            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
+            if interval >= Interval('P5'):
+                numWrong += 1
+                if numWrong > 1:
+                    wrongIntervals.append(i)
+        if len(wrongIntervals) > 0:
+            self.results['INT_NUM_LARGE'] = wrongIntervals
+        else:
+            self.results['INT_NUM_LARGE'] = True
 
 
 
@@ -358,7 +369,8 @@ class MelodicAnalysis(Analysis):
         ## Create the list of rules this analysis runs. This example just
         # uses the demo Rule defined above.
         self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
-                      , IntStepwise(self), IntConsonant(self), IntSimple(self)]
+                      , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self),
+                      ]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
