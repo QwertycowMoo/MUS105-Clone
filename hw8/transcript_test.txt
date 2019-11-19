@@ -91,7 +91,7 @@
       [  input = d6['MEL_START_NOTE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d6['MEL_CADENCE']  ]  your_output = []  desired_output = []  (2/2)
       [  input = d6['MEL_TESSITURA']  ]  your_output = True  desired_output = True  (2/2)
-      [  input = d6['MEL_DIATONIC']  ]  your_output = [2]  desired_output = True  (0/2)
+      [  input = d6['MEL_DIATONIC']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d6['INT_STEPWISE']  ]  your_output = []  desired_output = True  (0/2)
       [  input = d6['INT_CONSONANT']  ]  your_output = [1]  desired_output = [1]  (2/2)
       [  input = d6['INT_SIMPLE']  ]  your_output = True  desired_output = True  (2/2)
@@ -120,10 +120,10 @@
       [  input = d7['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d7['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d7['SHAPE_UNIQUE']  ]  your_output = None  desired_output = True  (0/2)
-Total raw score: (165/239)
+Total raw score: (167/239)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 29
 Extra credit (if applicable): 0
-Adjusted score (Final): 136/210
+Adjusted score (Final): 138/210
 
