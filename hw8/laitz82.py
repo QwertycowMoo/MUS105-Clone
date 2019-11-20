@@ -87,6 +87,12 @@ melodic_checks = {
     # otherwise set it to a list containing the note positions of each interval
     # that fails. To mark a leap spanning a 5th or greater that did not reverse
     # by step, set its note index to be negative.
+    # Anything larger than a second is a leap
+    # Consecutive thirds are ok tho, 2 in a row outlines a triad. More than 2 is nono
+    # Three leaps in a row
+    # Leap a fourth, can leap a third after that
+    # Leap anything larger, must be stepwise in opposite
+    # Only check for the first after the leap
     'LEAP_RECOVERY': None,
 
     ## Max number of consecutive leaps in a row is 2 (three notes). If the
@@ -366,37 +372,36 @@ class LeapRecovery(Rule):
         super().__init__(analysis, 'Checks for law of recovery')
         self.score = analysis.score
         self.results = analysis.results
-        self.notes = getNotes(self.score, 0, 0, 0)
+        self.analysis = analysis
 
     def apply(self):
-        rip = list(zip(self.notes[:-1], self.notes[1:]))
+        self.notes = self.analysis.melody
+        self.intervals = self.analysis.intervals
+        print(self.intervals)
+        spans = [(i.span + 1) * i.sign for i in self.intervals]
+        print(spans)
         wrongNotes = []
-        isAscending = True
-
-        previousInt = Interval('P1')
-        for i in range(len(rip)):
-            changeDir = False
-            interval = Interval(rip[i][0].pitch, rip[i][1].pitch)
-            print(interval.lines_and_spaces())
-            if interval.is_ascending() == isAscending:
-                if interval > Interval('M2'):
-                    #only ascending intervals can be added, use this to check for ascending descending
-                    previousInt = copy(previousInt.add(interval))
-                    continue
+        prev = 0
+        for i in range(1, len(spans) + 1):
+            prev = prev + spans[i - 1] if prev >= 3 and abs(prev + spans[i - 1]) > prev else spans[i - 1]
+            print(prev)
+            try:
+                now = spans[i]
+            except IndexError:
+                now = prev
+            if abs(prev) > 3:
+                if abs(prev) > 4:
+                    if prev < 0:
+                        if not(now > 0 and now <= 2):
+                            wrongNotes.append((i + 1) * -1)
+                    elif prev > 0:
+                        if not(now < 0 and now >= -2):
+                            wrongNotes.append((i + 1) * -1)
+                    else:
+                        wrongNotes.append((i + 1) * -1)
                 else:
-                    previousInt = copy(interval)
-            else:
-                isAscending = not isAscending
-                previousInt = copy(interval)
-                changeDir = True
-
-            if previousInt >= Interval('P4'):
-                if previousInt >= Interval('P5'):
-                    if interval.lines_and_spaces() != 2:
-                        wrongNotes.append(-(i + 1))
-                else:
-                    if not changeDir:
-                        wrongNotes.append(i + 1)
+                    if (prev > 0 and now > 0) or (prev < 0 and now < 0):
+                        wrongNotes.append((i + 1))
 
         if len(wrongNotes) == 0:
             self.results['LEAP_RECOVERY'] = True
@@ -420,7 +425,7 @@ class MelodicAnalysis(Analysis):
         # uses the demo Rule defined above.
         self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
                       , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self), IntNumUnison(self)
-                      , IntNumSameDir(self)]
+                      , IntNumSameDir(self), LeapRecovery(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
@@ -433,6 +438,11 @@ class MelodicAnalysis(Analysis):
         # you will want to use this when you access the timepoints
         melodic_id = args[0]
         tps = timepoints(self.score, span=True, measures=False)
+        self.melody = []
+        for t in tps:
+            self.melody.append(t.nmap[melodic_id])
+        pitches = list(zip(self.melody[:-1], self.melody[1:]))
+        self.intervals = [Interval(pitches[i][0].pitch, pitches[i][1].pitch) for i in range(len(pitches))]
 
     ## This function is given to you, it returns your analysis results
     # for the autograder to check.  You can also use this function as
