@@ -444,6 +444,7 @@ class ShapeNumClimax(Rule):
                 countHigh += 1
             if countHigh > 1:
                 wrong.append(i + 1)
+                countHigh = 1
         if len(wrong) == 0:
             self.results['SHAPE_NUM_CLIMAX'] = True
         else:
@@ -464,16 +465,17 @@ class ShapeArchlike(Rule):
         print("middle", middle)
         print("outsides", outsides)
         middleThird = pitches[outsides: (len(pitches) - outsides)]
-        if highest in middleThird:
+        for i in range(len(pitches[:outsides])):
+            if pitches[i] == highest:
+                wrong.append(i + 1)
+        for pitch in pitches[len(pitches) - outsides:]:
+            if pitch == highest:
+                wrong.append(pitches.index(pitch, len(pitches) - outsides))
+        if wrong == []:
             self.results['SHAPE_ARCHLIKE'] = True
         else:
-            for i in range(len(pitches[:outsides])):
-                if pitches[i] == highest:
-                    wrong.append(i + 1)
-            for pitch in pitches[len(pitches) - outsides:]:
-                if pitch == highest:
-                    wrong.append(pitches.index(pitch, len(pitches) - outsides))
             self.results['SHAPE_ARCHLIKE'] = wrong
+
 
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
