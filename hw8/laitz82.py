@@ -224,7 +224,6 @@ class MelDiatonic(Rule):
         self.key = analysis.score.metadata['main_key']
 
     def apply(self):
-        print(self.key.scale())
         scale = self.key.scale()
         extraHarmonic = (Interval('+1').transpose(self.key.scale()[6]))
         extraMelodic = (Interval('+1').transpose(self.key.scale()[5]))
@@ -377,14 +376,11 @@ class LeapRecovery(Rule):
     def apply(self):
         self.notes = self.analysis.melody
         self.intervals = self.analysis.intervals
-        print(self.intervals)
         spans = [(i.span + 1) * i.sign for i in self.intervals]
-        print(spans)
         wrongNotes = []
         prev = 0
         for i in range(1, len(spans) + 1):
             prev = prev + spans[i - 1] if prev >= 3 and abs(prev + spans[i - 1]) > prev else spans[i - 1]
-            print(prev)
             try:
                 now = spans[i]
             except IndexError:
@@ -408,6 +404,77 @@ class LeapRecovery(Rule):
         else:
             self.results['LEAP_RECOVERY'] = wrongNotes
 
+class LeapNumConsec(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'Checks for a maximum of consecutive leaps of which is 2')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.analysis = analysis
+
+    def apply(self):
+        wrong = []
+        intervals = self.analysis.intervals
+        numLeaps = 0
+        for i in range(len(intervals)):
+            if intervals[i].span < 2:
+                numLeaps = 0
+            else:
+                numLeaps += 1
+            if numLeaps >= 3:
+                wrong.append(i + 1)
+        if len(wrong) == 0:
+            self.results['LEAP_NUM_CONSEC'] = True
+        else:
+            self.results['LEAP_NUM_CONSEC'] = wrong
+
+class ShapeNumClimax(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'Checks for a climax note and any subsequent climax notes')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.analysis = analysis
+
+    def apply(self):
+        pitches = [note.pitch for note in self.analysis.melody]
+        highest = max(pitches)
+        wrong = []
+        countHigh = 0
+        for i in range(len(pitches)):
+            if pitches[i] == highest:
+                countHigh += 1
+            if countHigh > 1:
+                wrong.append(i + 1)
+        if len(wrong) == 0:
+            self.results['SHAPE_NUM_CLIMAX'] = True
+        else:
+            self.results['SHAPE_NUM_CLIMAX'] = wrong
+
+class ShapeArchlike(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'Checks for a climax note and any subsequent climax notes')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.analysis = analysis
+    def apply(self):
+        pitches = [note.pitch for note in self.analysis.melody]
+        highest = max(pitches)
+        wrong = []
+        middle = int(len(pitches) / 3) + 1 if len(pitches) % 3 == 1 else int(len(pitches) / 3)
+        outsides = int((len(pitches) - middle) / 2) + 1 if len(pitches) % 3 == 2 else int(len(pitches) / 3)
+        print("middle", middle)
+        print("outsides", outsides)
+        middleThird = pitches[outsides: (len(pitches) - outsides)]
+        if highest in middleThird:
+            self.results['SHAPE_ARCHLIKE'] = True
+        else:
+            for i in range(len(pitches[:outsides])):
+                if pitches[i] == highest:
+                    wrong.append(i + 1)
+            for pitch in pitches[len(pitches) - outsides:]:
+                if pitch == highest:
+                    wrong.append(pitches.index(pitch, len(pitches) - outsides))
+            self.results['SHAPE_ARCHLIKE'] = wrong
+
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
 # * self.score: The score passed into the analysis
@@ -425,7 +492,7 @@ class MelodicAnalysis(Analysis):
         # uses the demo Rule defined above.
         self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
                       , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self), IntNumUnison(self)
-                      , IntNumSameDir(self), LeapRecovery(self)]
+                      , IntNumSameDir(self), LeapRecovery(self), LeapNumConsec(self), ShapeNumClimax(self), ShapeArchlike(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
