@@ -462,8 +462,6 @@ class ShapeArchlike(Rule):
         wrong = []
         middle = int(len(pitches) / 3) + 1 if len(pitches) % 3 == 1 else int(len(pitches) / 3)
         outsides = int((len(pitches) - middle) / 2) + 1 if len(pitches) % 3 == 2 else int(len(pitches) / 3)
-        print("middle", middle)
-        print("outsides", outsides)
         middleThird = pitches[outsides: (len(pitches) - outsides)]
         for i in range(len(pitches[:outsides])):
             if pitches[i] == highest:
@@ -476,6 +474,28 @@ class ShapeArchlike(Rule):
         else:
             self.results['SHAPE_ARCHLIKE'] = wrong
 
+class ShapeUnique(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, 'Checks for uniqueness in a melody')
+        self.score = analysis.score
+        self.results = analysis.results
+        self.analysis = analysis
+    def apply(self):
+        spans = [(interval.span + 1) * interval.sign for interval in self.analysis.intervals]
+        for size in range(1, len(spans) // 2):
+            spanSets = [spans[i:i + size] for i in range(0, len(spans) + 1 - size, size)]
+            for patternI in range(len(spanSets)):
+                lengthPattern = len(spanSets[patternI])
+                for rest in range(patternI + 1, len(spanSets)):
+                    if spanSets[patternI] == spanSets[rest]:
+                        lengthPattern += len(spanSets[rest])
+                    else:
+                        continue
+                if lengthPattern > len(spans) // 2:
+                    self.results['SHAPE_UNIQUE'] = spanSets[patternI]
+                    return
+        if self.results['SHAPE_UNIQUE'] == None:
+            self.results['SHAPE_UNIQUE'] = True
 
 ## A class representing a melodic analysis of a voice in a score. The class
 # has three attributes to being with, you will likely add more attributes.
@@ -494,7 +514,8 @@ class MelodicAnalysis(Analysis):
         # uses the demo Rule defined above.
         self.rules = [MyFirstRule(self), MelStartNote(self), MelCadence(self), MelTessitura(self), MelDiatonic(self)
                       , IntStepwise(self), IntConsonant(self), IntSimple(self), IntNumLarge(self), IntNumUnison(self)
-                      , IntNumSameDir(self), LeapRecovery(self), LeapNumConsec(self), ShapeNumClimax(self), ShapeArchlike(self)]
+                      , IntNumSameDir(self), LeapRecovery(self), LeapNumConsec(self), ShapeNumClimax(self), ShapeArchlike(self)
+                      , ShapeUnique(self)]
 
     def cleanup(self):
         self.melody, self.intervals, self.motions = [], [], []
