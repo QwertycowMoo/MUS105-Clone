@@ -13,7 +13,7 @@
       [  input = d1['INT_NUM_LARGE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d1['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d1['INT_NUM_SAMEDIR']  ]  your_output = [5, 6, 7]  desired_output = [5, 6, 7]  (2/2)
-      [  input = d1['LEAP_RECOVERY']  ]  your_output = None  desired_output = [-10]  (0/2)
+      [  input = d1['LEAP_RECOVERY']  ]  your_output = [-10]  desired_output = [-10]  (2/2)
       [  input = d1['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d1['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d1['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = True  (0/2)
@@ -30,7 +30,7 @@
       [  input = d2['INT_NUM_LARGE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d2['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d2['INT_NUM_SAMEDIR']  ]  your_output = [6]  desired_output = [6]  (2/2)
-      [  input = d2['LEAP_RECOVERY']  ]  your_output = None  desired_output = True  (0/2)
+      [  input = d2['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d2['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d2['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d2['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = [2]  (0/2)
@@ -47,7 +47,7 @@
       [  input = d3['INT_NUM_LARGE']  ]  your_output = [7]  desired_output = [7]  (2/2)
       [  input = d3['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d3['INT_NUM_SAMEDIR']  ]  your_output = True  desired_output = True  (2/2)
-      [  input = d3['LEAP_RECOVERY']  ]  your_output = None  desired_output = [2, -5, -7]  (0/2)
+      [  input = d3['LEAP_RECOVERY']  ]  your_output = [2, -5, -7]  desired_output = [2, -5, -7]  (2/2)
       [  input = d3['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = [6, 7]  (0/2)
       [  input = d3['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d3['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = [3]  (0/2)
@@ -64,7 +64,7 @@
       [  input = d4['INT_NUM_LARGE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d4['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d4['INT_NUM_SAMEDIR']  ]  your_output = True  desired_output = True  (2/2)
-      [  input = d4['LEAP_RECOVERY']  ]  your_output = None  desired_output = True  (0/2)
+      [  input = d4['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d4['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d4['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d4['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = True  (0/2)
@@ -81,7 +81,7 @@
       [  input = d5['INT_NUM_LARGE']  ]  your_output = [8]  desired_output = [8]  (2/2)
       [  input = d5['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d5['INT_NUM_SAMEDIR']  ]  your_output = [6, 7, 13]  desired_output = [6, 7, 13]  (2/2)
-      [  input = d5['LEAP_RECOVERY']  ]  your_output = None  desired_output = True  (0/2)
+      [  input = d5['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d5['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d5['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = [9]  (0/2)
       [  input = d5['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = [2]  (0/2)
@@ -98,7 +98,7 @@
       [  input = d6['INT_NUM_LARGE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d6['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d6['INT_NUM_SAMEDIR']  ]  your_output = [6, 10]  desired_output = [6, 10]  (2/2)
-      [  input = d6['LEAP_RECOVERY']  ]  your_output = None  desired_output = True  (0/2)
+      [  input = d6['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d6['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d6['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d6['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = True  (0/2)
@@ -115,15 +115,15 @@
       [  input = d7['INT_NUM_LARGE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d7['INT_NUM_UNISON']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d7['INT_NUM_SAMEDIR']  ]  your_output = True  desired_output = True  (2/2)
-      [  input = d7['LEAP_RECOVERY']  ]  your_output = None  desired_output = True  (0/2)
+      [  input = d7['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d7['LEAP_NUM_CONSEC']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d7['SHAPE_NUM_CLIMAX']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d7['SHAPE_ARCHLIKE']  ]  your_output = None  desired_output = True  (0/2)
       [  input = d7['SHAPE_UNIQUE']  ]  your_output = None  desired_output = True  (0/2)
-Total raw score: (169/239)
+Total raw score: (183/239)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 29
 Extra credit (if applicable): 0
-Adjusted score (Final): 140/210
+Adjusted score (Final): 154/210
 
