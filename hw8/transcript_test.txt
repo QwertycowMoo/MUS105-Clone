@@ -83,8 +83,8 @@
       [  input = d5['INT_NUM_SAMEDIR']  ]  your_output = [6, 7, 13]  desired_output = [6, 7, 13]  (2/2)
       [  input = d5['LEAP_RECOVERY']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d5['LEAP_NUM_CONSEC']  ]  your_output = True  desired_output = True  (2/2)
-      [  input = d5['SHAPE_NUM_CLIMAX']  ]  your_output = [9, 10, 11, 12, 13]  desired_output = [9]  (2/2)
-      [  input = d5['SHAPE_ARCHLIKE']  ]  your_output = True  desired_output = [2]  (0/2)
+      [  input = d5['SHAPE_NUM_CLIMAX']  ]  your_output = [9]  desired_output = [9]  (2/2)
+      [  input = d5['SHAPE_ARCHLIKE']  ]  your_output = [2]  desired_output = [2]  (2/2)
       [  input = d5['SHAPE_UNIQUE']  ]  your_output = None  desired_output = [-2]  (0/2)
       [  input = s6=import_score('xmls/Laitz_p84F.musicxml')  ]  your_output = None  desired_output = None  (2/2)
       [  input = d6=MelodicAnalysis(s6).submit_to_grading()  ]  your_output = None  desired_output = None  (2/2)
@@ -120,10 +120,10 @@
       [  input = d7['SHAPE_NUM_CLIMAX']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d7['SHAPE_ARCHLIKE']  ]  your_output = True  desired_output = True  (2/2)
       [  input = d7['SHAPE_UNIQUE']  ]  your_output = None  desired_output = True  (0/2)
-Total raw score: (221/239)
+Total raw score: (223/239)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 29
 Extra credit (if applicable): 0
-Adjusted score (Final): 192/210
+Adjusted score (Final): 194/210
 
