@@ -1,19 +1,26 @@
 ------------------------------
 [ pid=118, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    The idea of voicing, bass, tenor, alto, and soprano
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
-  If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+  This rule follows the idea that bass must be lower than tenor which must be lower
+  than alto which must be lower than soprano. This idea is usually called voice crossing.
+  (Sorry forgot the laitz textbook)
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    It does not
 
 
 
 ------------------------------
 [ pid=66, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Soprano, tonic, median, and dominant
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    Not necessarily, the rule seems to say that the soprano line likely to be a C, E, or G. However,
+    because Bach composed in many keys, this may just be random.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 
@@ -60,11 +67,17 @@
 ------------------------------
 [ pid=112, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Spacing
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This rule finds the difference between the soprano keynum and the bass keynum. It seems to be similar
+    to the rule that a voice cannot be more than an octave apart from each other, excluding the bass which
+    can have a separation of an octave and a fifth. The most common separation between bass and soprano
+    is between 15-24, which is between 2 and 3 octaves, enough for 2 other voices to fit inbetween the bass
+    and soprano.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    Some occurances have separations of 7 or 31, which is very close or too much separation for a four part chorale
 
 
 
@@ -72,8 +85,13 @@
 ------------------------------
 [ pid=68, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Voice separation, bass and soprano, consonance and dissonance
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This rule involves the bass and soprano and seems to find that consonant intervals (separation of
+    5(perfect fifth), 3, 4(maj/min third), 0(octave), 8, 9(maj/min sixth)) are more common than the dissonances
+    of seconds, sevenths, perfect and aug fourths. This agrees with the rule that counterpoint must
+    involve consonant intervals and only use dissonances as embellishments.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 
@@ -84,8 +102,11 @@
 ------------------------------
 [ pid=113, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Voice Spacing, tenor and alto
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the Laitz guideline that the upper voices cannot be more than an octave apart.
+    It also agrees with the rule that the Alto must be higher than the Tenor and that voice crossing is observed.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 
@@ -96,10 +117,16 @@
 ------------------------------
 [ pid=69, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Voice spacing, consonance and dissonance
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    It is similar to the Laitz guideline that consonances must be used on strong beats and dissonances
+    must be reserved for embellishments. While this rule only concerns the tenor and alto, if both voices are consonant
+    with the bass, then the voices should also be consonant with each other if you also include the perfect fourth(?).
+    As well, the
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This disagrees with Laitz in the fact that the tenor and alto should have any relation with each other.
 
 
 
@@ -108,8 +135,14 @@
 ------------------------------
 [ pid=196, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Chords, consonances and dissonances, voice repition
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This histogram shows that these tetrachords commonly have a repeated note voiced in the soprano.
+    As well, the notes also commonly form a major or minor triad. This follows the rule that diatonic
+    triads should be used in four part writing. Augmented and diminished triads are less common and used
+    for embellishments. Inversions are also used, and it seems that the root and first inversions are
+    more common, which lines with the rule that 64 chords should only be used in specific cases.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 
@@ -120,8 +153,12 @@
 ------------------------------
 [ pid=162, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Chords, minor and major, triads
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This is very similar to pid=196 where major or minor triads are used to create the parts.
+    It is easier to see that inversions that are in root or first position are more common than
+    the second inversion chords. Both major and minor chords are used.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 
@@ -132,10 +169,16 @@
 ------------------------------
 [ pid=157, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Major and Minor triads
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This histogram agrees with the idea that major or minor chords are the basis of part writing.
+    These chords should be diatonic with the key and the separations show that it is so.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    The second most common entry in the histogram does not agree with the structure of major,
+    minor, diminished, or seventh. This is not diatonic with the key and disagrees with the rule
+    that part writing should be diatonic.
 
 
 
