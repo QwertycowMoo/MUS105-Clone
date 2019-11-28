@@ -19,11 +19,14 @@
     Soprano, tonic, median, and dominant
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-    Not necessarily, the rule seems to say that the soprano line likely to be a C, E, or G. However,
-    because Bach composed in many keys, this may just be random.
+    This rule does not necessarily agree or contradict with any of Laitz's rules, but it seems to
+    say that the tonic, dominant, mediant, and dominant 7th are very common tones to find in the soprano.
+    This may be because these notes are most commonly consonant with the Tonic, Subdominant, and Dominant
+    function chords. Other notes would be used as embellishments rather than structural tones.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    It seems odd that the submediant(9) occurs as much as it does, but that may be because it is
+    consonant with the tonic chord and the third of the subdominant.
 
 
 
@@ -31,11 +34,18 @@
 ------------------------------
 [ pid=62, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Alto, structural tones, tonic, median, and dominant
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This rule seems to state that the tones of the tonic as well as the submediant are important to the alto voice.
+    This agrees with the idea that notes should be consonant with the chord in counterpoint. This analysis is based
+    on the idea the the tonic, subdominant, and dominant function chords are the most common and that the tonic(0), median(4),
+    and the dominant(7) are consonant with these chords.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    There is no counterpoint rule from Laitz that says one cannot use the (3) or (10) in the alto voice,
+    and this analysis applies to pid 66, 61, and 60. It is only that it is uncommon to use these dissonant tones,
+    but they can be used for embellishments
 
 
 
@@ -43,11 +53,14 @@
 ------------------------------
 [ pid=61, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Tenor, tonic, median, dominant, consonance and dissonance
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This slightly agrees with the rule that structural notes should be consonant with the bass.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    There is no Laitz rule that states what the tenor voice must do, only that it should be
+    consonant with the bass.
 
 
 
@@ -55,11 +68,14 @@
 ------------------------------
 [ pid=60, ngram=1 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Bass, inversions
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    See analyses above. The bass usually has tones that are diatonic to the key, unless there
+    are inversions of applied chords.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    See analyses above
 
 
 

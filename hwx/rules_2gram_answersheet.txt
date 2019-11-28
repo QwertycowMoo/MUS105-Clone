@@ -1,24 +1,32 @@
 ------------------------------
 [ pid=66, ngram=2, cond=s ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Starting notes, tonic
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+     This agrees with both the melodic and counterpoint rule that the starting note of the soprano
+    must be a tonic, dominant, or mediant.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
-
+    It does seem to disagree showing that (9), the submediant, is a common tone to start the piece on.
+    This may be because of pickups or not starting on the tonic chord.
 
 
 
 ------------------------------
 [ pid=66, ngram=2, cond=0 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Stepwise Motion, Melody
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This rule agrees with the Laitz rule that melody (especially in the soprano) should be stepwise.
+    This also agrees with the Laitz rule that the melody should end on a tonic note (which would be consonant
+    with the bass, a I chord).
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
-
+    Not really, steps may be introduced to melody for interest.
 
 
 
@@ -26,12 +34,16 @@
 ------------------------------
 [ pid=66, ngram=2, cond=5 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Stepwise motion, tendency tones, subdominant, mediant
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This histogram agrees with the Laitz rule of resolving the tendency tones, especially within a dominant chord.
+    The condition is the subdominant, which almost always resolves to the mediant.
+    This also agrees with Laitz's rule of keeping stepwise motion within the melody and saving leaps for interest.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
-
+    None
 
 
 
@@ -39,8 +51,12 @@
 ------------------------------
 [ pid=66, ngram=2, cond=7 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Stepwise motion
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    Yes, This follows the Laitz rule of stepwise motion within the voices.
+    As well, it agrees with the idea of chordal leaps as embellishments, resolving from the dominant(7)
+    to the tonic(0) or mediant(4).
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
@@ -52,12 +68,15 @@
 ------------------------------
 [ pid=66, ngram=2, cond=11 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Stepwise motion, tendency tone resolution
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the rule that the leading tone should resolve to the tonic, and if not, should move
+    stepwise down.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
-
+    All rules with pid=66 ngram=2 are very similar in stepwise motion.
 
 
 
@@ -65,8 +84,12 @@
 ------------------------------
 [ pid=68, ngram=2, cond=s ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Starting pitches, consonance
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the Laitz counterpoint rule that the bass should start on the tonic while the soprano(melody)
+    should be on the tonic, mediant, or dominant. This is a clearer rule than [ pid=68, ngram=1 ] because having
+    the condition being the starting note removes possibilities for the bass and soprano.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -78,11 +101,15 @@
 ------------------------------
 [ pid=68, ngram=2, cond=0 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Motion, Direct fifths
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
+    It seems to break the rule of direct fifths, skipping from an octave separation to most commonly a separation of a fifth.
+
 
 
 
@@ -91,8 +118,11 @@
 ------------------------------
 [ pid=68, ngram=2, cond=3 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Parallel motion and consonant intervals
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    It agrees with the Laitz guideline that parallel motion with imperfect consonant intervals is recommended.
+    This also seems to relate to the idea of oblique motion and chordal leaps, moving from a third to a fifth.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -104,11 +134,16 @@
 ------------------------------
 [ pid=68, ngram=2, cond=6 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Stepwise motion, oblique motion
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    It does not seem to follow any of Laitz's guidelines, but seems to encourage oblique motion from a o5 or +4 to a
+    consonant interval of m3 or M3.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
+    This disagrees with [ pid=68, ngram=1 ] because the separation of a 6 is inherently a dissonant interval that should
+    be resolved to a fifth(7) in counterpoint.
 
 
 
@@ -117,12 +152,17 @@
 ------------------------------
 [ pid=68, ngram=2, cond=7 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Motion, resolution
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This rule agrees with the counterpoint idea of moving from perfect consonant interval to an imperfect consonant interval,
+    avoiding parallel perfects. As well, it also captures the possibility of resolution from V to I, a separation of
+    a fifth to an octave which is allowed if done by step in one of the voices.
+    This rule also allows movement in major and minor keys.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
-
+    Not really
 
 
 
