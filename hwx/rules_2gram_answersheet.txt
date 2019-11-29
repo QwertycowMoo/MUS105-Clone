@@ -170,11 +170,17 @@
 ------------------------------
 [ pid=157, ngram=2, cond=s ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Tonic, chords,
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    Yes, it agrees with the rule that the melody must start on the tonic, mediant, or dominant. This extends
+    to the bass and the other voices because voices must be consonant with each other, creating an implicit
+    rule that a piece should start on its I/i chord. The two most common starting chords according to this histogram
+     is the major I chord or the minor i chord.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
+    It does not.
 
 
 
@@ -183,24 +189,35 @@
 ------------------------------
 [ pid=157, ngram=2, cond=0,0,4,7 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Tonic, Dominant, prolonging harmony, embellishing harmony, cadence, phrase model
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    Yes, this histogram agrees with the rule that a melody should end on its tonic, and extending this to all four voices
+    where a piece should end on its tonic chord at the end of an authentic cadence.
+    It also agrees with the guideline of extending harmonies for musical interest, moving from I to I7.
+    This histogram also agrees with the idea of phrase models and cadences, possibly moving from I to V(2,7,7,11) as a half cadence
+    or I to IV(0,5,5,9), following the tonic to predominant motion.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
-
+    It seems odd that I can move to I7, especially because I7 is a MM7, but this may be just to extend the tonic.
 
 
 
 ------------------------------
 [ pid=157, ngram=2, cond=2,7,7,11 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Cadences, prolonging harmony
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the rule that an authentic cadence should move from V to I(0,0,4,7) or move through
+    the I chord as a cadential 64 chord.
+    As well, the V can be extended in harmony by moving to V7(2,5,7,11).
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
-
+    The rest of the histogram has a lot of edge cases that I assume we have not learned yet in theory.
+    This rule is similar to the [ pid=157, ngram=2, cond=0,0,4,7 ] in its idea of chordal movement
 
 
 
@@ -208,11 +225,18 @@
 ------------------------------
 [ pid=157, ngram=2, cond=2,5,7,11 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Cadences, harmony, resolution
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the rule that a V7 chord should resolve to the I chord; the leading tone(11) to tonic(1),
+    the dominant(7) to tonic(0), the subdominant(5) to mediant(4) and the supertonic to the tonic(0) or mediant(4).
+    This movement also follows the voicing for an authentic cadence.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
+    This rule strays a little from the correct way to resolve a V7 which gives a tripled tonic and the mediant while
+    omitting the dominant note. Both of the most common results on the histogram include the dominant note, which can
+    only be used with the frustrated leading tone.
 
 
 
@@ -221,12 +245,18 @@
 ------------------------------
 [ pid=157, ngram=2, cond=2,4,8,11 ]
 * What concepts are considered here (use music language, e.g. music terms)?
+    Applied chords, resolution, raised leading tone in minor
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
+    This agrees with the rule of applied chords resolving to their resolution. This chord(2,4,8,11) is a
+    V7/vi or V7 in minor, and it resolves to either the vi in major or i in minor (0,4,9,9). However,
+    the histogram also shows that this chord can resolve to the major VI chord(1,4,9,9) as possibly an applied
+    chord in the minor key.
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
-
+    This chord resolving to (0,5,9,9) seems odd because it would be an augmented chord. We do not use augmented
+    chords unless it is a suspension or embellishment that would resolve.
 
 
 
