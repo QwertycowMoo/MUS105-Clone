@@ -57,13 +57,13 @@ s2_settings['MAX_UNI'] = 0    # no melodic unisons allowed
 # it simply contains the list of all the result strings ;)
 result_strings = [
     # VERTICAL RESULTS
-    'At #{}: consecutive unisons',
+    'At #{}: consecutive unisons',#"parallel"
     'At #{}: consecutive fifths',
     'At #{}: consecutive octaves',
     'At #{}: direct unisons',
-    'At #{}: direct fifths',
+    'At #{}: direct fifths', # not parallel, move to a fifth when soprano leaps
     'At #{}: direct octaves',
-    'At #{}: consecutive unisons in cantus firmus notes',  # if species 2
+    'At #{}: consecutive unisons in cantus firmus notes',  # if species 2 beginning of each measure
     'At #{}: consecutive fifths in cantus firmus notes',   # if species 2
     'At #{}: consecutive octaves in cantus firmus notes',  # if species 2
     'At #{}: voice overlap',

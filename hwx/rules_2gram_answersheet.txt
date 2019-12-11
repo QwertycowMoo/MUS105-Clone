@@ -11,6 +11,7 @@
 [Hints:] You may want to compare it to [ pid=66, ngram=1 ] and then other [ pid=66, ngram=2, cond=... ]s.
     It does seem to disagree showing that (9), the submediant, is a common tone to start the piece on.
     This may be because of pickups or not starting on the tonic chord.
+    --Actually this analysis is wrong because (9) is the tonic of the minor mode
 
 
 
@@ -90,6 +91,7 @@
     This agrees with the Laitz counterpoint rule that the bass should start on the tonic while the soprano(melody)
     should be on the tonic, mediant, or dominant. This is a clearer rule than [ pid=68, ngram=1 ] because having
     the condition being the starting note removes possibilities for the bass and soprano.
+    --Melodies should start on the tonic triad--
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -101,10 +103,10 @@
 ------------------------------
 [ pid=68, ngram=2, cond=0 ]
 * What concepts are considered here (use music language, e.g. music terms)?
-    Motion, Direct fifths
+    Motion, Direct Perfect Intervals
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
-
+    --At least says that the parallel octaves should not exist--
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -123,6 +125,7 @@
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
     It agrees with the Laitz guideline that parallel motion with imperfect consonant intervals is recommended.
     This also seems to relate to the idea of oblique motion and chordal leaps, moving from a third to a fifth.
+    --but can still move to perfect consonants--
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -139,6 +142,7 @@
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
     It does not seem to follow any of Laitz's guidelines, but seems to encourage oblique motion from a o5 or +4 to a
     consonant interval of m3 or M3.
+    --Tritone resolution--
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
@@ -163,6 +167,7 @@
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 [Hints:] You may want to compare it to [ pid=68, ngram=1 ] and then other [ pid=68, ngram=2, cond=... ]s.
     Not really
+    --Perfect fifth to perfect octave--
 
 
 
@@ -257,7 +262,7 @@
 [Hints:] You may want to compare it to [ pid=157, ngram=1 ] and then other [ pid=157, ngram=2, cond=... ]s.
     This chord resolving to (0,5,9,9) seems odd because it would be an augmented chord. We do not use augmented
     chords unless it is a suspension or embellishment that would resolve.
-
+    --(1,4,9,9) is picardy third--
 
 
 

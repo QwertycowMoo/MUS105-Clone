@@ -5,7 +5,7 @@
 * Does this histogram agrees with one or multiple rules you learned in a music theory class?
     If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
   This rule follows the idea that bass must be lower than tenor which must be lower
-  than alto which must be lower than soprano. This idea is usually called voice crossing.
+  than alto which must be lower than soprano. This idea is usually called voice crossing which should not be violated.
   (Sorry forgot the laitz textbook)
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
@@ -139,7 +139,7 @@
     It is similar to the Laitz guideline that consonances must be used on strong beats and dissonances
     must be reserved for embellishments. While this rule only concerns the tenor and alto, if both voices are consonant
     with the bass, then the voices should also be consonant with each other if you also include the perfect fourth(?).
-    As well, the
+    As well, the inner voices have a less likelyhood of being an octave because of the voice spacing
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
     This disagrees with Laitz in the fact that the tenor and alto should have any relation with each other.
@@ -159,6 +159,8 @@
     triads should be used in four part writing. Augmented and diminished triads are less common and used
     for embellishments. Inversions are also used, and it seems that the root and first inversions are
     more common, which lines with the rule that 64 chords should only be used in specific cases.
+
+    Open Position, Closed Position, Neutral Position
 * Does this histogram disagrees with one or multiple rules you learned in a music theory class?
   If so, what are they? (preferably with a reference, e.g. Laitz page x Rule/Guideline y)
 

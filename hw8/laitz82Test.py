@@ -1,5 +1,5 @@
 from hw8.laitz82 import *
-from hw8.score import score
+from hw8.score import_score
 s = import_score("C:/Users/qwert/School/MUS105/kjzhou2/hw8/xmls/Laitz_p84A.musicxml")
 s2 = import_score("C:/Users/qwert/School/MUS105/kjzhou2/hw8/xmls/Laitz_p84B.musicxml")
 s3 = import_score("C:/Users/qwert/School/MUS105/kjzhou2/hw8/xmls/Laitz_p84C.musicxml")
