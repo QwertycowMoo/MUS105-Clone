@@ -68,8 +68,8 @@ result_strings = [
     'At #{}: consecutive unisons in cantus firmus notes',  # 7 if species 2 beginning of each measure
     'At #{}: consecutive fifths in cantus firmus notes',  # 8 if species 2
     'At #{}: consecutive octaves in cantus firmus notes',  # 9 if species 2
-    'At #{}: voice overlap',  # 10
-    'At #{}: voice crossing',  # 11
+    'At #{}: voice overlap',  # 10 done
+    'At #{}: voice crossing',  # 11 done
     'At #{}: forbidden weak beat dissonance',  # 12 vertical dissonance
     'At #{}: forbidden strong beat dissonance',  # 13 vertical dissonance
     'At #{}: too many consecutive parallel intervals',  # 14 parallel vertical intervals
@@ -124,7 +124,8 @@ class SpeciesAnalysis(Analysis):
         self.settings = copy(s1_settings) if species == 1 else copy(s2_settings)
         ## Add your rules to this list.
         self.rules = [MelodicCadence(self), StartNote(self), ConsecutiveInterval(self, 1), ConsecutiveInterval(self, 5), ConsecutiveInterval(self, 8),
-                      DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self)]
+                      DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self),
+                      ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8)]
         ## A list of strings that represent the findings of your analysis.
         self.results = []
 
@@ -138,7 +139,6 @@ class SpeciesAnalysis(Analysis):
         bottomMelody = []
         for t in tps:
             topMelody.append(t.nmap['P1.1'])
-        for t in tps:
             bottomMelody.append(t.nmap['P2.1'])
 
         if self.score.get_part('P1').name == 'CP':
@@ -168,7 +168,6 @@ class SpeciesAnalysis(Analysis):
 class StartNote(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks if the starting note is correct or just a rest")
-        self.analysis = analysis
         self.score = analysis.score
         self.scale = self.score.metadata['main_key'].scale()
         self.setting = analysis.settings
@@ -233,8 +232,8 @@ class ConsecutiveInterval(Rule):
         zipInt = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
         for i in range(len(zipInt)):
             pair = zipInt[i]
-            if (self.illegalInterval == 1):
-                if (pair[0].is_unison()):
+            if self.illegalInterval == 1:
+                if pair[0].is_unison():
                     if (pair[1].is_unison()):
                         self.results.append(addToResults(i + 1, result_strings[0]))
             elif (self.illegalInterval == 5):
@@ -306,7 +305,6 @@ class VoiceOverlap(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for voice overlap between the two voices")
         self.analysis = analysis
-        self.score = analysis.score
         self.setting = analysis.settings
 
     def apply(self):
@@ -315,11 +313,53 @@ class VoiceOverlap(Rule):
         cfMelody = self.analysis.cfMelody
         verticalIntervals = self.analysis.verticalIntervals
         for i in range(len(cpMelody) - 1):
-            print(cpMelody[i + 1], cfMelody[i])
             if cpMelody[i + 1] < cfMelody[i] and self.analysis.cpIsTop:
                 self.results.append(addToResults(i + 1, result_strings[9]))
             if cpMelody[i + 1] > cfMelody[i] and not self.analysis.cpIsTop:
                 self.results.append(addToResults(i + 1, result_strings[9]))
+
+class ConsecutiveInterval2Species(Rule):
+    def __init__(self, analysis, interval):
+        super().__init__(analysis, "Checks for Consecutive Intervals for second species")
+        self.analysis = analysis
+        self.setting = analysis.settings
+        self.illegalInterval = interval
+    def apply(self):
+        self.results = self.analysis.results
+        cpMelody = self.analysis.cpMelody
+        cfMelody = self.analysis.cfMelody
+        print(cpMelody)
+        print(cfMelody)
+        if self.analysis.species == 2:
+            interval2species = []
+            prevcf = Note(Pitch('C00'), Ratio(1 / 4))
+            for n in range(len(cpMelody)):
+                cp_note = cpMelody[n]
+                cf_note = cfMelody[n]
+                if cf_note != prevcf:
+                    prevcf = cf_note
+                    if self.analysis.cpIsTop:
+                        interval2species.append(Interval(cf_note.pitch, cp_note.pitch))
+            # Does not get the last interval if cp and cf both whole notes but that error will be melodic cadence anyways
+            zipInt2Species = list(zip(interval2species[:-1], interval2species[1:]))
+            print(zipInt2Species)
+            for i in range(len(zipInt2Species)):
+                pair = zipInt2Species[i]
+                print(pair)
+                if self.illegalInterval == 1:
+                    if pair[0].is_unison():
+                        if pair[1].is_unison():
+                            self.results.append(addToResults((i + 1) * 2, result_strings[6]))
+                elif self.illegalInterval == 5:
+                    print("yep")
+                    if pair[0].is_fifth():
+                        if pair[1].is_fifth():
+                            self.results.append(addToResults((i + 1) * 2, result_strings[7]))
+                elif self.illegalInterval == 8:
+                    if pair[0].is_octave():
+                        if pair[1].is_octave():
+                            self.results.append(addToResults((i + 1) * 2, result_strings[8]))
+
 def addToResults(tp, resultString):
     return resultString.format(tp + 1)
 
@@ -389,8 +429,8 @@ samples = ['2-034-A_zawang2.musicxml', '2-028-C_hanzhiy2.musicxml', '2-000-B_sz1
 #     '2-029-A_hanzhiy2.musicxml'
 #     '2-010-B_mamn2.musicxml'
 
-scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/1-019-A_ajyanez2.musicxml")
+scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-034-C_zawang2.musicxml")
 s = import_score(scorePaths[0])
 print(s)
-a = SpeciesAnalysis(s, 1)
+a = SpeciesAnalysis(s, 2)
 print(a.submit_to_grading())
