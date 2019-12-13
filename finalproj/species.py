@@ -125,7 +125,8 @@ class SpeciesAnalysis(Analysis):
         ## Add your rules to this list.
         self.rules = [MelodicCadence(self), StartNote(self), ConsecutiveInterval(self, 1), ConsecutiveInterval(self, 5), ConsecutiveInterval(self, 8),
                       DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self),
-                      ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8)]
+                      ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8),
+                      ForbiddenWeakBeatDissonance(self), ForbiddenStrongBeatDissonance(self), TooManyConsecutiveIntervals(self)]
         ## A list of strings that represent the findings of your analysis.
         self.results = []
 
@@ -328,8 +329,6 @@ class ConsecutiveInterval2Species(Rule):
         self.results = self.analysis.results
         cpMelody = self.analysis.cpMelody
         cfMelody = self.analysis.cfMelody
-        print(cpMelody)
-        print(cfMelody)
         if self.analysis.species == 2:
             interval2species = []
             prevcf = Note(Pitch('C00'), Ratio(1 / 4))
@@ -342,16 +341,13 @@ class ConsecutiveInterval2Species(Rule):
                         interval2species.append(Interval(cf_note.pitch, cp_note.pitch))
             # Does not get the last interval if cp and cf both whole notes but that error will be melodic cadence anyways
             zipInt2Species = list(zip(interval2species[:-1], interval2species[1:]))
-            print(zipInt2Species)
             for i in range(len(zipInt2Species)):
                 pair = zipInt2Species[i]
-                print(pair)
                 if self.illegalInterval == 1:
                     if pair[0].is_unison():
                         if pair[1].is_unison():
                             self.results.append(addToResults((i + 1) * 2, result_strings[6]))
                 elif self.illegalInterval == 5:
-                    print("yep")
                     if pair[0].is_fifth():
                         if pair[1].is_fifth():
                             self.results.append(addToResults((i + 1) * 2, result_strings[7]))
@@ -359,6 +355,86 @@ class ConsecutiveInterval2Species(Rule):
                     if pair[0].is_octave():
                         if pair[1].is_octave():
                             self.results.append(addToResults((i + 1) * 2, result_strings[8]))
+
+class ForbiddenWeakBeatDissonance(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for weak beat dissonance (not passing tone) for second species")
+        self.analysis = analysis
+        self.setting = analysis.settings
+
+    def apply(self):
+        # dissonances on weak beats are allowed only if they are passing tones
+        self.cpMelody = self.analysis.cpMelody
+        cfMelody = self.analysis.cfMelody
+        vertIntervals = self.analysis.verticalIntervals
+        results = self.analysis.results
+        prevcf = Note(Pitch('C00'), Ratio(1 / 4))
+        for i in range(len(vertIntervals)):
+            cf_note = cfMelody[i]
+            if cf_note == prevcf:
+                if vertIntervals[i].is_dissonant():
+                    if not self.isPassing(i):
+                        results.append(addToResults(i, result_strings[11]))
+            else:
+                prevcf = cf_note
+
+    def isPassing(self, tps):
+        appr = self.cpMelody[tps - 1].pitch
+        diss = self.cpMelody[tps].pitch
+        res = self.cpMelody[tps + 1].pitch
+        firstInt = Interval(appr, diss)
+        secondInt = Interval(diss, res)
+        if firstInt.is_second() and secondInt.is_second():
+            if firstInt.sign == secondInt.sign:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+class ForbiddenStrongBeatDissonance(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for strong beat dissonance for both species")
+        self.analysis = analysis
+        self.setting = analysis.settings
+
+    def apply(self):
+        # dissonances on weak beats are allowed only if they are passing tones
+        self.cpMelody = self.analysis.cpMelody
+        cfMelody = self.analysis.cfMelody
+        vertIntervals = self.analysis.verticalIntervals
+        results = self.analysis.results
+        prevcf = Note(Pitch('C00'), Ratio(1 / 4))
+        for i in range(len(vertIntervals)):
+            cf_note = cfMelody[i]
+            if cf_note != prevcf:
+                prevcf = cf_note
+                if vertIntervals[i].is_dissonant():
+                    results.append(addToResults(i, result_strings[12]))
+
+class TooManyConsecutiveIntervals(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for strong beat dissonance for both species")
+        self.analysis = analysis
+        self.setting = analysis.settings
+
+    def apply(self):
+        results = self.analysis.results
+        max = self.setting['MAX_PARALLEL']
+        vertIntervals = self.analysis.verticalIntervals
+        countParallel = 0
+        sameInt = Interval('P29')
+        # this works for first species but not second species, might work on that later
+        for i in range(len(vertIntervals)):
+            interval = vertIntervals[i]
+            print(sameInt, interval, countParallel)
+            if interval != sameInt:
+                sameInt = interval
+                countParallel = 0
+            else:
+                countParallel += 1
+                if countParallel > max:
+                    results.append(addToResults(i + 1, result_strings[13]))
 
 def addToResults(tp, resultString):
     return resultString.format(tp + 1)
@@ -429,7 +505,7 @@ samples = ['2-034-A_zawang2.musicxml', '2-028-C_hanzhiy2.musicxml', '2-000-B_sz1
 #     '2-029-A_hanzhiy2.musicxml'
 #     '2-010-B_mamn2.musicxml'
 
-scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-034-C_zawang2.musicxml")
+scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-029-A_hanzhiy2.musicxml")
 s = import_score(scorePaths[0])
 print(s)
 a = SpeciesAnalysis(s, 2)
