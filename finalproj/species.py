@@ -2,8 +2,8 @@
 
 ## You can import from score, theory, and any python system modules you want.
 
-from finalproj.score import Note, Pitch, Rest, Interval, Ratio, Mode, import_score
-from finalproj.theory import Analysis, Rule, timepoints
+from .score import Note, Pitch, Rest, Interval, Ratio, Mode, import_score
+from .theory import Analysis, Rule, timepoints
 from copy import copy
 from math import inf
 from glob import glob
@@ -70,15 +70,15 @@ result_strings = [
     'At #{}: consecutive octaves in cantus firmus notes',  # 9 if species 2
     'At #{}: voice overlap',  # 10 done
     'At #{}: voice crossing',  # 11 done
-    'At #{}: forbidden weak beat dissonance',  # 12 vertical dissonance
-    'At #{}: forbidden strong beat dissonance',  # 13 vertical dissonance
-    'At #{}: too many consecutive parallel intervals',  # 14 parallel vertical intervals
+    'At #{}: forbidden weak beat dissonance',  # 12 vertical dissonance done
+    'At #{}: forbidden strong beat dissonance',  # 13 vertical dissonance done
+    'At #{}: too many consecutive parallel intervals',  # 14 parallel vertical intervals done but onlhy first species
 
     # MELODIC RESULTS
-    'At #{}: forbidden starting pitch',  # 15
-    'At #{}: forbidden rest',  # 16
-    'At #{}: forbidden duration',  # 17
-    'At #{}: missing melodic cadence',  # 18
+    'At #{}: forbidden starting pitch',  # 15 done
+    'At #{}: forbidden rest',  # 16 done
+    'At #{}: forbidden duration',  # 17 done
+    'At #{}: missing melodic cadence',  # 18 done
     'At #{}: forbidden non-diatonic pitch',  # 19
     'At #{}: dissonant melodic interval',  # 20
     'At #{}: too many melodic unisons',  # 21 'MAX_UNI' setting
@@ -126,7 +126,8 @@ class SpeciesAnalysis(Analysis):
         self.rules = [MelodicCadence(self), StartNote(self), ConsecutiveInterval(self, 1), ConsecutiveInterval(self, 5), ConsecutiveInterval(self, 8),
                       DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self),
                       ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8),
-                      ForbiddenWeakBeatDissonance(self), ForbiddenStrongBeatDissonance(self), TooManyConsecutiveIntervals(self)]
+                      ForbiddenWeakBeatDissonance(self), ForbiddenStrongBeatDissonance(self), TooManyConsecutiveIntervals(self), ForbiddenRest(self),
+                      ForbiddenDuration(self), NonDiatonicPitch(self), DissonantMelodicInterval(self), MelodicUnisons(self), TooManyLeapsOf(self)]
         ## A list of strings that represent the findings of your analysis.
         self.results = []
 
@@ -166,25 +167,7 @@ class SpeciesAnalysis(Analysis):
         return set(self.results)
 
 
-class StartNote(Rule):
-    def __init__(self, analysis):
-        super().__init__(analysis, "Checks if the starting note is correct or just a rest")
-        self.score = analysis.score
-        self.scale = self.score.metadata['main_key'].scale()
-        self.setting = analysis.settings
 
-    def apply(self):
-        cpMelody = self.analysis.cpMelody
-        cpIsTop = self.analysis.cpIsTop
-        self.results = self.analysis.results
-        if cpIsTop:
-            startingPC = self.setting['START_ABOVE']
-        else:
-            startingPC = self.setting['START_BELOW']
-        startingPitch = cpMelody[0].pitch.pnum()
-        startingNotes = [self.scale[i - 1] for i in startingPC]
-        if startingPitch not in startingNotes:
-            self.results.append(addToResults(0, result_strings[14]))
 
 class MelodicCadence(Rule):
     def __init__(self, analysis):
@@ -427,7 +410,6 @@ class TooManyConsecutiveIntervals(Rule):
         # this works for first species but not second species, might work on that later
         for i in range(len(vertIntervals)):
             interval = vertIntervals[i]
-            print(sameInt, interval, countParallel)
             if interval != sameInt:
                 sameInt = interval
                 countParallel = 0
@@ -435,6 +417,150 @@ class TooManyConsecutiveIntervals(Rule):
                 countParallel += 1
                 if countParallel > max:
                     results.append(addToResults(i + 1, result_strings[13]))
+
+class StartNote(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks if the starting note is correct or just a rest")
+        self.score = analysis.score
+        self.scale = self.score.metadata['main_key'].scale()
+        self.setting = analysis.settings
+
+    def apply(self):
+        cpMelody = self.analysis.cpMelody
+        cpIsTop = self.analysis.cpIsTop
+        self.results = self.analysis.results
+        if cpIsTop:
+            startingPC = self.setting['START_ABOVE']
+        else:
+            startingPC = self.setting['START_BELOW']
+        startingPitch = cpMelody[0].pitch.pnum()
+        startingNotes = [self.scale[i - 1] for i in startingPC]
+        if startingPitch not in startingNotes:
+            self.results.append(addToResults(0, result_strings[14]))
+
+class ForbiddenRest(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden rest")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        result = self.analysis.results
+        cpMelody = self.analysis.cpMelody
+        for i in range(len(cpMelody)):
+            if i != 0 and isinstance(cpMelody[i], Rest):
+                result.append(addToResults(i, result_strings[15]))
+
+class ForbiddenDuration(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        result = self.analysis.results
+        cpMelody = self.analysis.cpMelody
+        cfMelody = self.analysis.cfMelody
+        if self.analysis.species == 1:
+            correctDur = cfMelody[0].dur
+        elif self.analysis.species == 2:
+            correctDur = cfMelody[0].dur / 2
+            if cpMelody[-1].dur != cfMelody[0].dur:
+                result.append(addToResults(len(cpMelody) - 1, result_strings[16]))
+        for i in range(len(cpMelody)):
+            if cpMelody[i].dur != correctDur:
+                result.append(addToResults(i, result_strings[16]))
+
+class NonDiatonicPitch(Rule):
+    #might be wrong cuz raised 7th is able to be anywhere not just the end
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+        self.key = self.analysis.score.metadata['main_key']
+        self.scale = self.analysis.score.metadata['main_key'].scale()
+
+    def apply(self):
+        cpMelody = self.analysis.cpMelody
+        result = self.analysis.results
+        if self.key == Mode.AEOLIAN:
+            self.scale.append(Interval('+1').transpose(self.scale[6]).pnum())
+        for i in range(len(cpMelody)):
+            if cpMelody[i].pitch.pnum() not in self.scale:
+                result.append(i, result_strings[18])
+
+class DissonantMelodicInterval(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        result = self.analysis.results
+        for i in range(len(cpInt)):
+            #Not working
+            if cpInt[i].qual < 5 or cpInt[i].qual > 7:
+                result.append(i, result_strings[19])
+
+class MelodicUnisons(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        result = self.analysis.results
+        maxUni = self.setting['MAX_UNI']
+        countUni = 0
+        for i in range(len(cpInt)):
+            if cpInt[i].is_unison():
+                countUni += 1
+                if countUni >= maxUni:
+                    result.append(addToResults(i, result_strings[20]))
+
+class TooManyLeapsOf(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        result = self.analysis.results
+        max4th = self.setting['MAX_4TH']
+        max5th = self.setting['MAX_5TH']
+        max6th = self.setting['MAX_6TH']
+        max7th = self.setting['MAX_7TH']
+        maxOct = self.setting['MAX_8VA']
+        count4 = 0
+        count5 = 0
+        count6 = 0
+        count7 = 0
+        count8 = 0
+        for i in range(len(cpInt)):
+            if cpInt[i].is_fourth():
+                count4 += 1
+                if count4 >= max4th:
+                    result.append(i, result_strings[21])
+            if cpInt[i].is_fifth():
+                count5 += 1
+                if count5 >= max5th:
+                    result.append(i, result_strings[22])
+            if cpInt[i].is_sixth():
+                count6 += 1
+                if count6 >= max6th:
+                    result.append(i, result_strings[23])
+            if cpInt[i].is_seventh():
+                count7 += 1
+                if count7 >= max7th:
+                    result.append(i, result_strings[24])
+            if cpInt[i].is_octave():
+                count8 += 1
+                if count8 >= maxOct:
+                    result.append(i, result_strings[25])
+
 
 def addToResults(tp, resultString):
     return resultString.format(tp + 1)
@@ -505,8 +631,3 @@ samples = ['2-034-A_zawang2.musicxml', '2-028-C_hanzhiy2.musicxml', '2-000-B_sz1
 #     '2-029-A_hanzhiy2.musicxml'
 #     '2-010-B_mamn2.musicxml'
 
-scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-029-A_hanzhiy2.musicxml")
-s = import_score(scorePaths[0])
-print(s)
-a = SpeciesAnalysis(s, 2)
-print(a.submit_to_grading())
