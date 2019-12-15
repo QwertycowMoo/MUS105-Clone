@@ -88,7 +88,7 @@ result_strings = [
     'At #{}: too many leaps of a seventh',  # 25 'MAX_7TH' setting
     'At #{}: too many leaps of an octave',  # 26 'MAX_8VA' setting
     'At #{}: too many large leaps',  # 27 'MAX_LRG' setting
-    'At #{}: too many consecutive leaps'  # 28 'MAX_CONSEC_LEAP' setting
+    'At #{}: too many consecutive leaps',  # 28 'MAX_CONSEC_LEAP' setting
     'At #{}: too many consecutive intervals in same direction',  # 29 'MAX_SAMEDIR' setting
     'At #{}: missing reverse by step recovery',  # 30 'STEP_THRESHOLD' setting
     'At #{}: forbidden compound melodic interval',  # 31
@@ -127,7 +127,8 @@ class SpeciesAnalysis(Analysis):
                       DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self),
                       ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8),
                       ForbiddenWeakBeatDissonance(self), ForbiddenStrongBeatDissonance(self), TooManyConsecutiveIntervals(self), ForbiddenRest(self),
-                      ForbiddenDuration(self), NonDiatonicPitch(self), DissonantMelodicInterval(self), MelodicUnisons(self), TooManyLeapsOf(self)]
+                      ForbiddenDuration(self), NonDiatonicPitch(self), DissonantMelodicInterval(self), MelodicUnisons(self), TooManyLeapsOf(self),
+                      LargeLeaps(self), ConsecLeaps(self)]
         ## A list of strings that represent the findings of your analysis.
         self.results = []
 
@@ -561,6 +562,43 @@ class TooManyLeapsOf(Rule):
                 if count8 >= maxOct:
                     result.append(i, result_strings[25])
 
+class LargeLeaps(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        maxLarge = self.setting['MAX_LRG']
+        result = self.analysis.results
+        countLarge = 0
+        for i in range(len(cpInt)):
+            if cpInt[i] > Interval('M3'):
+                countLarge += 1
+                if countLarge > maxLarge:
+                    result.append(addToResults(i, result_strings[26]))
+
+class ConsecLeaps(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+        self.analysis = analysis
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        maxConsec = self.setting['MAX_CONSEC_LEAP']
+        result = self.analysis.results
+        countConsec = 0
+        prevInt = cpInt[0]
+        for i in range(1, len(cpInt)):
+            if cpInt[i].sign == prevInt.sign:
+                countConsec += 1
+                if countConsec > maxConsec:
+                    result.append(addToResults(i, result_strings[27]))
+            else:
+                prevInt = cpInt[i]
+                countConsec = 0
 
 def addToResults(tp, resultString):
     return resultString.format(tp + 1)
