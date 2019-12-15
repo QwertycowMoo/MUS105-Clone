@@ -123,15 +123,36 @@ class SpeciesAnalysis(Analysis):
         ## A local copy of the analysis settings.
         self.settings = copy(s1_settings) if species == 1 else copy(s2_settings)
         ## Add your rules to this list.
-        self.rules = [MelodicCadence(self), StartNote(self), ConsecutiveInterval(self, 1), ConsecutiveInterval(self, 5), ConsecutiveInterval(self, 8),
-                      DirectInterval(self, 1), DirectInterval(self, 5), DirectInterval(self, 8), VoiceCrossing(self), VoiceOverlap(self),
-                      ConsecutiveInterval2Species(self, 1), ConsecutiveInterval2Species(self, 5), ConsecutiveInterval2Species(self, 8),
-                      ForbiddenWeakBeatDissonance(self), ForbiddenStrongBeatDissonance(self), TooManyConsecutiveIntervals(self), ForbiddenRest(self),
-                      ForbiddenDuration(self), NonDiatonicPitch(self), DissonantMelodicInterval(self), MelodicUnisons(self), TooManyLeapsOf(self),
-                      LargeLeaps(self), ConsecLeaps(self)]
+        self.rules = [MelodicCadence(self),
+                      StartNote(self),
+                      ConsecutiveInterval(self, 1),
+                      ConsecutiveInterval(self, 5),
+                      ConsecutiveInterval(self, 8),
+                      DirectInterval(self, 1),
+                      DirectInterval(self, 5),
+                      DirectInterval(self, 8),
+                      VoiceCrossing(self),
+                      VoiceOverlap(self),
+                      ConsecutiveInterval2Species(self, 1),
+                      ConsecutiveInterval2Species(self, 5),
+                      ConsecutiveInterval2Species(self, 8),
+                      ForbiddenWeakBeatDissonance(self),
+                      ForbiddenStrongBeatDissonance(self),
+                      TooManyConsecutiveIntervals(self),
+                      ForbiddenRest(self),
+                      ForbiddenDuration(self),
+                      NonDiatonicPitch(self),
+                      DissonantMelodicInterval(self),
+                      MelodicUnisons(self),
+                      TooManyLeapsOf(self),
+                      LargeLeaps(self),
+                      ConsecLeaps(self),
+                      SameDirIntervals(self),
+                      StepRecovery(self),
+                      CompoundMelodicInterval(self)
+                      ]
         ## A list of strings that represent the findings of your analysis.
         self.results = []
-
         self.cpMelody = []
         self.cfMelody = []
 
@@ -165,7 +186,7 @@ class SpeciesAnalysis(Analysis):
         self.analyze()
         ## When you return your results to the autograder make sure you convert
         # it to a Python set, like this:
-        return set(self.results)
+        return sorted(set(self.results))
 
 
 
@@ -173,7 +194,6 @@ class SpeciesAnalysis(Analysis):
 class MelodicCadence(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for the melodic cadence in both voices")
-        self.analysis = analysis
         self.score = analysis.score
         self.key = self.score.metadata['main_key']
         self.scale = self.key.scale()
@@ -204,7 +224,6 @@ class MelodicCadence(Rule):
 class ConsecutiveInterval(Rule):
     def __init__(self, analysis, interval):
         super().__init__(analysis, "Checks for any consecutive (parallel) perfect intervals")
-        self.analysis = analysis
         self.score = analysis.score
         self.setting = analysis.settings
         if interval not in [1, 5, 8]:
@@ -220,20 +239,20 @@ class ConsecutiveInterval(Rule):
             if self.illegalInterval == 1:
                 if pair[0].is_unison():
                     if (pair[1].is_unison()):
-                        self.results.append(addToResults(i + 1, result_strings[0]))
+                        self.results.append(addToResults(i, result_strings[0]))
             elif (self.illegalInterval == 5):
                 if (pair[0].is_fifth()):
                     if (pair[1].is_fifth()):
-                        self.results.append(addToResults(i + 1, result_strings[1]))
+                        self.results.append(addToResults(i, result_strings[1]))
             elif (self.illegalInterval == 8):
-                if (pair[0].is_octave()):
-                    if (pair[1].is_octave()):
-                        self.results.append(addToResults(i + 1, result_strings[2]))
+                if (pair[1] != verticalIntervals[-1]):
+                    if (pair[0].is_octave()):
+                        if (pair[1].is_octave()):
+                            self.results.append(addToResults(i, result_strings[2]))
 
 class DirectInterval(Rule):
     def __init__(self, analysis, interval):
         super().__init__(analysis, "Checks for any direct perfect intervals")
-        self.analysis = analysis
         self.score = analysis.score
         if interval not in [1, 5, 8]:
             raise ValueError("The illegal direct interval must be a unison, fifth, or octave")
@@ -242,40 +261,57 @@ class DirectInterval(Rule):
     def apply(self):
         self.results = self.analysis.results
         verticalIntervals = self.analysis.verticalIntervals
-        #checks if the counterpoint is top if not, uses the cf melody as the soprano voice
+        cfMelody = self.analysis.cfMelody
+        zipVertical = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
+        zipVertical2 = []
         if self.analysis.cpIsTop:
             topMelody = self.analysis.cpMelody
             topZipMelody = list(zip(topMelody[:-1], topMelody[1:]))
-            melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in range(len(topZipMelody))]
+            self.melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in range(len(topZipMelody))]
         else:
             topMelody = self.analysis.cfMelody
             topZipMelody = list(zip(topMelody[:-1], topMelody[1:]))
-            melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in
+            self.melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in
                                 range(len(topZipMelody))]
-        zipVertical = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
-
+        for k in range(0, len(verticalIntervals), 2):
+            zipVertical2.append(verticalIntervals[k])
         #goes through both the pairs of vertical intervals if not parallel fifth but still fifth,
         #then checks melodic interval for a leap
+        prevNote = Note(Pitch('C00'), Ratio('1/3'))
         for i in range(len(zipVertical)):
             firstI = zipVertical[i][0]
             secondI = zipVertical[i][1]
-            if self.illegalInterval == 1:
-                if secondI.is_unison() and not firstI.is_unison():
-                    if melodicIntervals[i] > Interval('M2'):
-                        self.results.append(addToResults(i + 1, result_strings[3]))
-            if self.illegalInterval == 5:
-                if secondI.is_fifth() and not firstI.is_fifth():
-                    if melodicIntervals[i] > Interval('M2'):
-                        self.results.append(addToResults(i + 1, result_strings[4]))
-            if self.illegalInterval == 8:
-                if secondI.is_octave() and not firstI.is_octave():
-                    if melodicIntervals[i] > Interval('M2'):
-                        self.results.append(addToResults(i + 1, result_strings[5]))
+            if self.analysis.species == 2:
+                if cfMelody[i] == prevNote:
+                    self.check(firstI, secondI, i)
+                else:
+                    prevNote = cfMelody[i]
+            else:
+                self.check(firstI, secondI, i)
+        #
+        # if self.analysis.species == 2:
+        #     for i in range(len(zipVertical2) - 1):
+        #         firstI2 = zipVertical2[i]
+        #         secondI2 = zipVertical2[i + 1]
+        #         self.check(firstI2, secondI2, i)
+
+    def check(self, firstI, secondI, tp):
+        if self.illegalInterval == 1:
+            if secondI.is_unison() and not firstI.is_unison():
+                if self.melodicIntervals[tp] > Interval('M2'):
+                    self.results.append(addToResults(tp, result_strings[3]))
+        if self.illegalInterval == 5:
+            if secondI.is_fifth() and not firstI.is_fifth():
+                if self.melodicIntervals[tp] > Interval('M2'):
+                    self.results.append(addToResults(tp, result_strings[4]))
+        if self.illegalInterval == 8:
+            if secondI.is_octave() and not firstI.is_octave():
+                if self.melodicIntervals[tp] > Interval('M2'):
+                    self.results.append(addToResults(tp, result_strings[5]))
 
 class VoiceCrossing(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for voice overlap between the two voices")
-        self.analysis = analysis
         self.score = analysis.score
         self.setting = analysis.settings
 
@@ -289,7 +325,6 @@ class VoiceCrossing(Rule):
 class VoiceOverlap(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for voice overlap between the two voices")
-        self.analysis = analysis
         self.setting = analysis.settings
 
     def apply(self):
@@ -306,7 +341,6 @@ class VoiceOverlap(Rule):
 class ConsecutiveInterval2Species(Rule):
     def __init__(self, analysis, interval):
         super().__init__(analysis, "Checks for Consecutive Intervals for second species")
-        self.analysis = analysis
         self.setting = analysis.settings
         self.illegalInterval = interval
     def apply(self):
@@ -343,7 +377,6 @@ class ConsecutiveInterval2Species(Rule):
 class ForbiddenWeakBeatDissonance(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for weak beat dissonance (not passing tone) for second species")
-        self.analysis = analysis
         self.setting = analysis.settings
 
     def apply(self):
@@ -356,7 +389,7 @@ class ForbiddenWeakBeatDissonance(Rule):
         for i in range(len(vertIntervals)):
             cf_note = cfMelody[i]
             if cf_note == prevcf:
-                if vertIntervals[i].is_dissonant():
+                if vertIntervals[i].is_dissonant() or vertIntervals[i].is_fourth():
                     if not self.isPassing(i):
                         results.append(addToResults(i, result_strings[11]))
             else:
@@ -379,7 +412,6 @@ class ForbiddenWeakBeatDissonance(Rule):
 class ForbiddenStrongBeatDissonance(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for strong beat dissonance for both species")
-        self.analysis = analysis
         self.setting = analysis.settings
 
     def apply(self):
@@ -393,13 +425,12 @@ class ForbiddenStrongBeatDissonance(Rule):
             cf_note = cfMelody[i]
             if cf_note != prevcf:
                 prevcf = cf_note
-                if vertIntervals[i].is_dissonant():
+                if vertIntervals[i].is_dissonant() or vertIntervals[i].is_fourth():
                     results.append(addToResults(i, result_strings[12]))
 
 class TooManyConsecutiveIntervals(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for strong beat dissonance for both species")
-        self.analysis = analysis
         self.setting = analysis.settings
 
     def apply(self):
@@ -443,7 +474,6 @@ class ForbiddenRest(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden rest")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         result = self.analysis.results
@@ -456,7 +486,6 @@ class ForbiddenDuration(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         result = self.analysis.results
@@ -464,37 +493,37 @@ class ForbiddenDuration(Rule):
         cfMelody = self.analysis.cfMelody
         if self.analysis.species == 1:
             correctDur = cfMelody[0].dur
+            for i in range(len(cpMelody)):
+                if cpMelody[i].dur != correctDur:
+                    result.append(addToResults(i, result_strings[16]))
         elif self.analysis.species == 2:
             correctDur = cfMelody[0].dur / 2
+            for i in range(len(cpMelody) - 2):
+                if cpMelody[i].dur != correctDur:
+                    result.append(addToResults(i, result_strings[16]))
             if cpMelody[-1].dur != cfMelody[0].dur:
                 result.append(addToResults(len(cpMelody) - 1, result_strings[16]))
-        for i in range(len(cpMelody)):
-            if cpMelody[i].dur != correctDur:
-                result.append(addToResults(i, result_strings[16]))
 
 class NonDiatonicPitch(Rule):
     #might be wrong cuz raised 7th is able to be anywhere not just the end
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
         self.key = self.analysis.score.metadata['main_key']
         self.scale = self.analysis.score.metadata['main_key'].scale()
-
     def apply(self):
         cpMelody = self.analysis.cpMelody
         result = self.analysis.results
-        if self.key == Mode.AEOLIAN:
-            self.scale.append(Interval('+1').transpose(self.scale[6]).pnum())
+        if self.key.mode == Mode.MINOR:
+            self.scale.append(Interval('+1').transpose(self.scale[6]))
         for i in range(len(cpMelody)):
             if cpMelody[i].pitch.pnum() not in self.scale:
-                result.append(i, result_strings[18])
+                result.append(addToResults(i, result_strings[18]))
 
 class DissonantMelodicInterval(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         cpInt = self.analysis.cpIntervals
@@ -502,13 +531,12 @@ class DissonantMelodicInterval(Rule):
         for i in range(len(cpInt)):
             #Not working
             if cpInt[i].qual < 5 or cpInt[i].qual > 7:
-                result.append(i, result_strings[19])
+                result.append(addToResults(i, result_strings[19]))
 
 class MelodicUnisons(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         cpInt = self.analysis.cpIntervals
@@ -525,7 +553,6 @@ class TooManyLeapsOf(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         cpInt = self.analysis.cpIntervals
@@ -566,7 +593,6 @@ class LargeLeaps(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         cpInt = self.analysis.cpIntervals
@@ -583,22 +609,65 @@ class ConsecLeaps(Rule):
     def __init__(self, analysis):
         super().__init__(analysis, "Checks for forbidden duration")
         self.setting = analysis.settings
-        self.analysis = analysis
 
     def apply(self):
         cpInt = self.analysis.cpIntervals
         maxConsec = self.setting['MAX_CONSEC_LEAP']
         result = self.analysis.results
         countConsec = 0
-        prevInt = cpInt[0]
-        for i in range(1, len(cpInt)):
-            if cpInt[i].sign == prevInt.sign:
+        for i in range(len(cpInt)):
+            if cpInt[i] > Interval('M2'):
                 countConsec += 1
                 if countConsec > maxConsec:
                     result.append(addToResults(i, result_strings[27]))
             else:
+                countConsec = 0
+
+class SameDirIntervals(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for forbidden duration")
+        self.setting = analysis.settings
+
+    def apply(self):
+        cpInt = self.analysis.cpIntervals
+        maxConsec = self.setting['MAX_SAMEDIR']
+        result = self.analysis.results
+        countConsec = 1
+        prevInt = cpInt[0]
+        for i in range(1, len(cpInt)):
+            if cpInt[i].sign == prevInt.sign or cpInt[i].is_unison():
+                countConsec += 1
+                if countConsec >= maxConsec:
+                    result.append(addToResults(i, result_strings[28]))
+            else:
                 prevInt = cpInt[i]
                 countConsec = 0
+
+class StepRecovery(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Checks for rule of recovery after a leap")
+        self.setting = analysis.settings
+
+    def apply(self):
+        result = self.analysis.results
+        stepThres = self.setting['STEP_THRESHOLD']
+        intervalThres = Interval('{}{}'.format('M' if stepThres in [2, 3, 6, 7] else 'P', stepThres))
+        cpInt = self.analysis.cpIntervals
+        for i in range(len(cpInt) - 1):
+            if cpInt[i] >= intervalThres:
+                if not (cpInt[i + 1].sign != cpInt[i].sign and cpInt[i + 1].is_second()):
+                    result.append(addToResults(i + 2, result_strings[29]))
+
+class CompoundMelodicInterval(Rule):
+    def __init__(self, analysis):
+        super().__init__(analysis, "Check for any forbidden compound melodic intervals e.g. nothing more than octave")
+
+    def apply(self):
+        result = self.analysis.results
+        cpInt = self.analysis.cpIntervals
+        for i in range(len(cpInt)):
+            if (cpInt[i].is_compound()):
+                result.append(addToResults(i + 1, result_strings[30]))
 
 def addToResults(tp, resultString):
     return resultString.format(tp + 1)
