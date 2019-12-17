@@ -186,7 +186,7 @@ class SpeciesAnalysis(Analysis):
         self.analyze()
         ## When you return your results to the autograder make sure you convert
         # it to a Python set, like this:
-        return sorted(set(self.results))
+        return set(self.results)
 
 
 
