@@ -647,7 +647,7 @@ class SameDirIntervals(Rule):
         countConsec = 1
         prevInt = cpInt[0]
         for i in range(1, len(cpInt)):
-            if cpInt[i].sign == prevInt.sign or cpInt[i].is_unison():
+            if cpInt[i].sign == prevInt.sign:
                 countConsec += 1
                 if countConsec > maxConsec:
                     result.append(addToResults(i, result_strings[28]))
