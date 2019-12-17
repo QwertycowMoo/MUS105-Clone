@@ -1,0 +1,37 @@
+============= kjzhou2.hwx transcript [test] =============
+
+[ pid=118, ngram=1 ] (2/2)
+[ pid=66, ngram=1 ] (2/2)
+[ pid=62, ngram=1 ] (2/2)
+[ pid=61, ngram=1 ] (2/2)
+[ pid=60, ngram=1 ] (2/2)
+[ pid=112, ngram=1 ] (2/2)
+[ pid=68, ngram=1 ] (2/2)
+[ pid=113, ngram=1 ] (2/2)
+[ pid=69, ngram=1 ] (2/2)
+[ pid=196, ngram=1 ] (1/2)
+[ pid=162, ngram=1 ] (1/2)
+[ pid=157, ngram=1 ] (1/2)
+[ pid=66, ngram=2, cond=s ] (1/2)
+[ pid=66, ngram=2, cond=0 ] (2/2)
+[ pid=66, ngram=2, cond=5 ] (2/2)
+[ pid=66, ngram=2, cond=7 ] (2/2)
+[ pid=66, ngram=2, cond=11 ] (2/2)
+[ pid=68, ngram=2, cond=s ] (1/2)
+[ pid=68, ngram=2, cond=0 ] (0/2)
+[ pid=68, ngram=2, cond=3 ] (2/2)
+[ pid=68, ngram=2, cond=6 ] (0/2)
+[ pid=68, ngram=2, cond=7 ] (2/2)
+[ pid=157, ngram=2, cond=s ] (2/2)
+[ pid=157, ngram=2, cond=0,0,4,7 ] (2/2)
+[ pid=157, ngram=2, cond=2,7,7,11 ] (2/2)
+[ pid=157, ngram=2, cond=2,5,7,11 ] (2/2)
+[ pid=157, ngram=2, cond=2,4,8,11 ] (2/2)
+
+Total raw score: (45/54)
+
+----------------------
+Base score (if you do nothing but just turn in the starter code): 0
+Extra credit (pid=162, ngram=1; pid=68, ngram=2, cond=7): 4
+Adjusted score (Final): 45/50
+
