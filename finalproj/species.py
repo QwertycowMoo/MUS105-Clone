@@ -235,7 +235,7 @@ class ConsecutiveInterval(Rule):
         self.results = self.analysis.results
         verticalIntervals = self.analysis.verticalIntervals
         zipInt = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
-        for i in range(len(zipInt)):
+        for i in range(len(zipInt) - 1):
             pair = zipInt[i]
             if self.illegalInterval == 1:
                 if pair[0].is_unison():
