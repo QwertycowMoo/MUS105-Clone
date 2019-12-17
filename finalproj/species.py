@@ -186,7 +186,7 @@ class SpeciesAnalysis(Analysis):
         self.analyze()
         ## When you return your results to the autograder make sure you convert
         # it to a Python set, like this:
-        return set(self.results)
+        return sorted(set(self.results))
 
 
 
@@ -349,6 +349,7 @@ class ConsecutiveInterval2Species(Rule):
         cfMelody = self.analysis.cfMelody
         if self.analysis.species == 2:
             interval2species = []
+            matching_cf_note = []
             prevcf = Note(Pitch('C00'), Ratio(1 / 4))
             for n in range(len(cpMelody)):
                 cp_note = cpMelody[n]
@@ -357,22 +358,25 @@ class ConsecutiveInterval2Species(Rule):
                     prevcf = cf_note
                     if self.analysis.cpIsTop:
                         interval2species.append(Interval(cf_note.pitch, cp_note.pitch))
+                        matching_cf_note.append(n)
             # Does not get the last interval if cp and cf both whole notes but that error will be melodic cadence anyways
             zipInt2Species = list(zip(interval2species[:-1], interval2species[1:]))
             for i in range(len(zipInt2Species)):
+
                 pair = zipInt2Species[i]
+                print(pair, matching_cf_note[i])
                 if self.illegalInterval == 1:
                     if pair[0].is_unison():
                         if pair[1].is_unison():
-                            self.results.append(addToResults((i + 1) * 2, result_strings[6]))
+                            self.results.append(addToResults(matching_cf_note[i], result_strings[6]))
                 elif self.illegalInterval == 5:
-                    if pair[0].is_fifth():
-                        if pair[1].is_fifth():
-                            self.results.append(addToResults((i + 1) * 2, result_strings[7]))
+                    if pair[0].is_fifth() and pair[1].is_perfect():
+                        if pair[1].is_fifth() and pair[1].is_perfect():
+                            self.results.append(addToResults(matching_cf_note[i], result_strings[7]))
                 elif self.illegalInterval == 8:
                     if pair[0].is_octave():
                         if pair[1].is_octave():
-                            self.results.append(addToResults((i + 1) * 2, result_strings[8]))
+                            self.results.append(addToResults(matching_cf_note[i], result_strings[8]))
 
 class ForbiddenWeakBeatDissonance(Rule):
     def __init__(self, analysis):
@@ -441,14 +445,15 @@ class TooManyConsecutiveIntervals(Rule):
         sameInt = Interval('P29')
         # this works for first species but not second species, might work on that later
         for i in range(len(vertIntervals)):
+            print(sameInt, vertIntervals[i])
             interval = vertIntervals[i]
-            if interval != sameInt:
+            if interval != sameInt or interval.is_perfect():
                 sameInt = interval
                 countParallel = 0
             else:
                 countParallel += 1
                 if countParallel > max:
-                    results.append(addToResults(i + 1, result_strings[13]))
+                    results.append(addToResults(i, result_strings[13]))
 
 class StartNote(Rule):
     def __init__(self, analysis):
@@ -627,7 +632,7 @@ class ConsecLeaps(Rule):
         maxConsec = self.setting['MAX_CONSEC_LEAP']
         result = self.analysis.results
         countConsec = 0
-        for i in range(1, len(cpInt)):
+        for i in range(len(cpInt)):
             if cpInt[i] > Interval('M2'):
                 countConsec += 1
                 if countConsec > maxConsec:
