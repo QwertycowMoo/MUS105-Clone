@@ -169,7 +169,7 @@ class SpeciesAnalysis(Analysis):
             self.cpMelody = topMelody
             self.cfMelody = bottomMelody
             self.cpIsTop = True
-        elif self.score.get_part('P2').name == 'CP':
+        elif self.score.get_part('P2').name == 'CP' or self.score.get_part('P1').name == 'CF':
             self.cpMelody = bottomMelody
             self.cfMelody = topMelody
             self.cpIsTop = False
@@ -214,12 +214,13 @@ class MelodicCadence(Rule):
             cadencePatterns.append(pitchPattern)
         cpLast2 = [self.analysis.cpMelody[i].pitch.pnum() for i in range(-2, 0)]
         cfLast2 = [self.analysis.cfMelody[i].pitch.pnum() for i in range(-2, 0)]
-        if cpLast2 in cadencePatterns:
-            del cadencePatterns[cadencePatterns.index(cpLast2)]
-            if cfLast2 not in cadencePatterns:
+        if [cpLast2[i] == cfLast2[i] for i in range(2)] != [True, True] or (self.analysis.species == 2):
+            if cpLast2 in cadencePatterns:
+                del cadencePatterns[cadencePatterns.index(cpLast2)]
+                if cfLast2 not in cadencePatterns:
+                    self.results.append(addToResults(len(self.analysis.cpMelody) - 2, result_strings[17]))
+            else:
                 self.results.append(addToResults(len(self.analysis.cpMelody) - 2, result_strings[17]))
-        else:
-            self.results.append(addToResults(len(self.analysis.cpMelody) - 2, result_strings[17]))
 
 class ConsecutiveInterval(Rule):
     def __init__(self, analysis, interval):
@@ -262,52 +263,52 @@ class DirectInterval(Rule):
         self.results = self.analysis.results
         verticalIntervals = self.analysis.verticalIntervals
         cfMelody = self.analysis.cfMelody
+        self.cpMelody = self.analysis.cpMelody
         zipVertical = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
-        zipVertical2 = []
         if self.analysis.cpIsTop:
             topMelody = self.analysis.cpMelody
-            topZipMelody = list(zip(topMelody[:-1], topMelody[1:]))
-            self.melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in range(len(topZipMelody))]
+            bottomMelody = self.analysis.cfMelody
         else:
             topMelody = self.analysis.cfMelody
-            topZipMelody = list(zip(topMelody[:-1], topMelody[1:]))
-            self.melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in
-                                range(len(topZipMelody))]
-        for k in range(0, len(verticalIntervals), 2):
-            zipVertical2.append(verticalIntervals[k])
+            bottomMelody = self.analysis.cpMelody
+        topZipMelody = list(zip(topMelody[:-1], topMelody[1:]))
+        self.melodicIntervals = [Interval(topZipMelody[i][0].pitch, topZipMelody[i][1].pitch) for i in
+                                 range(len(topZipMelody))]
+        botZipMelody = list(zip(bottomMelody[:-1], bottomMelody[1:]))
+        self.otherIntervals = [Interval(botZipMelody[i][0].pitch, botZipMelody[i][1].pitch) for i in range(len(botZipMelody))]
         #goes through both the pairs of vertical intervals if not parallel fifth but still fifth,
-        #then checks melodic interval for a leap
+        #then checks melodic interval for a leaps
         prevNote = Note(Pitch('C00'), Ratio('1/3'))
         for i in range(len(zipVertical)):
             firstI = zipVertical[i][0]
             secondI = zipVertical[i][1]
             if self.analysis.species == 2:
-                if cfMelody[i] == prevNote:
-                    self.check(firstI, secondI, i)
+                if i == 0:
+                    pass
                 else:
-                    prevNote = cfMelody[i]
+                    if cfMelody[i + 1] != prevNote:
+                        prevNote = cfMelody[i + 1]
+                        self.check(firstI, secondI, i)
             else:
                 self.check(firstI, secondI, i)
-        #
-        # if self.analysis.species == 2:
-        #     for i in range(len(zipVertical2) - 1):
-        #         firstI2 = zipVertical2[i]
-        #         secondI2 = zipVertical2[i + 1]
-        #         self.check(firstI2, secondI2, i)
 
     def check(self, firstI, secondI, tp):
-        if self.illegalInterval == 1:
-            if secondI.is_unison() and not firstI.is_unison():
-                if self.melodicIntervals[tp] > Interval('M2'):
-                    self.results.append(addToResults(tp, result_strings[3]))
-        if self.illegalInterval == 5:
-            if secondI.is_fifth() and not firstI.is_fifth():
-                if self.melodicIntervals[tp] > Interval('M2'):
-                    self.results.append(addToResults(tp, result_strings[4]))
-        if self.illegalInterval == 8:
-            if secondI.is_octave() and not firstI.is_octave():
-                if self.melodicIntervals[tp] > Interval('M2'):
-                    self.results.append(addToResults(tp, result_strings[5]))
+        if self.cpMelody[tp] != self.cpMelody[tp + 1]:
+            if self.illegalInterval == 1:
+                if secondI.is_unison() and not firstI.is_unison():
+                    if self.melodicIntervals[tp] > Interval('M2')\
+                            and self.otherIntervals[tp].sign == self.melodicIntervals[tp].sign:
+                        self.results.append(addToResults(tp, result_strings[3]))
+            if self.illegalInterval == 5:
+                if secondI.is_fifth() and not firstI.is_fifth():
+                    if self.melodicIntervals[tp] > Interval('M2')\
+                            and self.otherIntervals[tp].sign == self.melodicIntervals[tp].sign:
+                        self.results.append(addToResults(tp, result_strings[4]))
+            if self.illegalInterval == 8:
+                if secondI.is_octave() and not firstI.is_octave():
+                    if self.melodicIntervals[tp] > Interval('M2')\
+                            and self.otherIntervals[tp].sign == self.melodicIntervals[tp].sign:
+                        self.results.append(addToResults(tp, result_strings[5]))
 
 class VoiceCrossing(Rule):
     def __init__(self, analysis):
@@ -331,11 +332,10 @@ class VoiceOverlap(Rule):
         self.results = self.analysis.results
         cpMelody = self.analysis.cpMelody
         cfMelody = self.analysis.cfMelody
-        verticalIntervals = self.analysis.verticalIntervals
         for i in range(len(cpMelody) - 1):
-            if cpMelody[i + 1] < cfMelody[i] and self.analysis.cpIsTop:
+            if (cpMelody[i + 1] < cfMelody[i] or cfMelody[i + 1] > cpMelody[i]) and self.analysis.cpIsTop:
                 self.results.append(addToResults(i + 1, result_strings[9]))
-            if cpMelody[i + 1] > cfMelody[i] and not self.analysis.cpIsTop:
+            if (cpMelody[i + 1] > cfMelody[i] or cfMelody[i + 1] < cpMelody[i]) and not self.analysis.cpIsTop:
                 self.results.append(addToResults(i + 1, result_strings[9]))
 
 class ConsecutiveInterval2Species(Rule):
@@ -544,9 +544,9 @@ class MelodicUnisons(Rule):
         maxUni = self.setting['MAX_UNI']
         countUni = 0
         for i in range(len(cpInt)):
-            if cpInt[i].is_unison():
+            if cpInt[i].is_unison() and cpInt[i].is_perfect():
                 countUni += 1
-                if countUni >= maxUni:
+                if countUni > maxUni:
                     result.append(addToResults(i, result_strings[20]))
 
 class TooManyLeapsOf(Rule):
@@ -557,11 +557,13 @@ class TooManyLeapsOf(Rule):
     def apply(self):
         cpInt = self.analysis.cpIntervals
         result = self.analysis.results
+        maxLrg = self.setting['MAX_LRG']
         max4th = self.setting['MAX_4TH']
         max5th = self.setting['MAX_5TH']
         max6th = self.setting['MAX_6TH']
         max7th = self.setting['MAX_7TH']
         maxOct = self.setting['MAX_8VA']
+        countLrg = 0
         count4 = 0
         count5 = 0
         count6 = 0
@@ -570,24 +572,34 @@ class TooManyLeapsOf(Rule):
         for i in range(len(cpInt)):
             if cpInt[i].is_fourth():
                 count4 += 1
-                if count4 >= max4th:
-                    result.append(i, result_strings[21])
+                countLrg += 1
+                if countLrg <= maxLrg:
+                    if count4 > max4th:
+                        result.append(addToResults(i, result_strings[21]))
             if cpInt[i].is_fifth():
                 count5 += 1
-                if count5 >= max5th:
-                    result.append(i, result_strings[22])
+                countLrg += 1
+                if countLrg <= maxLrg:
+                    if count5 > max5th:
+                        result.append(addToResults(i, result_strings[22]))
             if cpInt[i].is_sixth():
                 count6 += 1
-                if count6 >= max6th:
-                    result.append(i, result_strings[23])
+                countLrg += 1
+                if countLrg <= maxLrg:
+                    if count6 > max6th:
+                        result.append(addToResults(i, result_strings[23]))
             if cpInt[i].is_seventh():
                 count7 += 1
-                if count7 >= max7th:
-                    result.append(i, result_strings[24])
+                countLrg += 1
+                if countLrg <= maxLrg:
+                    if count7 > max7th:
+                        result.append(addToResults(i, result_strings[24]))
             if cpInt[i].is_octave():
                 count8 += 1
-                if count8 >= maxOct:
-                    result.append(i, result_strings[25])
+                countLrg += 1
+                if countLrg <= maxLrg:
+                    if count8 > maxOct:
+                        result.append(addToResults(i, result_strings[25]))
 
 class LargeLeaps(Rule):
     def __init__(self, analysis):
@@ -615,7 +627,7 @@ class ConsecLeaps(Rule):
         maxConsec = self.setting['MAX_CONSEC_LEAP']
         result = self.analysis.results
         countConsec = 0
-        for i in range(len(cpInt)):
+        for i in range(1, len(cpInt)):
             if cpInt[i] > Interval('M2'):
                 countConsec += 1
                 if countConsec > maxConsec:
@@ -637,11 +649,11 @@ class SameDirIntervals(Rule):
         for i in range(1, len(cpInt)):
             if cpInt[i].sign == prevInt.sign or cpInt[i].is_unison():
                 countConsec += 1
-                if countConsec >= maxConsec:
+                if countConsec > maxConsec:
                     result.append(addToResults(i, result_strings[28]))
             else:
                 prevInt = cpInt[i]
-                countConsec = 0
+                countConsec = 1
 
 class StepRecovery(Rule):
     def __init__(self, analysis):
@@ -655,8 +667,8 @@ class StepRecovery(Rule):
         cpInt = self.analysis.cpIntervals
         for i in range(len(cpInt) - 1):
             if cpInt[i] >= intervalThres:
-                if not (cpInt[i + 1].sign != cpInt[i].sign and cpInt[i + 1].is_second()):
-                    result.append(addToResults(i + 2, result_strings[29]))
+                if cpInt[i + 1].sign == cpInt[i].sign or not cpInt[i + 1].is_second():
+                    result.append(addToResults(i, result_strings[29]))
 
 class CompoundMelodicInterval(Rule):
     def __init__(self, analysis):

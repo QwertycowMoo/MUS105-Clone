@@ -30,9 +30,15 @@ samples = ['2-034-A_zawang2.musicxml', # consecutive intervals at #7, direct fif
            ]
 
 #Start fixing this one
-scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-003-A_cjrosas2.musicxml")
-s = import_score(scorePaths[0])
-print(s)
-a = SpeciesAnalysis(s, 2)
-for output in a.submit_to_grading():
-    print(output)
+scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-028-C_hanzhiy2.musicxml")
+scriptpath = "C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/"
+for i in range(len(samples)):
+    print('===================================================================')
+    print(samples[i])
+    s = import_score(scriptpath + samples[i])
+    if samples[i][0] == '1':
+        a = SpeciesAnalysis(s, 1)
+    else:
+        a = SpeciesAnalysis(s, 2)
+    for output in a.submit_to_grading():
+        print(output)
