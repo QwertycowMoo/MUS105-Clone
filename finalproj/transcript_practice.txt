@@ -7,6 +7,7 @@
 'At #16: direct fifths',
 'At #16: forbidden weak beat dissonance',
 'At #16: too many large leaps',
+'At #19: consecutive octaves',
 'At #19: missing melodic cadence',
 'At #19: too many melodic unisons',
 'At #20: forbidden duration',
@@ -25,7 +26,7 @@
 'At #2: forbidden weak beat dissonance',
 'At #6: too many melodic unisons',
 'At #7: too many consecutive intervals in same direction'
-}  (2/2)
+}  (0/2)
       [  input = SpeciesAnalysis(import_score('Species/2-028-C_hanzhiy2.musicxml'), 2).submit_to_grading()  ]  your_output = {
 'At #16: forbidden weak beat dissonance',
 'At #2: forbidden weak beat dissonance',
@@ -49,6 +50,7 @@
 'At #16: too many melodic unisons',
 'At #17: forbidden strong beat dissonance',
 'At #17: too many consecutive intervals in same direction',
+'At #18: consecutive octaves',
 'At #18: missing melodic cadence',
 'At #2: forbidden weak beat dissonance',
 'At #3: forbidden strong beat dissonance',
@@ -384,10 +386,10 @@
 'At #7: forbidden weak beat dissonance',
 'At #7: too many melodic unisons'
 }  (2/2)
-Total raw score: (37/43)
+Total raw score: (35/43)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 1
 Extra credit (if applicable): 0
-Adjusted score (Final): 36/42
+Adjusted score (Final): 34/42
 
