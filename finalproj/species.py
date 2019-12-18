@@ -239,17 +239,16 @@ class ConsecutiveInterval(Rule):
             pair = zipInt[i]
             if self.illegalInterval == 1:
                 if pair[0].is_unison():
-                    if (pair[1].is_unison()):
+                    if pair[1].is_unison():
                         self.results.append(addToResults(i, result_strings[0]))
-            elif (self.illegalInterval == 5):
-                if (pair[0].is_fifth()):
-                    if (pair[1].is_fifth()):
+            elif self.illegalInterval == 5:
+                if pair[0].is_fifth():
+                    if pair[1].is_fifth():
                         self.results.append(addToResults(i, result_strings[1]))
-            elif (self.illegalInterval == 8):
-                if (pair[1] != verticalIntervals[-1]):
-                    if (pair[0].is_octave()):
-                        if (pair[1].is_octave()):
-                            self.results.append(addToResults(i, result_strings[2]))
+            elif self.illegalInterval == 8:
+                if pair[0].is_octave():
+                    if pair[1].is_octave():
+                        self.results.append(addToResults(i, result_strings[2]))
 
 class DirectInterval(Rule):
     def __init__(self, analysis, interval):
