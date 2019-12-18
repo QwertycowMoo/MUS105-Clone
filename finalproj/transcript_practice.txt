@@ -211,6 +211,7 @@
 'At #8: direct unisons',
 'At #8: forbidden strong beat dissonance',
 'At #8: too many large leaps',
+'At #9: consecutive unisons',
 'At #9: too many consecutive intervals in same direction',
 'At #9: voice overlap'
 }  desired_output = {
