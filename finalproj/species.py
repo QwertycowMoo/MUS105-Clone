@@ -235,7 +235,7 @@ class ConsecutiveInterval(Rule):
         self.results = self.analysis.results
         verticalIntervals = self.analysis.verticalIntervals
         zipInt = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
-        for i in range(len(zipInt) - 1):
+        for i in range(len(zipInt)):
             pair = zipInt[i]
             if self.illegalInterval == 1:
                 if pair[0].is_unison():
@@ -364,7 +364,6 @@ class ConsecutiveInterval2Species(Rule):
             for i in range(len(zipInt2Species)):
 
                 pair = zipInt2Species[i]
-                print(pair, matching_cf_note[i])
                 if self.illegalInterval == 1:
                     if pair[0].is_unison():
                         if pair[1].is_unison():
@@ -445,7 +444,6 @@ class TooManyConsecutiveIntervals(Rule):
         sameInt = Interval('P29')
         # this works for first species but not second species, might work on that later
         for i in range(len(vertIntervals)):
-            print(sameInt, vertIntervals[i])
             interval = vertIntervals[i]
             if interval != sameInt or interval.is_perfect():
                 sameInt = interval
