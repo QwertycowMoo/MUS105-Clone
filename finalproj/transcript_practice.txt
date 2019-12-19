@@ -235,6 +235,7 @@
 'At #4: dissonant melodic interval',
 'At #4: forbidden weak beat dissonance',
 'At #6: too many melodic unisons',
+'At #7: consecutive octaves in cantus firmus notes',
 'At #8: missing reverse by step recovery',
 'At #9: too many consecutive leaps'
 }  desired_output = {
@@ -251,7 +252,7 @@
 'At #7: consecutive octaves in cantus firmus notes',
 'At #8: missing reverse by step recovery',
 'At #9: too many consecutive leaps'
-}  (0/2)
+}  (2/2)
       [  input = SpeciesAnalysis(import_score('Species/1-008-C_davidx2.musicxml'), 1).submit_to_grading()  ]  your_output = {
 'At #1: consecutive fifths',
 'At #3: missing reverse by step recovery',
@@ -389,10 +390,10 @@
 'At #7: forbidden weak beat dissonance',
 'At #7: too many melodic unisons'
 }  (2/2)
-Total raw score: (33/43)
+Total raw score: (35/43)
 
 ----------------------
 Base score (if you do nothing but just turn in the starter code): 1
 Extra credit (if applicable): 0
-Adjusted score (Final): 32/42
+Adjusted score (Final): 34/42
 
