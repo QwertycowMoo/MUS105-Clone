@@ -357,18 +357,19 @@ class ConsecutiveInterval2Species(Rule):
                     prevcf = cf_note
                     if self.analysis.cpIsTop:
                         interval2species.append(Interval(cf_note.pitch, cp_note.pitch))
-                        matching_cf_note.append(n)
+                    else:
+                        interval2species.append(Interval(cp_note.pitch, cf_note.pitch))
+                    matching_cf_note.append(n)
             # Does not get the last interval if cp and cf both whole notes but that error will be melodic cadence anyways
             zipInt2Species = list(zip(interval2species[:-1], interval2species[1:]))
             for i in range(len(zipInt2Species)):
-
                 pair = zipInt2Species[i]
                 if self.illegalInterval == 1:
                     if pair[0].is_unison():
                         if pair[1].is_unison():
                             self.results.append(addToResults(matching_cf_note[i], result_strings[6]))
                 elif self.illegalInterval == 5:
-                    if pair[0].is_fifth() and pair[1].is_perfect():
+                    if pair[0].is_fifth() and pair[0].is_perfect():
                         if pair[1].is_fifth() and pair[1].is_perfect():
                             self.results.append(addToResults(matching_cf_note[i], result_strings[7]))
                 elif self.illegalInterval == 8:
