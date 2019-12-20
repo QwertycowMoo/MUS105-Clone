@@ -31,7 +31,7 @@ samples = ['2-034-A_zawang2.musicxml',
            ]
 
 #Start fixing this one
-scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-034-C_zawang2.musicxml")
+scorePaths = glob("C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/2-034-A_zawang2.musicxml")
 scriptpath = "C:/Users/qwert/School/MUS105/kjzhou2/finalproj/Species/"
 # for i in range(len(samples)):
 #     print('===================================================================')

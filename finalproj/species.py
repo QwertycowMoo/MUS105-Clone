@@ -235,6 +235,8 @@ class ConsecutiveInterval(Rule):
         self.results = self.analysis.results
         verticalIntervals = self.analysis.verticalIntervals
         zipInt = list(zip(verticalIntervals[:-1], verticalIntervals[1:]))
+        cpMelody = self.analysis.cpMelody
+        cfMelody = self.analysis.cfMelody
         for i in range(len(zipInt)):
             pair = zipInt[i]
             if self.illegalInterval == 1:
@@ -246,9 +248,12 @@ class ConsecutiveInterval(Rule):
                     if pair[1].is_fifth():
                         self.results.append(addToResults(i, result_strings[1]))
             elif self.illegalInterval == 8:
-                if pair[0].is_octave():
-                    if pair[1].is_octave():
-                        self.results.append(addToResults(i, result_strings[2]))
+                if cpMelody[-1] == cpMelody[-2]:
+                    pass
+                else:
+                    if pair[0].is_octave():
+                        if pair[1].is_octave():
+                            self.results.append(addToResults(i, result_strings[2]))
 
 class DirectInterval(Rule):
     def __init__(self, analysis, interval):
